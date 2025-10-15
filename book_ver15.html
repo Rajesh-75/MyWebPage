@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Carousel & Directory</title>
+    <style>
+        /* Global Styling */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .publisher-heading {
+            text-transform: uppercase;
+            font-size: 2.5em;
+            margin-bottom: 5px;
+            color: #2a6496;
+            text-align: center;
+        }
+        
+        .publisher-address {
+            text-align: center;
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        .address-line {
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        /* --- Navigation Bar Styling --- */
+        .nav-bar {
+            text-align: center;
+            margin: 20px auto 30px auto; 
+            max-width: 1100px;
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+            background-color: #f0f0f0;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 0 25px;
+            padding: 5px 10px;
+            transition: color 0.2s;
+            cursor: pointer; 
+        }
+        
+        .nav-link:hover {
+            color: #0056b3;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+        }
+        
+        /* --- Carousel Structure --- */
+        
+        .carousel-wrapper {
+            position: relative;
+            max-width: 1100px; 
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+
+        .carousel-container {
+            width: 100%;
+            overflow: hidden; 
+            padding: 20px 0;
+            font-size: 1rem; 
+        }
+
+        .book-track {
+            display: flex; 
+            flex-direction: row; 
+            transition: transform 0.5s ease-in-out;
+            flex-wrap: nowrap; 
+            width: fit-content; 
+        }
+        
+        .book-item {
+            min-width: 200px; 
+            height: 300px; 
+            margin-right: 20px; 
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            cursor: pointer; 
+            transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            font-size: 14px; 
+        }
+        
+        .book-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .book-author {
+            font-size: 1.2em;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+        }
+
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 24px;
+            line-height: 1;
+            border-radius: 50%;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .carousel-arrow:hover {
+            opacity: 1;
+        }
+        
+        /* --- Main Content Area & Two-Column Views --- */
+        .main-content-area {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+            border: 2px dashed #007bff;
+            background-color: #eaf6ff;
+            min-height: 250px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        
+        /* Styles for the Two-Column Container (used by both Books and Tutorials) */
+        .two-column-container {
+            display: flex;
+            height: 100%;
+        }
+        
+        .left-panel {
+            flex: 0 0 30%; /* Left column takes 30% of the width */
+            padding-right: 20px;
+            border-right: 2px solid #ccc; /* Vertical separator line */
+            overflow-y: auto; 
+        }
+        
+        .right-panel {
+            flex: 1; 
+            padding-left: 20px;
+        }
+        
+        /* Styling for List Items (Books and Tutorials) */
+        .list-item {
+            list-style: none;
+            padding: 10px 0;
+            font-size: 1.1em;
+            cursor: pointer;
+            color: #2a6496;
+            transition: color 0.2s, background-color 0.2s;
+            border-bottom: 1px dotted #eee;
+        }
+        
+        .list-item:hover {
+            color: #0056b3;
+            background-color: #f0f8ff;
+        }
+        
+        .list-item.selected {
+            font-weight: bold;
+            color: #d9534f; 
+            background-color: #fff0f0;
+        }
+
+        /* Detail Pane Styling (Books and Tutorials) */
+        .detail-title {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        
+        .detail-description, .detail-author-bio {
+            margin-top: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        .detail-author-title {
+            color: #28a745; 
+            margin-top: 20px;
+            border-bottom: 1px solid #28a745;
+            padding-bottom: 5px;
+            font-size: 1.3em;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <h1 class="publisher-heading">Yamuna Publications</h1>
+    
+    <div class="publisher-address">
+        <p class="address-line">Sreekandeswaram</p>
+        <p class="address-line">Thiruvananthapuram</p>
+        <p class="address-line">kerala - 695023</p>
+        <p class="address-line">Contact Details - 9446185404</p>
+    </div>
+    
+    <div class="nav-bar">
+        <a id="navBooks" class="nav-link">Books</a>
+        <a id="navTutorials" class="nav-link">Tutorials</a>
+        <a id="navBlogs" class="nav-link">Blogs</a>
+        <a id="navGalleries" class="nav-link">Galleries</a>
+    </div>
+
+    <div class="carousel-wrapper" id="carouselWrapper" style="display: block;"> 
+        
+        <button id="prevBtn" class="carousel-arrow prev" aria-label="Previous Book">❮</button> 
+        
+        <div class="carousel-container">
+            <div id="bookTrack" class="book-track">
+                </div>
+        </div>
+        
+        <button id="nextBtn" class="carousel-arrow next" aria-label="Next Book">❯</button>
+
+    </div>
+
+    <div id="mainContentArea" class="main-content-area">
+        <h2 class="detail-title">Book Details</h2>
+        <p id="descriptionText" class="detail-description">Click on any book in the carousel above to see its detailed description here.</p>
+        <h4 id="authorInfoHeading" class="detail-author-title" style="display: none;">About the Author: </h4>
+        <p id="authorInfoText" class="detail-description"></p>
+    </div>
+    <script>
+        // Define the Author's biography once
+        const authorBio = "L.R.Potti is a renowned academic with over two decades of experience in the field of Statistics and Business Studies. His passion lies in making complex mathematical concepts accessible to students across various disciplines.";
+        
+        // 1. Define your book data 
+        const books = [
+            { 
+                id: 1, 
+                title: "Statistics for Commerece", 
+                author: "L.R.Potti",
+                description: "This a text book of Statistics for students of business studies. It explains statistical concepts in a lucid manner by sacrificing mathematical rigours",
+                authorBio: authorBio
+            },
+            { id: 2, title: "Statistics for Economics", author: "L.R.Potti", description: "This a text book of Statistics for students for Economics. It explains statistical and mathematical concepts by using day to day Economical events.", authorBio: authorBio},
+            { id: 3, title: "MS", author: "L.R.Potti", description: "Mathematical Statistical.", authorBio: authorBio },
+            { id: 4, title: "OR", author: "L.R.Potti", description: "Operations Research.", authorBio: authorBio },
+            { id: 5, title: "QT", author: "L.R.Potti", description: "Quantitative Techniques.", authorBio: authorBio },
+            { id: 6, title: "BLs", author: "L.R.Potti", description: "Business Laws.", authorBio: authorBio },
+            { id: 7, title: "FCS (Vol 1)", author: "L.R.Potti", description: "Full course in Statistics, Volume 1.", authorBio: authorBio },
+            { id: 8, title: "FCS (Vol 2)", author: "L.R.Potti", description: "Second volume for the Full Course in Statistics.", authorBio: authorBio },
+            { id: 9, title: "FCS (Vol 3)", author: "L.R.Potti", description: "Third volume for the Full Course in Statistics.", authorBio: authorBio },
+            { id: 10, title: "ADD", author: "L.R.Potti", description: "Advanced Data Decisions.", authorBio: authorBio },
+            { id: 11, title: "FCS (Vol 4)", author: "L.R.Potti", description: "Fourth volume for the Full Course in Statistics.", authorBio: authorBio },
+            { id: 12, title: "FCS (Vol 5)", author: "L.R.Potti", description: "Fifth volume for the Full Course in Statistics.", authorBio: authorBio }
+        ];
+        
+        // 2. NEW: Define tutorial data
+        const tutorials = [
+            { 
+                key: "ml", 
+                title: "Machine Learning Essentials", 
+                content: "Introduction to fundamental concepts of **Machine Learning**, covering supervised and unsupervised learning algorithms like linear regression, k-means, and decision trees. Essential for data analysis."
+            },
+            { 
+                key: "dl", 
+                title: "Deep Learning Architectures", 
+                content: "Dive into **Deep Learning** with a focus on neural network architectures, including CNNs (for image recognition) and RNNs (for sequence data). Pre-requisite: strong Python knowledge."
+            },
+            { 
+                key: "stats", 
+                title: "Advanced Statistical Methods", 
+                content: "A tutorial on advanced **Statistics** topics like hypothesis testing, regression analysis, ANOVA, and time-series forecasting. Directly complements the publisher's textbooks."
+            },
+            { 
+                key: "python", 
+                title: "Python for Data Science", 
+                content: "Master **Python** libraries crucial for data science, including Pandas for data manipulation, NumPy for numerical operations, and Matplotlib for visualization. Hands-on coding examples provided."
+            }
+        ];
+
+        // 3. Get the elements
+        const bookTrack = document.getElementById('bookTrack');
+        const carouselWrapper = document.getElementById('carouselWrapper');
+        const mainContentArea = document.getElementById('mainContentArea'); 
+
+        const navBooks = document.getElementById('navBooks'); 
+        const navTutorials = document.getElementById('navTutorials');
+        const navBlogs = document.getElementById('navBlogs');
+        const navGalleries = document.getElementById('navGalleries');
+        
+        // Save the initial HTML content of the description area
+        const initialContent = mainContentArea.innerHTML; 
+        
+        // 4. Variables for carousel logic (MUST match CSS)
+        let currentIndex = 0; 
+        const booksToShow = 5; 
+        const totalBooks = books.length; 
+        
+        // --- Core Movement Constants (MUST MATCH CSS) ---
+        const bookWidth = 200; 
+        const bookMargin = 20; 
+        const moveDistance = bookWidth + bookMargin; 
+        // ------------------------------------------------
+        
+        // Helper function to generate a random bright color
+        function getRandomColor() {
+            const hue = Math.floor(Math.random() * 360);
+            return `hsl(${hue}, 70%, 60%)`; 
+        }
+
+        // --- Core Carousel Click Handler ---
+        function handleCarouselBookClick(book) {
+            // Ensure we are in the home view when a book is clicked
+            loadHomeView(); 
+
+            // Re-get the elements after ensuring the correct HTML structure is loaded
+            const dText = document.getElementById('descriptionText');
+            const aHeading = document.getElementById('authorInfoHeading');
+            const aText = document.getElementById('authorInfoText');
+            
+            dText.textContent = book.description;
+            aHeading.textContent = `About the Author: ${book.author}`;
+            aHeading.style.display = 'block';
+            aText.textContent = book.authorBio;
+        }
+
+        // --- Function to load the default/Home View ---
+        function loadHomeView() {
+            // Restore visibility of the carousel
+            carouselWrapper.style.display = 'block'; 
+            
+            // Restore the initial content area structure
+            mainContentArea.innerHTML = initialContent; 
+            
+            // Re-initialize content (must happen after innerHTML reset)
+            document.getElementById('descriptionText').textContent = "Click on any book in the carousel above to see its detailed description here.";
+            document.getElementById('authorInfoHeading').style.display = 'none';
+            document.getElementById('authorInfoText').textContent = "";
+        }
+
+
+        // --- Two-Column Book List View Logic (Unchanged) ---
+        function displayBookDetails(book, listElement) {
+            const detailsArea = document.getElementById('detailPane');
+            
+            detailsArea.innerHTML = `
+                <h2 class="detail-title">${book.title}</h2>
+                <p class="detail-description">${book.description}</p>
+                <h4 class="detail-author-title">About the Author: ${book.author}</h4>
+                <p class="detail-author-bio">${book.authorBio}</p>
+            `;
+            
+            document.querySelectorAll('.list-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            listElement.classList.add('selected');
+        }
+
+        function loadBookListView() {
+            carouselWrapper.style.display = 'none'; // Hide the Carousel
+
+            // Set up the Two-Column HTML Structure
+            mainContentArea.innerHTML = `
+                <div class="two-column-container">
+                    <div class="left-panel">
+                        <h3 class="detail-title">All Titles</h3>
+                        <ul id="bookList" style="padding: 0;">
+                        </ul>
+                    </div>
+                    <div id="detailPane" class="right-panel">
+                        <p class="detail-description">Select a title from the left to view details and author information.</p>
+                    </div>
+                </div>
+            `;
+            
+            // Populate the Book List
+            const bookList = document.getElementById('bookList');
+            
+            books.forEach(book => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-item';
+                listItem.textContent = book.title;
+                
+                listItem.addEventListener('click', (e) => {
+                    displayBookDetails(book, e.currentTarget);
+                });
+                
+                bookList.appendChild(listItem);
+            });
+            
+            // Automatically select and display details for the first book
+            if (books.length > 0) {
+                const firstListItem = bookList.querySelector('.list-item');
+                displayBookDetails(books[0], firstListItem);
+            }
+        }
+        
+        // -------------------------------------------------
+        // --- NEW: Two-Column Tutorial View Logic ---
+        // -------------------------------------------------
+        
+        function displayTutorialContent(tutorial, listElement) {
+            const contentArea = document.getElementById('tutorialContentPane');
+            
+            contentArea.innerHTML = `
+                <h2 class="detail-title">${tutorial.title}</h2>
+                <p class="detail-description">${tutorial.content}</p>
+            `;
+            
+            // Highlight the selected link
+            document.querySelectorAll('.list-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            listElement.classList.add('selected');
+        }
+        
+        function loadTutorialsView() {
+            carouselWrapper.style.display = 'none'; // Hide the Carousel
+            
+            // Set up the Two-Column HTML Structure for Tutorials
+            mainContentArea.innerHTML = `
+                <div class="two-column-container">
+                    <div class="left-panel">
+                        <h3 class="detail-title">Tutorials</h3>
+                        <ul id="tutorialList" style="padding: 0;">
+                        </ul>
+                    </div>
+                    <div id="tutorialContentPane" class="right-panel">
+                        <p class="detail-description">Select a topic from the left to view the tutorial overview.</p>
+                    </div>
+                </div>
+            `;
+            
+            // Populate the Tutorial List
+            const tutorialList = document.getElementById('tutorialList');
+            
+            tutorials.forEach(tutorial => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-item';
+                listItem.textContent = tutorial.title;
+                
+                listItem.addEventListener('click', (e) => {
+                    displayTutorialContent(tutorial, e.currentTarget);
+                });
+                
+                tutorialList.appendChild(listItem);
+            });
+            
+            // Automatically select and display details for the first tutorial
+            if (tutorials.length > 0) {
+                const firstListItem = tutorialList.querySelector('.list-item');
+                displayTutorialContent(tutorials[0], firstListItem);
+            }
+        }
+
+        // --- Setup Functions (Carousel) ---
+        
+        function createBookElement(book) {
+            const item = document.createElement('div');
+            item.className = 'book-item';
+            item.style.backgroundColor = getRandomColor();
+            item.innerHTML = `<span class="book-author">${book.title}<br>(${book.author})</span>`; 
+            
+            item.addEventListener('click', () => {
+                handleCarouselBookClick(book);
+            });
+            
+            return item;
+        }
+
+        // Populate the track with books
+        books.forEach(book => {
+            bookTrack.appendChild(createBookElement(book));
+        });
+        
+        // --- Core Movement Logic (Carousel) ---
+
+        function updateTrackPosition() {
+            const offset = -currentIndex * moveDistance;
+            bookTrack.style.transform = `translateX(${offset}px)`;
+            
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.disabled = currentIndex === 0;
+            const nextIndexMax = totalBooks - booksToShow;
+            if (nextIndexMax < 0) nextBtn.disabled = true;
+            else nextBtn.disabled = currentIndex >= nextIndexMax;
+        }
+
+        // --- Event Listeners ---
+        
+        // 1. Navigation Link Listener for "Books"
+        navBooks.addEventListener('click', () => {
+            loadBookListView();
+        });
+        
+        // 2. Navigation Link Listener for "Tutorials" (NEW)
+        navTutorials.addEventListener('click', () => {
+            loadTutorialsView();
+        });
+        
+        // 3. Navigation Listeners for "Return Home"
+        navBlogs.addEventListener('click', loadHomeView);
+        navGalleries.addEventListener('click', loadHomeView);
+        
+        // 4. Carousel Arrow Listeners
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (carouselWrapper.style.display !== 'none' && currentIndex > 0) {
+                currentIndex -= 1;
+                updateTrackPosition();
+            }
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (carouselWrapper.style.display !== 'none' && currentIndex < totalBooks - booksToShow) {
+                currentIndex += 1;
+                updateTrackPosition();
+            }
+        });
+
+        // Initialize the carousel position and button states
+        updateTrackPosition();
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Carousel & Directory</title>
+    <style>
+        /* Global Styling */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .publisher-heading {
+            text-transform: uppercase;
+            font-size: 2.5em;
+            margin-bottom: 5px;
+            color: #2a6496;
+            text-align: center;
+        }
+        
+        .publisher-address {
+            text-align: center;
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        .address-line {
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        /* --- Navigation Bar Styling --- */
+        .nav-bar {
+            text-align: center;
+            margin: 20px auto 30px auto; 
+            max-width: 1100px;
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+            background-color: #f0f0f0;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 0 25px;
+            padding: 5px 10px;
+            transition: color 0.2s;
+            cursor: pointer; 
+        }
+        
+        .nav-link:hover {
+            color: #0056b3;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+        }
+        
+        /* --- Carousel Structure (Simplified for brevity) --- */
+        .carousel-wrapper {
+            position: relative;
+            max-width: 1100px; 
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+
+        .carousel-container {
+            width: 100%;
+            overflow: hidden; 
+            padding: 20px 0;
+        }
+
+        .book-track {
+            display: flex; 
+            flex-direction: row; 
+            transition: transform 0.5s ease-in-out;
+            flex-wrap: nowrap; 
+            width: fit-content; 
+        }
+        
+        .book-item {
+            min-width: 200px; 
+            height: 300px; 
+            margin-right: 20px; 
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            cursor: pointer; 
+            transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            font-size: 14px; 
+        }
+        
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 24px;
+            line-height: 1;
+            border-radius: 50%;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        
+        /* --- Main Content Area & Two-Column Views --- */
+        .main-content-area {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+            border: 2px dashed #007bff;
+            background-color: #eaf6ff;
+            min-height: 250px;
+            height: 400px; /* Fixed height for scrolling to work */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        
+        /* Styles for the Two-Column Container */
+        .two-column-container {
+            display: flex;
+            height: 100%; 
+        }
+        
+        .left-panel {
+            flex: 0 0 35%; /* Slightly wider left panel for hierarchy */
+            padding-right: 20px;
+            border-right: 2px solid #ccc; 
+            overflow-y: auto; /* Scrollbar for the list of titles/topics */
+        }
+        
+        .right-panel {
+            flex: 1; 
+            padding-left: 20px;
+            overflow-y: auto; /* Add scrollbars if content exceeds the height */
+        }
+        
+        /* Styling for List Items (Books and Tutorials) */
+        .list-item {
+            list-style: none;
+            padding: 10px 0;
+            font-size: 1.1em;
+            cursor: pointer;
+            color: #2a6496;
+            transition: color 0.2s, background-color 0.2s;
+            border-bottom: 1px dotted #eee;
+        }
+
+        /* NEW: Styles for Hierarchy */
+        .topic-header {
+            font-weight: bold;
+            color: #0056b3;
+            list-style: none;
+            padding: 10px 0;
+            cursor: pointer;
+            border-bottom: 2px solid #ccc;
+            margin-top: 5px;
+        }
+
+        .sub-topics {
+            list-style: none;
+            padding: 0 0 0 20px; /* Indent sub-topics */
+            margin: 0;
+            display: none; /* Initially hidden */
+        }
+
+        .sub-topics .list-item {
+            font-size: 1em;
+            padding: 5px 0;
+            color: #333;
+            border: none; /* Remove border for cleaner sub-list */
+        }
+
+        /* Selected Styles */
+        .list-item.selected {
+            font-weight: bold;
+            color: #d9534f; 
+            background-color: #fff0f0;
+        }
+
+        /* Detail Pane Styling (Unchanged) */
+        .detail-title {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        
+        .detail-description {
+            margin-top: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <h1 class="publisher-heading">Yamuna Publications</h1>
+    
+    <div class="publisher-address">
+        <p class="address-line">Sreekandeswaram</p>
+        <p class="address-line">Thiruvananthapuram</p>
+        <p class="address-line">kerala - 695023</p>
+        <p class="address-line">Contact Details - 9446185404</p>
+    </div>
+    
+    <div class="nav-bar">
+        <a id="navBooks" class="nav-link">Books</a>
+        <a id="navTutorials" class="nav-link">Tutorials</a>
+        <a id="navBlogs" class="nav-link">Blogs</a>
+        <a id="navGalleries" class="nav-link">Galleries</a>
+    </div>
+
+    <div class="carousel-wrapper" id="carouselWrapper" style="display: block;"> 
+        
+        <button id="prevBtn" class="carousel-arrow prev" aria-label="Previous Book">❮</button> 
+        
+        <div class="carousel-container">
+            <div id="bookTrack" class="book-track">
+                </div>
+        </div>
+        
+        <button id="nextBtn" class="carousel-arrow next" aria-label="Next Book">❯</button>
+
+    </div>
+
+    <div id="mainContentArea" class="main-content-area">
+        <h2 class="detail-title">Book Details</h2>
+        <p id="descriptionText" class="detail-description">Click on any book in the carousel above to see its detailed description here.</p>
+        <h4 id="authorInfoHeading" class="detail-author-title" style="display: none;">About the Author: </h4>
+        <p id="authorInfoText" class="detail-description"></p>
+    </div>
+    <script>
+        // Define the Author's biography once
+        const authorBio = "L.R.Potti is a renowned academic with over two decades of experience in the field of Statistics and Business Studies. His passion lies in making complex mathematical concepts accessible to students across various disciplines.";
+        
+        // 1. Define your book data (Used for Books view and Home view)
+        const books = [
+            { id: 1, title: "Statistics for Commerece", author: "L.R.Potti", description: "This a text book of Statistics for students of business studies. It explains statistical concepts in a lucid manner by sacrificing mathematical rigours", authorBio: authorBio},
+            { id: 2, title: "Statistics for Economics", author: "L.R.Potti", description: "This a text book of Statistics for students for Economics. It explains statistical and mathematical concepts by using day to day Economical events.", authorBio: authorBio},
+            { id: 3, title: "MS", author: "L.R.Potti", description: "Mathematical Statistical.", authorBio: authorBio },
+            { id: 4, title: "OR", author: "L.R.Potti", description: "Operations Research.", authorBio: authorBio },
+            { id: 5, title: "QT", author: "L.R.Potti", description: "Quantitative Techniques.", authorBio: authorBio },
+            { id: 6, title: "BLs", author: "L.R.Potti", description: "Business Laws.", authorBio: authorBio },
+            { id: 7, title: "FCS (Vol 1)", author: "L.R.Potti", description: "Full course in Statistics, Volume 1.", authorBio: authorBio },
+            { id: 8, title: "FCS (Vol 2)", author: "L.R.Potti", description: "Second volume for the Full Course in Statistics.", authorBio: authorBio },
+            { id: 9, title: "FCS (Vol 3)", author: "L.R.Potti", description: "Third volume for the Full Course in Statistics.", authorBio: authorBio },
+            { id: 10, title: "ADD", author: "L.R.Potti", description: "Advanced Data Decisions.", authorBio: authorBio },
+            { id: 11, title: "FCS (Vol 4)", author: "L.R.Potti", description: "Fourth volume for the Full Course in Statistics.", authorBio: authorBio },
+            { id: 12, title: "FCS (Vol 5)", author: "L.R.Potti", description: "Fifth volume for the Full Course in Statistics.", authorBio: authorBio }
+        ];
+        
+        // 2. NEW: Hierarchical tutorial data structure
+        const tutorials = [
+            { 
+                title: "Machine Learning", 
+                subtopics: [
+                    { title: "K-Means Clustering", content: "An introduction to K-Means, an unsupervised learning algorithm for grouping data points into K distinct clusters. Ideal for initial data segmentation." },
+                    { title: "Random Forests", content: "Learn about ensemble learning using **Random Forests**. This supervised method builds multiple decision trees and merges them to get a more accurate and stable prediction." },
+                    { title: "Kernel Density Estimation (KDE)", content: "Explore **KDE** as a non-parametric way to estimate the probability density function of a random variable." }
+                ]
+            },
+            { 
+                title: "Deep Learning", 
+                subtopics: [
+                    { title: "Convolutional Neural Networks (CNN)", content: "Tutorial on CNNs, the backbone of modern image recognition systems. Learn about layers: convolution, pooling, and fully connected." },
+                    { title: "Recurrent Neural Networks (RNN)", content: "Focus on RNNs for sequential data, such as time series and natural language processing. Includes an overview of LSTMs and GRUs." }
+                ]
+            },
+            { 
+                title: "Statistics", 
+                subtopics: [
+                    { title: "Hypothesis Testing", content: "Detailed steps on how to formulate and test hypotheses, covering Z-tests, T-tests, and Chi-squared tests." },
+                    { title: "Regression Analysis", content: "Simple and multiple linear regression, including interpretation of R-squared and p-values." }
+                ]
+            },
+			{ 
+                title: "Computer Graphics and Imaging", 
+                subtopics: [
+                    { title: "Rendering", content: "Explains the Graphics Pipeline for Rendering." },
+                    { title: "Geometric Modeling", content: "Triangle is basic entity of any Graphics scene. Geometric Modeling involves placing the triangles." }
+                ]
+            },
+            { 
+                title: "Python", 
+                content: "Master Python libraries crucial for data science, including Pandas for data manipulation, NumPy for numerical operations, and Matplotlib for visualization. This is a standalone topic without sub-topics."
+            }
+        ];
+
+        // 3. Get the elements (Unchanged)
+        const bookTrack = document.getElementById('bookTrack');
+        const carouselWrapper = document.getElementById('carouselWrapper');
+        const mainContentArea = document.getElementById('mainContentArea'); 
+        const initialContent = mainContentArea.innerHTML; 
+        
+        const navBooks = document.getElementById('navBooks'); 
+        const navTutorials = document.getElementById('navTutorials');
+        const navBlogs = document.getElementById('navBlogs');
+        const navGalleries = document.getElementById('navGalleries');
+
+        // ... Carousel Variables (Unchanged) ...
+        let currentIndex = 0; 
+        const booksToShow = 5; 
+        const totalBooks = books.length; 
+        const bookWidth = 200; 
+        const bookMargin = 20; 
+        const moveDistance = bookWidth + bookMargin; 
+        
+        // Helper function to generate a random bright color (Unchanged)
+        function getRandomColor() {
+            const hue = Math.floor(Math.random() * 360);
+            return `hsl(${hue}, 70%, 60%)`; 
+        }
+
+        // --- Core Carousel Click Handler (Unchanged) ---
+        function handleCarouselBookClick(book) {
+            loadHomeView(); 
+            const dText = document.getElementById('descriptionText');
+            const aHeading = document.getElementById('authorInfoHeading');
+            const aText = document.getElementById('authorInfoText');
+            dText.textContent = book.description;
+            aHeading.textContent = `About the Author: ${book.author}`;
+            aHeading.style.display = 'block';
+            aText.textContent = book.authorBio;
+        }
+
+        // --- Function to load the default/Home View (Unchanged) ---
+        function loadHomeView() {
+            carouselWrapper.style.display = 'block'; 
+            mainContentArea.innerHTML = initialContent; 
+            document.getElementById('descriptionText').textContent = "Click on any book in the carousel above to see its detailed description here.";
+            document.getElementById('authorInfoHeading').style.display = 'none';
+            document.getElementById('authorInfoText').textContent = "";
+        }
+
+        // --- Two-Column Book List View Logic (Unchanged) ---
+        function displayBookDetails(book, listElement) {
+            const detailsArea = document.getElementById('detailPane');
+            detailsArea.innerHTML = `<h2 class="detail-title">${book.title}</h2><p class="detail-description">${book.description}</p><h4 class="detail-author-title">About the Author: ${book.author}</h4><p class="detail-author-bio">${book.authorBio}</p>`;
+            document.querySelectorAll('.list-item').forEach(item => { item.classList.remove('selected'); });
+            listElement.classList.add('selected');
+        }
+
+        function loadBookListView() {
+            carouselWrapper.style.display = 'none'; 
+            mainContentArea.innerHTML = `<div class="two-column-container"><div class="left-panel"><h3 class="detail-title">All Titles</h3><ul id="bookList" style="padding: 0;"></ul></div><div id="detailPane" class="right-panel"><p class="detail-description">Select a title from the left to view details and author information.</p></div></div>`;
+            
+            const bookList = document.getElementById('bookList');
+            books.forEach(book => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-item';
+                listItem.textContent = book.title;
+                listItem.addEventListener('click', (e) => { displayBookDetails(book, e.currentTarget); });
+                bookList.appendChild(listItem);
+            });
+            
+            if (books.length > 0) {
+                const firstListItem = bookList.querySelector('.list-item');
+                displayBookDetails(books[0], firstListItem);
+            }
+        }
+        
+        // -------------------------------------------------
+        // --- UPDATED: Two-Column Tutorial View Logic for Hierarchy ---
+        // -------------------------------------------------
+        
+        function displayTutorialContent(tutorial, listElement) {
+            const contentArea = document.getElementById('tutorialContentPane');
+            
+            contentArea.innerHTML = `
+                <h2 class="detail-title">${tutorial.title}</h2>
+                <p class="detail-description">${tutorial.content}</p>
+            `;
+            
+            // Remove selection from all sub-topics and main topics
+            document.querySelectorAll('.list-item').forEach(item => { item.classList.remove('selected'); });
+            document.querySelectorAll('.topic-header').forEach(item => { item.classList.remove('selected'); });
+
+            // Apply selection highlight only to the clicked sub-topic/standalone topic
+            listElement.classList.add('selected');
+        }
+
+        function loadTutorialsView() {
+            carouselWrapper.style.display = 'none'; // Hide the Carousel
+            
+            // Set up the Two-Column HTML Structure for Tutorials
+            mainContentArea.innerHTML = `
+                <div class="two-column-container">
+                    <div class="left-panel">
+                        <h3 class="detail-title">Tutorial Topics</h3>
+                        <ul id="tutorialList" style="padding: 0;">
+                        </ul>
+                    </div>
+                    <div id="tutorialContentPane" class="right-panel">
+                        <p class="detail-description">Select a topic from the left to view the tutorial overview.</p>
+                    </div>
+                </div>
+            `;
+            
+            const tutorialList = document.getElementById('tutorialList');
+            
+            tutorials.forEach(topic => {
+                if (topic.subtopics) {
+                    // This is a main topic (e.g., Machine Learning)
+                    const header = document.createElement('li');
+                    header.className = 'topic-header';
+                    header.innerHTML = `▶ ${topic.title}`;
+                    
+                    const subList = document.createElement('ul');
+                    subList.className = 'sub-topics';
+
+                    // Add click event to toggle sub-topics
+                    header.addEventListener('click', (e) => {
+                        const isVisible = subList.style.display === 'block';
+                        subList.style.display = isVisible ? 'none' : 'block';
+                        e.currentTarget.innerHTML = isVisible ? `▶ ${topic.title}` : `▼ ${topic.title}`;
+                    });
+                    
+                    topic.subtopics.forEach(subtopic => {
+                        const subItem = document.createElement('li');
+                        subItem.className = 'list-item';
+                        subItem.textContent = subtopic.title;
+                        
+                        // Add click event to display content
+                        subItem.addEventListener('click', (e) => {
+                            // Pass the subtopic data and the list element for highlighting
+                            displayTutorialContent(subtopic, e.currentTarget);
+                        });
+                        
+                        subList.appendChild(subItem);
+                    });
+                    
+                    tutorialList.appendChild(header);
+                    tutorialList.appendChild(subList);
+                    
+                } else {
+                    // This is a standalone topic (e.g., Python)
+                    const listItem = document.createElement('li');
+                    listItem.className = 'list-item';
+                    listItem.textContent = topic.title;
+                    
+                    listItem.addEventListener('click', (e) => {
+                        displayTutorialContent(topic, e.currentTarget);
+                    });
+                    
+                    tutorialList.appendChild(listItem);
+                }
+            });
+            
+            // No automatic selection on load for the hierarchical view
+            document.getElementById('tutorialContentPane').innerHTML = `<h2 class="detail-title">Welcome to Tutorials</h2><p class="detail-description">Click a main topic (e.g., Machine Learning) to expand and select a sub-topic to view its detailed content here.</p>`;
+        }
+
+        // --- Setup Functions & Event Listeners (Carousel and Navigation) ---
+
+        // Populate the track with books (Unchanged)
+        books.forEach(book => { bookTrack.appendChild(createBookElement(book)); });
+        function createBookElement(book) {
+            const item = document.createElement('div');
+            item.className = 'book-item';
+            item.style.backgroundColor = getRandomColor();
+            item.innerHTML = `<span class="book-author">${book.title}<br>(${book.author})</span>`; 
+            item.addEventListener('click', () => { handleCarouselBookClick(book); });
+            return item;
+        }
+        function updateTrackPosition() {
+            const offset = -currentIndex * moveDistance;
+            bookTrack.style.transform = `translateX(${offset}px)`;
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            prevBtn.disabled = currentIndex === 0;
+            const nextIndexMax = totalBooks - booksToShow;
+            if (nextIndexMax < 0) nextBtn.disabled = true;
+            else nextBtn.disabled = currentIndex >= nextIndexMax;
+        }
+
+        // 1. Navigation Link Listener for "Books"
+        navBooks.addEventListener('click', loadBookListView);
+        
+        // 2. Navigation Link Listener for "Tutorials" (UPDATED)
+        navTutorials.addEventListener('click', loadTutorialsView);
+        
+        // 3. Navigation Listeners for "Return Home"
+        navBlogs.addEventListener('click', loadHomeView);
+        navGalleries.addEventListener('click', loadHomeView);
+        
+        // 4. Carousel Arrow Listeners
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (carouselWrapper.style.display !== 'none' && currentIndex > 0) {
+                currentIndex -= 1;
+                updateTrackPosition();
+            }
+        });
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (carouselWrapper.style.display !== 'none' && currentIndex < totalBooks - booksToShow) {
+                currentIndex += 1;
+                updateTrackPosition();
+            }
+        });
+
+        // Initialize the carousel position and button states
+        updateTrackPosition();
+    </script>
+    
+</body>
+</html>
