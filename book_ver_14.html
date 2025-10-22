@@ -173,19 +173,22 @@
             color: #000;
             line-height: 1.6;
         }
-
-        /* Style for the Pseudocode/Info Box */
-        .pseudocode-box {
-            background-color: #f7f7f7; 
-            border: 1px solid #e0e0e0; 
-            padding: 15px;
-            margin: 20px auto; /* This centers the block */
-            border-radius: 5px; 
-            font-family: 'Consolas', 'Courier New', monospace; 
-            white-space: pre-wrap; /* Keeps lines wrapping if too long */
-            text-align: left; /* NOW LEFT-ALIGNED within the centered box */
-            max-width: 800px; /* Example: set a max-width to control the box size */
+        
+        /* --- NEW CSS for Flowchart Image --- */
+        .flowchart-container {
+            padding: 20px 0;
+            text-align: center; /* Center the image */
         }
+        .flowchart-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #eee; /* Light border around the image */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Optional subtle shadow */
+            width: 70%; 
+            min-width: 400px;
+            max-width: 600px;
+        }
+        /* --- OLD .pseudocode-box CSS removed, only keeping the above for image display --- */
         
     </style>
 </head>
@@ -246,7 +249,7 @@
             { id: 12, title: "FCS (Vol 5)", author: "L.R.Potti", description: "Fifth volume for the Full Course in Statistics.", authorBio: authorBio }
         ];
         
-        // 2. Tutorial data structure (Content updated for K-Means)
+        // 2. Tutorial data structure (K-Means content updated with image)
         const tutorials = [
             { 
                 title: "Machine Learning", 
@@ -255,18 +258,11 @@
                         title: "K-Means Clustering", 
                         content: `
                             <h2 id="section-intro" style="font-size: 1.5em; margin-bottom: 10px;">Introduction to K-Means</h2>
-                            <p>K-Means is an **unsupervised learning algorithm** used for grouping data points into distinct clusters. It is an ideal first step for initial data segmentation and exploration.</p>
+                            <p>K-Means is an **unsupervised learning algorithm** used for grouping data points into distinct clusters. It is an ideal first step for initial data segmentation and exploration. The process begins with initialization and iteratively refines cluster centers until convergence.</p>
                             
-                            <h2 id="section-pseudo" style="font-size: 1.5em; margin-bottom: 10px;">K-Means Algorithm Pseudocode</h2>
-                            <div class="pseudocode-box">
-<div style="text-align: center; font-weight: bold;">Algorithm: K-Means Clustering</div>
-<hr style="border: 0; border-top: 1px solid #ccc; margin: 5px 0;">
-PROCEDURE K-Means(Data **D**, Number of Clusters **K**):
-1. Initialize **K** random centroids (μ₁...μₖ) from the data D.
-2. REPEAT until convergence (centroids no longer move):
-3.   **Assignment Step**: Assign each point $xᵢ \\in D$ to the nearest centroid $μ_j$.
-4.   **Update Step**: Recalculate each centroid $μ_j$ as the mean of all points assigned to that cluster.
-5. RETURN the K clusters and final centroids.
+                            <h2 id="section-pseudo" style="font-size: 1.5em; margin-bottom: 10px;">Algorithm Flowchart</h2>
+                            <div class="flowchart-container">
+                                <img src="KmeansAlgorithmFlowchart.jpg" alt="K-Means Algorithm Flowchart" style="width: 70%; min-width: 400px; max-width: 600px;"/>
                             </div>
                             
                             <h2 id="section-challenge" style="font-size: 1.5em; margin-bottom: 10px;">Key Challenge</h2>
@@ -300,8 +296,8 @@ PROCEDURE K-Means(Data **D**, Number of Clusters **K**):
                 ]
             },
             { 
-                title: "Python", 
-                content: "Master Python libraries crucial for data science, including Pandas for data manipulation, NumPy for numerical operations, and Matplotlib for visualization. This is a standalone topic without sub-topics."
+                content: "Master Python libraries crucial for data science, including Pandas for data manipulation, NumPy for numerical operations, and Matplotlib for visualization. This is a standalone topic without sub-topics.",
+                title: "Python"
             }
         ];
 
