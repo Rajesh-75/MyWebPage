@@ -174,7 +174,7 @@
             line-height: 1.6;
         }
         
-        /* --- NEW CSS for Flowchart Image --- */
+        /* --- CSS for Flowchart Image --- */
         .flowchart-container {
             padding: 20px 0;
             text-align: center; /* Center the image */
@@ -188,7 +188,6 @@
             min-width: 400px;
             max-width: 600px;
         }
-        /* --- OLD .pseudocode-box CSS removed, only keeping the above for image display --- */
         
     </style>
 </head>
@@ -262,11 +261,54 @@
                             
                             <h2 id="section-pseudo" style="font-size: 1.5em; margin-bottom: 10px;">Algorithm Flowchart</h2>
                             <div class="flowchart-container">
-                                <img src="KmeansAlgorithmFlowchart.jpg" alt="K-Means Algorithm Flowchart" style="width: 70%; min-width: 400px; max-width: 600px;"/>
+                                <img src="KmeansAlgorithmFlowchart.jpg" alt="K-Means Algorithm Flowchart"/>
                             </div>
                             
                             <h2 id="section-challenge" style="font-size: 1.5em; margin-bottom: 10px;">Key Challenge</h2>
                             <p>**Key Challenge**: The number of clusters, $K$, must be specified beforehand. Methods like the Elbow method or Silhouette analysis are used to estimate the optimal $K$.</p>
+                        ` 
+                    },
+                    { 
+                        title: "Decision Tree", 
+                        content: `
+                            <h2 style="font-size: 1.5em; margin-bottom: 10px;">Decision Tree Overview</h2>
+                            <p>A **Decision Tree** is a supervised learning algorithm used for both classification and regression. It works by recursively splitting the dataset based on the feature that results in the best split (e.g., maximizing information gain or minimizing Gini impurity).</p>
+                            
+                            <h2 style="font-size: 1.5em; margin-bottom: 10px;">Training Algorithm Flowchart</h2>
+                            <div class="flowchart-container">
+                                <img src="DecisionTree.jpg" alt="Decision Tree Training Algorithm Flowchart"/>
+                            </div>
+                            
+                            <h2 style="font-size: 1.5em; margin-bottom: 10px;">Structure</h2>
+                            <p>The tree structure consists of **Root Nodes** (the starting point), **Internal Nodes** (decision points based on features), and **Leaf Nodes** (the final outcomes or predictions).</p>
+                        ` 
+                    },
+					{ 
+                        title: "SVM", 
+                        content: `
+                            <h2 style="font-size: 1.5em; margin-bottom: 10px;">SVM Overview</h2>
+                            <p>The goal of the learning algorithm SVM is to leverage the dataset and find
+								the optimal values wú and bú for parameters w and b. Once the learning algorithm identifies
+								these optimal values, the model f(x) is then defined as:</p>
+                          <h2 style="font-size: 1.5em; margin-bottom: 10px;">Linear vs. Non-Linear SVM: The Kernel Trick</h2>
+                            <p>0Support Vector Machines is based on Decision boundaries Linear boundary and non linear boudnay  The core difference between the linear and non-linear cases in SVM is the use of the <strong>Kernel Trick</strong>.</p>
+                            <p>Here are the algorithm steps for both cases and how data is conceptually transformed in the non-linear case.</p>
+
+                            <h3 style="font-size: 1.3em; margin-top: 20px;">1. Linear SVM Algorithm Steps</h3>
+                            <p>The linear case assumes the data is linearly separable or nearly so. The goal is to find the hyperplane that maximizes the margin between the two classes.</p>
+							<p>Here are the algorithm steps for both cases and how data is conceptually transformed in the non-linear case.</p>
+
+                            <h3 style="font-size: 1.3em; margin-top: 20px;">1. Linear SVM Algorithm Steps</h3>
+                            <p>The linear case assumes the data is linearly separable or nearly so. The goal is to find the hyperplane that maximizes the margin between the two classes.</p>
+                            
+                            <h4>Step-by-Step Algorithm:</h4>
+                            <ol> <li><strong>Define the Goal:</strong> Find the optimal hyperplane $\mathbf{w} \cdot \mathbf{x} + b = 0$ that separates the two classes ($y_i = +1$ and $y_i = -1$) while maximizing the margin (the distance between the hyperplane and the closest training points, called <strong>Support Vectors</strong>).</li>
+                                <li><strong>Formulate the Optimization Problem:</strong> This is typically formulated as a convex optimization (quadratic programming) problem:
+                                    <ul>
+                                        <li>Minimize: &frac12; ||&mathbf;w||&sup2; (This maximizes the margin, which is proportional to 1/||&mathbf;w||).</li>
+                                        <li>Subject to: The constraint that all data points are correctly classified with a margin of at least 1: $y_i(\mathbf{w} \cdot \mathbf{x}_i + b) \ge 1$, for all training points $(\mathbf{x}_i, y_i)$.</li>
+                                    </ul>
+                                </li> </o1>
                         ` 
                     },
                     { 
