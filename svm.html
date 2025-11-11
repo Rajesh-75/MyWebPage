@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Vector Machine (SVM)</title>
+    
+    <script type="text/javascript" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            color: #333;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 0;
+            box-shadow: none;
+            border-radius: 0;
+        }
+        h1 {
+            color: #007bff;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            font-size: 2em; 
+        }
+        h2 {
+            color: #343a40;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 5px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        h3 {
+            color: #495057;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        ol {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: 600;
+        }
+        code {
+            background-color: #e2f0ff;
+            color: #007bff;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+        }
+        .formula {
+            background-color: #f7f7f7; /* Changed color for differentiation */
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.1em;
+            overflow-x: auto;
+        }
+        .note {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Support Vector Machine (SVM)</h1>
+
+    <h2>🚀 1. Linear SVM Training (Hard Margin and Soft Margin)</h2>
+    <p>The goal is to find the optimal hyperplane that maximizes the margin between the two classes.</p>
+
+    <h3>Step-by-Step Process:</h3>
+    <ol>
+        <li><strong>Load Data:</strong> Load the training data, consisting of feature vectors $(\mathbf{x}_i)$ and their corresponding class labels $(y_i \in \{-1, 1\})$.</li>
+        <li><strong>Define the Optimization Problem (The Objective):</strong>
+            <ul>
+                <li><strong>Hard Margin:</strong> Maximize the margin, which is equivalent to minimizing $||\mathbf{w}||^2$ (the squared norm of the weight vector $\mathbf{w}$), subject to the constraint that all points are correctly classified with a margin of at least 1: $y_i(\mathbf{w} \cdot \mathbf{x}_i + b) \ge 1$.</li>
+                <li><strong>Soft Margin:</strong> Minimize $||\mathbf{w}||^2$ plus a penalty term for misclassification. This introduces the slack variables ($\xi_i$) and the regularization hyperparameter ($C$):
+                    <div class="formula">
+                        $$\text{Minimize: } \frac{1}{2}||\mathbf{w}||^2 + C \sum_{i=1}^{N} \xi_i$$
+                        $$\text{Subject to: } y_i(\mathbf{w} \cdot \mathbf{x}_i + b) \ge 1 - \xi_i \quad \text{and} \quad \xi_i \ge 0$$
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li><strong>Choose Hyperparameters ($C$):</strong> Select the regularization parameter $C$ (for the Soft Margin case). A smaller $C$ allows for a wider margin and more misclassifications; a larger $C$ enforces a narrower margin and fewer misclassifications.</li>
+        <li><strong>Solve the Dual Problem:</strong> Convert the primal optimization problem into its dual form using the Lagrange Multipliers ($\alpha_i$). This dual problem is a easier-to-solve Quadratic Programming (QP) problem.</li>
+        <li><strong>Identify Support Vectors:</strong> After solving the QP problem, the data points corresponding to non-zero Lagrange multipliers ($\alpha_i > 0$) are identified as the **Support Vectors (SVs)**. These are the critical points that define the margin/hyperplane.</li>
+        <li><strong>Calculate Parameters:</strong> Use the determined $\alpha_i$ values and the Support Vectors to calculate the optimal weight vector $\mathbf{w}$ and the bias term $b$.</li>
+        <li><strong>Return:</strong> The final parameters $(\mathbf{w}, b)$ that define the optimal linear hyperplane.</li>
+    </ol>
+
+    <h2>🚀 2. Non-Linear SVM Training (Kernel Trick)</h2>
+    <p>The goal is to implicitly map the data into a higher-dimensional feature space where it is linearly separable, without explicitly calculating the coordinates in that space.</p>
+
+    <h3>Step-by-Step Process:</h3>
+    <ol>
+        <li><strong>Initial Steps (Same as Linear):</strong> Load the data and define the optimization problem, including the Soft Margin hyperparameters $C$ and slack variables $\xi_i$.</li>
+        <li><strong>Choose the Kernel Function ($K$):</strong> Select a suitable Kernel Function, $K(\mathbf{x}_i, \mathbf{x}_j)$, which calculates the dot product in the higher-dimensional feature space, $\phi(\mathbf{x}_i) \cdot \phi(\mathbf{x}_j)$, implicitly. Common kernels include:
+            <ul>
+                <li>RBF (Radial Basis Function) / Gaussian Kernel</li>
+                <li>Polynomial Kernel</li>
+                <li>Sigmoid Kernel</li>
+            </ul>
+        </li>
+        <li><strong>Define Hyperparameters (Kernel-Specific):</strong>
+            <ul>
+                <li>For the RBF Kernel, choose the gamma ($\gamma$) parameter, which defines the influence of a single training example.</li>
+                <li>Choose the regularization parameter $C$ (same as the linear case).</li>
+            </ul>
+        </li>
+        <li><strong>Solve the Kernelized Dual Problem:</strong> Solve the same Quadratic Programming (QP) dual problem as the linear case, but replace every dot product $\mathbf{x}_i \cdot \mathbf{x}_j$ with the chosen **Kernel function** $K(\mathbf{x}_i, \mathbf{x}_j)$. This is the **Kernel Trick**.</li>
+        <li><strong>Identify Support Vectors:</strong> Identify the Support Vectors ($\alpha_i > 0$). These points are now critical in the kernel feature space.</li>
+        <li><strong>Calculate Bias ($b$):</strong> Calculate the bias term $b$ using the SVs and the kernel function. The weight vector $\mathbf{w}$ in the high-dimensional space is typically not explicitly calculated.</li>
+        <li><strong>Return:</strong> The Lagrange Multipliers ($\alpha_i$), the bias term ($b$), the Support Vectors (SVs), and the chosen Kernel function.</li>
+    </ol>
+
+    <h2>Classification (Decision Function) in Both Cases</h2>
+    <p>Once the model is trained, the class of a new data point $\mathbf{x}_{\text{new}}$ is predicted using the Decision Function (which is simply the sign of the output):</p>
+
+    <h3>Linear Case:</h3>
+    <div class="formula">
+        $$\text{sign}(\mathbf{w} \cdot \mathbf{x}_{\text{new}} + b)$$
+    </div>
+
+    <h3>Non-Linear Case (Kernelized):</h3>
+    <div class="formula">
+        $$\text{sign}\left(\sum_{i \in \text{SV}} \alpha_i y_i K(\mathbf{x}_i, \mathbf{x}_{\text{new}}) + b\right)$$
+    </div>
+
+    <hr>
+    <h2>🔬 SVM Optimization Comparison</h2>
+    <p>A comparison of the underlying structure, objective, and solution method for Linear and Non-Linear SVMs.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Feature</th>
+                <th>Linear SVM</th>
+                <th>Non-Linear SVM (Kernel SVM)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Model/Goal</strong></td>
+                <td>Find a single, <strong>straight hyperplane</strong> in the input space.</td>
+                <td>Find a <strong>linear hyperplane</strong> in the high-dimensional feature space ($\mathcal{F}$).</td>
+            </tr>
+            <tr>
+                <td><strong>Primal Cost (Objective)</strong></td>
+                <td>Minimize the weight vector norm ($\mathbf{w}$) to maximize the margin, subject to soft margin penalty $C$.</td>
+                <td>Conceptually the same (Minimize $\frac{1}{2} ||\mathbf{w}||^2 + C \sum \xi_i$), but applied to the mapped feature space $\mathcal{F}$.</td>
+            </tr>
+            <tr>
+                <td><strong>Optimization Method Solved</strong></td>
+                <td>Solved using the Dual Formulation, seeking the optimal Lagrange Multipliers ($\alpha_i$).</td>
+                <td>Solved using the <strong>Dual Formulation</strong>, incorporating the <strong>Kernel Function</strong> $K(\mathbf{x}_i, \mathbf{x}_j)$ instead of the simple dot product.</td>
+            </tr>
+            <tr>
+                <td><strong>Prediction Mode</strong></td>
+                <td>$f(\mathbf{x}) = \text{sign}(\mathbf{w} \cdot \mathbf{x} + b)$</td>
+                <td>$f(\mathbf{x}) = \text{sign}(\sum_{i \in \text{SV}} \alpha_i y_i K(\mathbf{x}_i, \mathbf{x}) + b)$</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="note">
+        <p><strong>Note on $\frac{1}{2} ||\mathbf{w}||^2$:</strong> Minimizing this term is mathematically equivalent to <strong>maximizing the margin width</strong>, which is $\frac{2}{||\mathbf{w}||}$.</p>
+    </div>
+</div>
+
+</body>
+</html>
