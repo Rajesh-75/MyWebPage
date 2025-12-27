@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arithmetic Mean - Statistical Analysis</title>
+    <title>Statistical Analysis - Mean & Median</title>
     
     <script type="text/javascript" async
         src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
@@ -26,6 +26,7 @@
             max-width: 900px;
             margin: auto;
             background-color: #f9f9f9;
+			font-size: 14px;
         }
         .header-section {
             border-bottom: 3px solid #2c3e50;
@@ -37,10 +38,10 @@
         
         .description-box {
             background: #fff;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 10px;
+            border-radius: 1px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
         
         .formula-container {
@@ -78,7 +79,7 @@
             border: 1px solid #ddd;
             padding: 10px;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
         .data-table th {
             background-color: #f4f4f4;
@@ -87,27 +88,32 @@
         .highlight-row {
             background-color: #e8f4fd !important;
         }
+        .median-section {
+            border-top: 4px double #2c3e50;
+            margin-top: 50px;
+            padding-top: 20px;
+        }
     </style>
 </head>
 <body>
 
     <div class="header-section">
-        <h1>Average (Arithmetic Mean)</h1>
-        <p><em>Measures of Central Tendency Series</em></p>
+        <h1>Measures of Central Tendency Series</h1>
+        <h2>Average (Arithmetic Mean)</h2>
     </div>
 
     <div class="description-box">
         <p>An average (Mean) is a simple figure which sums up the characteristics of a whole group of figures. An average is more or less a central value around which various values cluster.</p>
     </div>
 
-    <h2>Mathematical Definition</h2>
+    <h3>Mathematical Definition</h3>
     <p>The Arithmetic Mean is the sum of all observations divided by the total number of observations.</p>
     
     <div class="formula-container">
         $$ \text{Mean } (\bar{X}) = \frac{x_1 + x_2 + \dots + x_n}{n} = \frac{\sum x}{n} $$
     </div>
 
-    <h2>Computation by Data Type</h2>
+    <h3>Computation by Data Type</h3>
 
     <div class="data-type-card">
         <span class="tag">Series 1</span>
@@ -213,7 +219,7 @@
     </div>
 	<div class="median-section">
         <div class="header-section">
-            <h1>Median</h1>
+            <h2>Median</h2>
         </div>
 
         <div class="description-box">
@@ -259,6 +265,169 @@
             </ul>
         </div>
     </div>
+	<div class="mode-section">
+        <div class="header-section">
+            <h2>Mode</h2>
+        </div>
 
+        <div class="description-box">
+            <p><strong>Mode</strong> is the value of that item that occurs the greatest number of times in a distribution.</p>
+            <p><em>Example:</em> In the series $23, 35, 42, 62, 53, 35, 28, 42, 35, 23, 42, 35$, the value $35$ appears most frequently. Therefore, the <strong>Mode is 35</strong>.</p>
+        </div>
+
+        <div class="data-type-card">
+            <span class="tag">Empirical Relationship</span>
+            <h3>Asymmetrical Distributions</h3>
+            <p>When no item appears more times than any other, the mode is "ill-defined." In such asymmetrical distributions, the mode is calculated using the empirical formula:</p>
+            <div class="formula-container">
+                $$ \text{Mode} = 3 \times \text{Median} - 2 \times \text{Mean} $$
+            </div>
+        </div>
+
+        <div class="data-type-card">
+            <span class="tag">Continuous Case</span>
+            <h3>Continuous Distributions</h3>
+            <p>For grouped data, the mode is located within the modal class (the class with the highest frequency) and calculated as:</p>
+            
+            
+            
+            <div class="formula-container">
+                $$ \text{Mode} = L_1 + \frac{(f_1 - f_0) \times c}{(2f_1 - f_0 - f_2)} $$
+            </div>
+
+            <p><strong>Where:</strong></p>
+            <ul>
+                <li><strong>$L_1$:</strong> Lower limit of the modal class.</li>
+                <li><strong>$f_1$:</strong> Frequency of the modal class.</li>
+                <li><strong>$f_0$:</strong> Frequency of the class just preceding the modal class.</li>
+                <li><strong>$f_2$:</strong> Frequency of the class just succeeding the modal class.</li>
+                <li><strong>$c$:</strong> Class interval width.</li>
+            </ul>
+        </div>
+		<div class="sd-section">
+        <div class="header-section">
+            <h2>Standard Deviation</h2>
+        </div>
+
+        <div class="description-box">
+            <p>Standard Deviation ($\sigma$) is defined as the square root of the mean of the squares of deviations taken from the Arithmetic Mean. It is the most widely used measure of dispersion.</p>
+			<p>The relationship between Variance and Standard Deviation is simple:</p>
+        <div style="text-align: center; font-size: 1.2rem; margin: 10px 0;">
+            $$ \text{Variance} = \sigma^2 $$
+            $$ \text{Standard Deviation} = \sqrt{\text{Variance}} $$
+        </div>
+        <div class="data-type-card">
+            <span class="tag">Individual Observations</span>
+            <h3>Mathematical Formula</h3>
+            <p>For a population, the Standard Deviation is calculated as:</p>
+            <div class="formula-container">
+                $$ \sigma = \sqrt{\frac{\sum (x - \bar{X})^2}{N}} $$
+            </div>
+            <p>Where:</p>
+            <ul>
+                <li>$\sigma$: Standard Deviation</li>
+                <li>$\sum$: Summation</li>
+                <li>$x$: Individual values</li>
+                <li>$\bar{X}$: Arithmetic Mean</li>
+                <li>$N$: Total number of observations</li>
+            </ul>
+        </div>
+
+        <div class="data-type-card">
+            <span class="tag">Short-cut Method</span>
+            <h3>Calculation using Assumed Mean (A)</h3>
+            <div class="formula-container">
+                $$ \sigma = \sqrt{\frac{\sum fd^2}{N} - \left( \frac{\sum fd}{N} \right)^2} $$
+            </div>
+        </div>
+		<div class="data-type-card" style="border-left: 5px solid #e74c3c;">
+    <span class="tag">Interpretation</span>
+    <h3>Why the Mean needs the Standard Deviation</h3>
+    <p>The Mean gives us the <strong>location</strong> of the data, but the Standard Deviation (SD) gives us the <strong>context</strong>. One without the other can be misleading.</p>
+
+    <div class="description-box" style="background-color: #fdf2f2;">
+        <ul>
+            <li><strong>Low SD:</strong> The data points are close to the Mean. The average is a <strong>reliable</strong> representative of the group.</li>
+            <li><strong>High SD:</strong> The data points are spread out far from the Mean. This suggests that the average may <strong>not</strong> be a good representation because of high volatility or outliers.</li>
+        </ul>
+    </div>
+
+    
+
+    <h4>The "Consistency" Rule:</h4>
+    <p>A "High SD" tells us that the "Average" is not a typical experience for most members of the group. For example:</p>
+    <table class="data-table" style="max-width: 600px; margin: 10px auto;">
+        <thead>
+            <tr>
+                <th>Scenario</th>
+                <th>Mean Salary</th>
+                <th>SD</th>
+                <th>Conclusion</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Company A</td>
+                <td>Rs5000,000</td>
+                <td>Rs2,000</td>
+                <td><strong>Consistent:</strong> Most people earn very close to Rs5000000.</td>
+            </tr>
+            <tr>
+                <td>Company B</td>
+                <td>Rs500,000</td>
+                <td>Rs25,0000</td>
+                <td><strong>Inconsistent:</strong> There are likely very high and very low earners.</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="data-type-card" style="border-left: 5px solid #e74c3c;">
+        <span class="tag">Analysis</span>
+        <h3>The Relationship: Mean vs. Standard Deviation</h3>
+        <p>The Mean gives the "center," but the Standard Deviation (SD) tells us if that center is <strong>reliable</strong>. As a rule of thumb: <strong>High SD means the average is not a good representative of the data.</strong></p>
+        
+        <div class="description-box" style="background-color: #fff5f5; border: 1px solid #feb2b2;">
+            <p>If the SD is high, the data is scattered; the "Average" might be skewed by extreme values (outliers) and does not reflect the typical experience of the group.</p>
+        </div>
+
+        
+
+        <span class="tag">Comparison Tool</span>
+        <h3>Coefficient of Variation (CV)</h3>
+        <p>To mathematically measure the consistency of the Mean, we use the <strong>Coefficient of Variation</strong>. It expresses the SD as a percentage of the Mean:</p>
+        
+        <div class="formula-container">
+            $$ CV = \left( \frac{\sigma}{\bar{X}} \right) \times 100 $$
+        </div>
+
+        <p><strong>Interpretation of CV:</strong></p>
+        <ul>
+            <li><strong>Lower CV:</strong> The data is more <strong>consistent</strong> and stable. The Mean is highly reliable.</li>
+            <li><strong>Higher CV:</strong> The data is more <strong>variable</strong> (less consistent). The Mean should be used with caution.</li>
+        </ul>
+
+        <table class="data-table" style="max-width: 600px; margin: 10px auto;">
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Low CV Case</th>
+                    <th>High CV Case</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Stability</strong></td>
+                    <td>High Stability</td>
+                    <td>Low Stability</td>
+                </tr>
+                <tr>
+                    <td><strong>Uniformity</strong></td>
+                    <td>More Uniform</td>
+                    <td>Less Uniform</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
 </body>
 </html>
