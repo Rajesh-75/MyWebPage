@@ -429,5 +429,75 @@
         </table>
     </div>
     </div>
+	<div class="median-section"> <div class="header-section">
+            <h1>Measures of Skewness and Kurtosis</h1>
+        </div>
+
+        <div class="description-box">
+            <p>In statistics, measures of skewness and kurtosis are used to describe the shape of a probability distribution, which is simply a graph showing how often different values in a dataset occur. The most common reference point for these measures is the normal distribution, often called the "bell curve," where most data points cluster symmetrically in the middle and taper off equally at both ends. Skewness quantifies how much a distribution deviates from this symmetry; a positive skew indicates a "tail" stretching toward higher values on the right, while a negative skew indicates a tail extending toward lower values on the left. Kurtosis measures the "tailedness" of the distribution, or how the data behaves at the extreme ends compared to the bell curve. A high kurtosis (leptokurtic) signifies a sharp peak and heavy tails, suggesting more frequent outliers, whereas a low kurtosis (platykurtic) indicates a flatter top and thinner tails. Together, these tools help researchers identify how much their data "leans" or "bulges" compared to a standard normal model.While Mean and SD tell us about the center and spread, <strong>Skewness</strong> and <strong>Kurtosis</strong> describe the <strong>Shape</strong> of the distribution.</p>
+        </div>
+
+        <div class="data-type-card">
+            <span class="tag">Shape: Symmetry</span>
+            <h3>1. Measures of Skewness</h3>
+            <p>Skewness refers to the lack of symmetry in a distribution. A "Skewed" distribution is one that is not symmetrical and stretches out more on one side than the other.</p>
+            
+            
+
+            <div class="description-box" style="background-color: #f0f4f8;">
+                <ul>
+                    <li><strong>Symmetrical:</strong> Mean = Median = Mode.</li>
+                    <li><strong>Positive Skew (Right-skewed):</strong> The tail on the right side is longer. (Mean > Median > Mode).</li>
+                    <li><strong>Negative Skew (Left-skewed):</strong> The tail on the left side is longer. (Mean < Median < Mode).</li>
+                </ul>
+            </div>
+
+            <h4>Karl Pearson's Coefficient of Skewness ($S_k$):</h4>
+            <div class="formula-container">
+                $$ S_k = \frac{\text{Mean} - \text{Mode}}{\sigma} \quad \text{or} \quad S_k = \frac{3(\text{Mean} - \text{Median})}{\sigma} $$
+            </div>
+        </div>
+
+        <div class="data-type-card">
+            <span class="tag">Shape: Peakedness</span>
+            <h3>2. Measures of Kurtosis</h3>
+            <p>Kurtosis measures the "peakedness" or "flatness" of a distribution relative to a normal distribution. It tells us about the thickness of the tails.</p>
+
+            
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Condition ($\beta_2$)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Leptokurtic</strong></td>
+                        <td>Sharply peaked with heavy tails.</td>
+                        <td>$\beta_2 > 3$</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mesokurtic</strong></td>
+                        <td>Normal Distribution.</td>
+                        <td>$\beta_2 = 3$</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Platykurtic</strong></td>
+                        <td>Flat-topped with thin tails.</td>
+                        <td>$\beta_2 < 3$</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Formula for Kurtosis ($\beta_2$):</h4>
+            <p>Calculated using the fourth moment ($\mu_4$) and second moment ($\mu_2$):</p>
+            <div class="formula-container">
+                $$ \beta_2 = \frac{\mu_4}{\mu_2^2} $$
+            </div>
+        </div>
+    </div>
 </body>
 </html>

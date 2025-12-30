@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probability Distributions in ML & DL</title>
+    
+    <script type="text/javascript" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            padding: 40px;
+            color: #333;
+            max-width: 900px;
+            margin: auto;
+            background-color: #f4f7f6;
+            font-size: 14px;
+        }
+        .header-section {
+            border-bottom: 3px solid #2c3e50;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+        h1 { color: #2c3e50; margin-bottom: 5px; }
+        h2 { color: #2980b9; margin-top: 30px; border-left: 5px solid #2980b9; padding-left: 15px; }
+        h3 { color: #16a085; margin-top: 20px; }
+        
+        .description-box {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .formula-container {
+            background: #eef2f7;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+        
+        .data-type-card {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .tag {
+            display: inline-block;
+            background: #34495e;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .data-table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+        .highlight-blue { border-left: 5px solid #3498db; }
+        .highlight-green { border-left: 5px solid #2ecc71; }
+    </style>
+</head>
+<body>
+
+    <div class="header-section">
+        <h1>Probablitiy theory and applications </h1>
+    </div>
+
+    <div class="description-box">
+        <p>he theory of probability originated in games of chance related to gambling, such as throwing dice, tossing a coin, or picking cards from a deck. Today, probability is a foundational tool in domains such as AI, Machine Learning (ML), and Deep Learning (DL).</p>
+
+<p>The probability of a given event expresses the likelihood of that event occurring. It is a value ranging from 0 to 1. A probability of 0 represents an impossible event, while 1 represents a certain event. While absolute certainty (0 or 1) is rarely assigned to complex real-world predictions, these values define the boundaries of the scale. Any value in between represents a degree of uncertainty</p>
+    </div>
+
+    <h2>1. Fundamental Probability Laws</h2>
+    
+    <div class="data-type-card highlight-blue">
+        <h3>A. The Axioms of Probability</h3>
+        <p>For any event $A$ in sample space $S$:</p>
+        <ul>
+            <li><strong>Non-negativity:</strong> $P(A) \ge 0$</li>
+            <li><strong>Normalization:</strong> $P(S) = 1$</li>
+            <li><strong>Additivity:</strong> For mutually exclusive events, $P(A \cup B) = P(A) + P(B)$</li>
+        </ul>
+
+        <h3>B. The Complement Rule</h3>
+        <p>Essential for binary classification (e.g., Churn vs. No Churn):</p>
+        <div class="formula-container">
+            $$ P(A^c) = 1 - P(A) $$
+        </div>
+
+        <h3>C. The Addition Rule (General)</h3>
+        <div class="formula-container">
+            $$ P(A \cup B) = P(A) + P(B) - P(A \cap B) $$
+        </div>
+
+        <h3>D. Conditional Probability and Independence</h3>
+        <p><strong>Conditional Probability:</strong> $P(A|B) = \frac{P(A \cap B)}{P(B)}$</p>
+        <p><strong>Independence:</strong> Two events are independent if $P(A \cap B) = P(A) \cdot P(B)$</p>
+    </div>
+
+  
+</body>
+</html>			
