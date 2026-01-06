@@ -86,6 +86,46 @@
         }
         .highlight-blue { border-left: 5px solid #3498db; }
         .highlight-green { border-left: 5px solid #2ecc71; }
+		.example-problem {
+        background-color: #ffffff;
+        border: 2px solid #2980b9;
+        border-radius: 8px;
+        margin: 25px 0;
+        overflow: hidden;
+    }
+    
+    .problem-header {
+        background-color: #2980b9;
+        color: white;
+        padding: 10px 15px;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+    }
+    
+    .problem-content {
+        padding: 15px;
+        font-style: italic;
+        color: #2c3e50;
+        border-bottom: 1px dashed #ddd;
+    }
+    
+    .solution-content {
+        padding: 15px;
+        background-color: #fdfdfd;
+    }
+    
+    .solution-step {
+        margin-bottom: 10px;
+        padding-left: 10px;
+        border-left: 3px solid #bdc3c7;
+    }
+
+    .math-highlight {
+        color: #c0392b;
+        font-weight: bold;
+    }
     </style>
 </head>
 <body>
@@ -95,12 +135,166 @@
     </div>
 
     <div class="description-box">
-        <p>he theory of probability originated in games of chance related to gambling, such as throwing dice, tossing a coin, or picking cards from a deck. Today, probability is a foundational tool in domains such as AI, Machine Learning (ML), and Deep Learning (DL).</p>
+        <p>The theory of probability originated in games of chance related to gambling, such as throwing dice, tossing a coin, or picking cards from a deck. Today, probability is a foundational tool in domains such as <strong>AI, Machine Learning (ML), and Deep Learning (DL)</strong>.</p>
 
 <p>The probability of a given event expresses the likelihood of that event occurring. It is a value ranging from 0 to 1. A probability of 0 represents an impossible event, while 1 represents a certain event. While absolute certainty (0 or 1) is rarely assigned to complex real-world predictions, these values define the boundaries of the scale. Any value in between represents a degree of uncertainty</p>
+<div class="schools-container">
+    <p>There are four important <strong>Schools of Thought</strong> on the concept of probability:</p>
+    
+    <ul class="schools-list">
+        <li>
+            <span class="school-name">1. Classical Probability</span> 
+            <span class="school-subtext">(A Priori Approach)</span>
+        </li>
+        <li>
+            <span class="school-name">2. Statistical Probability</span> 
+            <span class="school-subtext">(Relative Frequency Theory / Empirical / A Posteriori)</span>
+        </li>
+        <li>
+            <span class="school-name">3. Personalistic or Subjective Probability</span> 
+            <span class="school-subtext">(Bayessian Theorem)</span>
+        </li>
+        <li>
+            <span class="school-name">4. Axiomatic Approach to Probability</span> 
+            <span class="school-subtext">(Modern Mathematical Foundation)</span>
+        </li>
+    </ul>
+</div>
+<p>Probability is defined as the ratio of the number of favouring cases to the total number of equally likely cases i.e. probability of the occurrence of event A is expressed as:
+    $$P(A) = \frac{\text{Number of Favourable Cases}}{\text{Total Number of Possible Cases}}$$
+</p>
+<h3>Some Sample problems using idea of Relative Frequency Approach</h3>
+<P>Three unbaied coins are tossed. What is the probability of obtaining (1) All heads (2)two heads (3) one head (4) at least one head (5) atleast two heads (6) all tails.</p> 
+
+<p> Eg. A bag contains <strong>5 white and 6 black balls</strong>. Then the <strong>probability for drawing a white ball is</strong> $\frac{5}{11} $ since favourable number of balls are white and they are 6 the total no of balls is 11 </p>
+    </div>
+	<h2>1. Relative Frequency Theory of Probability</h2>
+<p>
+    Let us consider a random experiment and let 'A' be an event. 
+    Suppose the random experiment is repeated $n$ times. 
+    Let the event 'A' occur in $f$ out of these repetitions and fail to occur in $n - f$ repetitions. 
+    The ratio $\frac{f}{n}$ is called the relative frequency ratio of the event A. 
+    As the number of repetitions increases ($n \to \infty$), the ratio $\frac{f}{n}$ tends to a specific constant value. 
+    This limiting value is defined as the probability of the event A.
+    <br><br>
+    Therefore, <strong> $P(A) = \lim_{n \to \infty} \frac{f}{n}$ </strong>
+	<div class="example-problem">
+    <div class="problem-header">Sample Problem: Relative Frequency Approach</div>
+    
+    <div class="problem-content">
+        Three unbiased coins are tossed. What is the probability of obtaining:
+        <br>(1) All heads, (2) Two heads, (3) One head, (4) At least one head, (5) At least two heads, (6) All tails.
     </div>
 
-    <h2>1. Fundamental Probability Laws</h2>
+    <div class="solution-content">
+        <h3>Solution:</h3>
+        
+        <div class="solution-step">
+            <strong>Step 1: Define the Sample Space ($S$)</strong>
+            <p>Total possible outcomes ($2^3$): <br>
+            $S = \{HHH, HHT, HTH, THH, HTT, THT, TTH, TTT\}$ 
+            <br>Total Number of Cases ($N$) = 8</p>
+        </div>
+
+        <div class="solution-step">
+            <strong>Step 2: Calculate Probabilities</strong>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Favourable Cases</th>
+                        <th>Count ($f$)</th>
+                        <th>$P(A) = f/N$</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>(1) All Heads</td><td>{HHH}</td><td>1</td><td>$1/8$</td></tr>
+                    <tr><td>(2) Two Heads</td><td>{HHT, HTH, THH}</td><td>3</td><td>$3/8$</td></tr>
+                    <tr><td>(3) One Head</td><td>{HTT, THT, TTH}</td><td>3</td><td>$3/8$</td></tr>
+                    <tr><td>(4) At least 1 Head</td><td>All except {TTT}</td><td>7</td><td>$7/8$</td></tr>
+                    <tr><td>(5) At least 2 Heads</td><td>{HHH, HHT, HTH, THH}</td><td>4</td><td>$4/8 = 0.5$</td></tr>
+                    <tr><td>(6) All Tails</td><td>{TTT}</td><td>1</td><td>$1/8$</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+	<div class="example-problem">
+    <div class="problem-header">Sample Problem: Probability with Two Dice</div>
+    
+    <div class="problem-content">
+        Two unbiased dice are thrown. Find the probability that:
+        <br>(1) Both the dice show the same number, (2) One die shows five, (3) First die shows five, (4) The total of the numbers on the dice is Eight, (5) Total of the numbers on the dice is greater than 8.
+    </div>
+
+    <div class="solution-content">
+        <h3>Solution:</h3>
+        
+        <div class="solution-step">
+            <strong>Step 1: Define the Sample Space ($S$)</strong>
+            <p>When two dice are thrown, each has 6 faces. Total possible outcomes ($6 \times 6$):</p>
+            <div style="font-family: monospace; font-size: 0.8rem; background: #eee; padding: 10px; text-align: center;">
+                (1,1) (1,2) (1,3) (1,4) (1,5) (1,6)<br>
+                (2,1) (2,2) (2,3) (2,4) (2,5) (2,6)<br>
+                (3,1) (3,2) (3,3) (3,4) (3,5) (3,6)<br>
+                (4,1) (4,2) (4,3) (4,4) (4,5) (4,6)<br>
+                (5,1) (5,2) (5,3) (5,4) (5,5) (5,6)<br>
+                (6,1) (6,2) (6,3) (6,4) (6,5) (6,6)
+            </div>
+            <p>Total Number of Cases ($N$) = 36</p>
+        </div>
+
+        
+
+        <div class="solution-step">
+            <strong>Step 2: Calculate Probabilities</strong>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Favourable Cases</th>
+                        <th>Count ($f$)</th>
+                        <th>$P(A) = f/36$</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>(1) Same Number (Doublets)</td>
+                        <td>(1,1), (2,2), (3,3), (4,4), (5,5), (6,6)</td>
+                        <td>6</td>
+                        <td>$6/36 = 1/6$</td>
+                    </tr>
+                    <tr>
+                        <td>(2) One die shows five</td>
+                        <td>(1,5), (2,5), (3,5), (4,5), (6,5), (5,1), (5,2), (5,3), (5,4), (5,6)</td>
+                        <td>10</td>
+                        <td>$10/36 = 5/18$</td>
+                    </tr>
+                    <tr>
+                        <td>(3) First die shows five</td>
+                        <td>(5,1), (5,2), (5,3), (5,4), (5,5), (5,6)</td>
+                        <td>6</td>
+                        <td>$6/36 = 1/6$</td>
+                    </tr>
+                    <tr>
+                        <td>(4) Total is 8</td>
+                        <td>(2,6), (3,5), (4,4), (5,3), (6,2)</td>
+                        <td>5</td>
+                        <td>$5/36$</td>
+                    </tr>
+                    <tr>
+                        <td>(5) Total > 8</td>
+                        <td>(3,6), (4,5), (4,6), (5,4), (5,5), (5,6), (6,3), (6,4), (6,5), (6,6)</td>
+                        <td>10</td>
+                        <td>$10/36 = 5/18$</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</p>
+
+    <h2>2.Fundamental Probability Laws</h2>
     
     <div class="data-type-card highlight-blue">
         <h3>A. The Axioms of Probability</h3>
@@ -126,7 +320,7 @@
         <p><strong>Conditional Probability:</strong> $P(A|B) = \frac{P(A \cap B)}{P(B)}$</p>
         <p><strong>Independence:</strong> Two events are independent if $P(A \cap B) = P(A) \cdot P(B)$</p>
     </div>
-
-  
+	<h2>3.Personalistic or Subjective Probability(Bayessian Probability)</h2>
+	<div class container = "XXX"> <p> We shall discusss this school of thought as separate topic under Bayessian classification</p> </div>
 </body>
 </html>			
