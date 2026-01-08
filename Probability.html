@@ -386,17 +386,124 @@
         <div class="formula-container">
             $$ P(A^c) = 1 - P(A) $$
         </div>
+		<div class="example-problem">
+            <div class="problem-header">Problem: Complementary & Exhaustive Events</div>
+            <div class="problem-content">
+                There are three events A, B, C. One of which <strong>must</strong> happen and <strong>only one</strong> can happen. 
+                The odds are 7 to 3 against A, and 6 to 4 against B. Find the odds against C.
+            </div>
+            <div class="solution-content">
+                <div class="solution-step">
+                    <strong>1. Calculate P(A) and P(B):</strong>
+                    <p>Odds against A are 7 to 3 $\implies P(A) = \frac{3}{7+3} = \frac{3}{10}$</p>
+                    <p>Odds against B are 6 to 4 $\implies P(B) = \frac{4}{6+4} = \frac{4}{10}$</p>
+                </div>
+                <div class="solution-step">
+                    <strong>2. Apply Exhaustive Property:</strong>
+                    <p>Because A, B, and C are mutually exclusive and exhaustive: $P(A) + P(B) + P(C) = 1$.</p>
+                    <p>$$P(C) = 1 - (P(A) + P(B))$$</p>
+                    <p>$$P(C) = 1 - (\frac{3}{10} + \frac{4}{10}) = 1 - \frac{7}{10} = \frac{3}{10}$$</p>
+                </div>
+                <div class="solution-step">
+                    <strong>3. Find Odds Against C:</strong>
+                    <p>Since $P(C) = 3/10$, the probability of C not occurring is $P(C^c) = 7/10$.</p>
+                    <p><strong>Answer:</strong> The odds against C are <strong>7 to 3</strong>.</p>
+                </div>
+            </div>
+        </div>
 
         <h3>C. The Addition Rule (General)</h3>
         <div class="formula-container">
             $$ P(A \cup B) = P(A) + P(B) - P(A \cap B) $$
         </div>
-
+		<div class="example-problem">
+            <div class="problem-header">Example: General Addition Rule</div>
+            <div class="problem-content">
+                The probability that a contractor will get a plumbing contract is $2/3$ and the probability that he will not get an electric contract is $5/9$. If the probability of getting at least one contract is $4/5$, what is the probability that he will get both contracts?
+            </div>
+            <div class="solution-content">
+                <div class="solution-step">
+                    <strong>1. Identify the given probabilities:</strong>
+                    <ul>
+                        <li>$P(\text{Plumbing}) = P(A) = \frac{2}{3}$</li>
+                        <li>$P(\text{No Electric}) = P(B^c) = \frac{5}{9} \implies P(B) = 1 - \frac{5}{9} = \frac{4}{9}$</li>
+                        <li>$P(\text{At least one}) = P(A \cup B) = \frac{4}{5}$</li>
+                    </ul>
+                </div>
+                <div class="solution-step">
+                    <strong>2. Solve for "Both" ($P(A \cap B)$):</strong>
+                    <p>Using the Addition Rule formula: $P(A \cup B) = P(A) + P(B) - P(A \cap B)$</p>
+                    <p>Rearranging to find the intersection:</p>
+                    <p>$$P(A \cap B) = P(A) + P(B) - P(A \cup B)$$</p>
+                    <p>$$P(A \cap B) = \frac{2}{3} + \frac{4}{9} - \frac{4}{5}$$</p>
+                </div>
+                <div class="solution-step">
+                    <strong>3. Final Calculation (Common Denominator 45):</strong>
+                    <p>$$P(A \cap B) = \frac{30}{45} + \frac{20}{45} - \frac{36}{45} = \frac{14}{45}$$</p>
+                    <p><strong>Answer:</strong> The probability that he gets both contracts is <span class="math-highlight">14/45</span>.</p>
+                </div>
+            </div>
+        </div>
+		
         <h3>D. Conditional Probability and Independence</h3>
         <p><strong>Conditional Probability:</strong> $P(A|B) = \frac{P(A \cap B)}{P(B)}$</p>
         <p><strong>Independence:</strong> Two events are independent if $P(A \cap B) = P(A) \cdot P(B)$</p>
+		<div class="example-problem">
+            <div class="problem-header">Example: Successive Draws Without Replacement</div>
+            <div class="problem-content">
+                A bag contains 8 red and 5 white balls. Two successive draws of 3 balls are made <strong>without replacement</strong>. Find the probability that the first drawing will give 3 white balls and the second drawing will give 3 red balls.
+            </div>
+            <div class="solution-content">
+                <div class="solution-step">
+                    <strong>Step 1: Probability of First Draw (Event A - 3 White Balls)</strong>
+                    <p>Total balls = 13. We choose 3 out of 5 white balls:</p>
+                    <p>$$P(A) = \frac{\binom{5}{3}}{\binom{13}{3}} = \frac{10}{286} = \frac{5}{143}$$</p>
+                </div>
+                <div class="solution-step">
+                    <strong>Step 2: Probability of Second Draw (Event B|A - 3 Red Balls)</strong>
+                    <p>After the first draw, 10 balls remain (8 red, 2 white). We choose 3 red from 8:</p>
+                    <p>$$P(B|A) = \frac{\binom{8}{3}}{\binom{10}{3}} = \frac{56}{120} = \frac{7}{15}$$</p>
+                </div>
+                <div class="solution-step">
+                    <strong>Step 3: Joint Probability ($P(A \cap B)$)</strong>
+                    <p>Using the Multiplication Rule:</p>
+                    <p>$$P(A \cap B) = P(A) \times P(B|A) = \frac{5}{143} \times \frac{7}{15}$$</p>
+                    <p>$$P(A \cap B) = \frac{35}{2145} = \frac{7}{429}$$</p>
+                    <p><strong>Answer:</strong> The probability is <span class="math-highlight">7/429</span>.</p>
+                </div>
+            </div>
+        </div>
     </div>
+	<div class="data-type-card highlight-green">
+    <span class="tag">Real-World Perspective</span>
+    <h3>Where does $P(A)$ come from?</h3>
+    <p>In textbook problems, $P(A)$ is usually a given constant. However, in practice, we derive this value in two distinct ways:</p>
+    
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Approach</th>
+                <th>Definition</th>
+                <th>Typical Use Case</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Measured Frequency</strong> (Frequentist)</td>
+                <td>Calculated from historical data. $P(A) = \frac{\text{Wins}}{\text{Total Trials}}$.</td>
+                <td>Insurance premiums, factory defect rates, coin tosses.</td>
+            </tr>
+            <tr>
+                <td><strong>Degree of Belief</strong> (Bayesian)</td>
+                <td>A subjective estimate based on expertise, intuition, or partial evidence.</td>
+                <td>Business contract bidding, weather forecasting, medical diagnosis.</td>
+            </tr>
+        </tbody>
+    </table>
+    <p><em>Note:</em> Modern AI often combines both. A model starts with a <strong>Prior</strong> (belief) and updates it as it sees more <strong>Empirical Data</strong> (frequency).</p>
+</div>
 	<h2>3.Personalistic or Subjective Probability(Bayessian Probability)</h2>
 	<div class container = "XXX"> <p> We shall discusss this school of thought as separate topic under Bayessian classification</p> </div>
+	
 </body>
 </html>			
