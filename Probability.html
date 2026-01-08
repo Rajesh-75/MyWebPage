@@ -191,9 +191,9 @@
         
         <div class="solution-step">
             <strong>Step 1: Define the Sample Space ($S$)</strong>
-            <p>Total possible outcomes ($2^3$): <br>
-            $S = \{HHH, HHT, HTH, THH, HTT, THT, TTH, TTT\}$ 
-            <br>Total Number of Cases ($N$) = 8</p>
+            <p><br>There are four types of card Spade,Clubs, Hearts and Diamond: 
+			Each type of cards has 13 number of items (Jack,King,Queen,Ace,2...10)
+            <br>Hence Total Number of Cases ($N$) = 13 *4 = 52</p>
         </div>
 
         <div class="solution-step">
@@ -291,6 +291,82 @@
             </table>
         </div>
     </div>
+	<div class="example-problem">
+    <div class="problem-header">Sample Problem: Probability using Combinations</div>
+    
+    <div class="problem-content">
+        Four cards are drawn from a pack of 52 cards. Find the probability that:
+        <br>(a) There is one card of each suit, (b) Two cards are spades and two are hearts, (c) All the four are kings, (d) All the four are spades and one of them is a king, (e) At least one of the four cards is an ace.
+    </div>
+
+    <div class="solution-content">
+        <h3>Solution:</h3>
+        
+        <div class="solution-step">
+            <strong>Step 1: Total Outcomes ($N$)</strong>
+            <p>Total ways to draw 4 cards from 52 is given by $^{52}C_4$:</p>
+            <div style="text-align:center; padding: 10px;">
+                $$ N = \binom{52}{4} = \frac{52 \times 51 \times 50 \times 49}{4 \times 3 \times 2 \times 1} = 270,725 $$
+				<div class="data-type-card">
+    <span class="tag">Mathematical Foundation</span>
+    <h3>The Combination Formula ($^nC_r$)</h3>
+    <p>When drawing multiple items at once without replacement, we use the combination formula to find the number of ways to select $r$ items from a set of $n$:</p>
+    
+    <div class="formula-container">
+        $$ \binom{n}{r} = \frac{n!}{r!(n - r)!} $$
+    </div>
+    
+    <p><strong>Example:</strong> Ways to pick 2 Aces from 4 Aces:</p>
+    <div style="text-align: center;">
+        $$ \binom{4}{2} = \frac{4 \times 3}{2 \times 1} = 6 \text{ ways} $$
+    </div>
+</div>
+            </div>
+        </div>
+
+        
+
+        <div class="solution-step">
+            <strong>Step 2: Calculate Probabilities</strong>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Logic (Combinations)</th>
+                        <th>Probability $P(A)$</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>(a) One of each suit</strong></td>
+                        <td>One from each of 13 c</p suits: <br> $\binom{13}{1} \times \binom{13}{1} \times \binom{13}{1} \times \binom{13}{1}$</td>
+                        <td>$$ \frac{13^4}{^{52}C_4} $$<p>1. The Multiplication Principle (The "AND" Rule)If one task can be done in $m$ ways and a second task can be done in $n$ ways, then the two tasks together can be done in $m \times n$ ways.Here in this problem: First take 1 Spade from among 13 cards AND next 1 Heart AND 1 Diamond AND 1 Club.Action: Multiply the combinations (mxnxpxq).</p</td>
+                    </tr>
+                    <tr>
+                        <td><strong>(b) 2 Spades & 2 Hearts</strong></td>
+                        <td>Two from 13 Spades AND two from 13 Hearts: <br> $\binom{13}{2} \times \binom{13}{2}$</td>
+                        <td>$$ \frac{78 \times 78}{270,725} $$</td>
+                    </tr>
+                    <tr>
+                        <td><strong>(c) All 4 are Kings</strong></td>
+                        <td>Four Kings from the 4 available: <br> $\binom{4}{4}$</td>
+                        <td>$$ \frac{1}{270,725} $$</td>
+                    </tr>
+                    <tr>
+                        <td><strong>(d) 4 Spades (one is King)</strong></td>
+                        <td>The King of Spades (1) AND 3 other Spades (12): <br> $\binom{1}{1} \times \binom{12}{3}$</td>
+                        <td>$$ \frac{220}{270,725} $$</td>
+                    </tr>
+                    <tr>
+                        <td><strong>(e) At least one Ace</strong></td>
+                        <td>$1 - P(\text{No Ace})$. <br> No Ace means drawing from 48 non-aces: $\binom{48}{4}$</td>
+                        <td>$$ 1 - \frac{^{48}C_4}{^{52}C_4} $$</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+	</div>
 </div>
 </p>
 
