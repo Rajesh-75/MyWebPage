@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistical Analysis - Mean & Median</title>
+    
+    <script type="text/javascript" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        .backprop-section {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .variable-list {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-left: 5px solid #2ecc71;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .derivative-step {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+        }
+        .code-snippet {
+            background-color: #272822;
+            color: #f8f8f2;
+            padding: 12px;
+            border-radius: 5px;
+            font-family: 'Consolas', monospace;
+            display: block;
+            margin: 10px 0;
+        }
+        .intuition-box {
+            background-color: #eef7ff;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            border-left: 4px solid #3498db;
+            margin-bottom: 10px;
+        }
+        .math-breakdown {
+            background-color: #fffaf0;
+            padding: 15px;
+            border: 1px dashed #f39c12;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .tag {
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="backprop-section">
+    <h2 class="detail-title">Backpropagation in MLP</h2>
+    <p class="detail-description">To understand Backpropagation in an MLP, we need to look at exactly what happens inside one single layer. In your 4-layer network, each layer is performing a <strong>"Local Chain Rule."</strong></p>
+
+    <h3>1. The Variables</h3>
+    <div class="variable-list">
+        <ul>
+            <li>$A_{i-1}$: The input coming from the previous layer.</li>
+            <li>$W_i, b_i$: The weights and biases of the current layer.</li>
+            <li>$Z_i$: The result of $W_i \cdot A_{i-1} + b_i$ (pre-activation sum).</li>
+            <li>$A_i$: The output after the activation function $\sigma(Z_i)$.</li>
+            <li>$L$: The total Loss (the error).</li>
+        </ul>
+    </div>
+
+    <h3>2. The Three Key Derivatives</h3>
+    <p>During Backpropagation, we receive $\frac{\partial L}{\partial A_i}$ from the layer ahead. We then perform three specific differentiations:</p>
+
+    <div class="derivative-step">
+        <span class="tag" style="background:#e74c3c;">Step A</span>
+        <h4>Differentiation of the Activation Function ($\frac{\partial L}{\partial Z_i}$)</h4>
+        <p>We "undo" the Sigmoid function to find how the loss changes with respect to $Z$.</p>
+        <div class="formula-container">
+            $$\frac{\partial L}{\partial Z_i} = \frac{\partial L}{\partial A_i} \cdot \sigma'(Z_i)$$
+        </div>
+        <code class="code-snippet">dZ = dA * sigmoid_derivative(A)</code>
+        <div class="intuition-box">
+            <strong>Intuition:</strong> If the neuron is in a "flat" part of the Sigmoid curve, the gradient becomes near zero (Vanishing Gradient), and learning slows down.
+        </div>
+    </div>
+
+    <div class="derivative-step">
+        <span class="tag" style="background:#f39c12;">Step B</span>
+        <h4>Differentiation for Weights ($\frac{\partial L}{\partial W_i}$)</h4>
+        <p>In Step A, we found <strong>$dZ$</strong> (the error signal). Now, we calculate exactly how to adjust the weights to reduce that error.</p>
+        
+        <div class="formula-container" style="text-align: center; font-size: 1.1rem; background: #fdfdfd; padding: 10px; border: 1px solid #eee;">
+            $$\frac{\partial L}{\partial W_i} = \underbrace{\frac{\partial L}{\partial Z_i}}_{\text{Error Signal}} \cdot \underbrace{\frac{\partial Z_i}{\partial W_i}}_{\text{Input Signal}}$$
+        </div>
+
+        <div class="math-breakdown">
+            <strong>The Mathematical Breakdown:</strong>
+            <p>Since $Z_i = W_i \cdot A_{i-1} + b_i$, the partial derivative of $Z_i$ with respect to $W_i$ is simply the input $A_{i-1}$. This means the weight's contribution to the error is directly proportional to the signal it carried.</p>
+            <p>Formula: $$\frac{\partial L}{\partial W_i} = dZ_i \cdot (A_{i-1})^T$$</p>
+        </div>
+
+        <div class="intuition-box">
+            <strong>Technically Speaking:</strong> This product <strong>IS</strong> the differentiation of the loss function. It determines the "slope" of the error for that specific weight.
+            <br>$$\text{Gradient} = \text{Signal Strength (Input)} \times \text{Error Contribution (dZ)}$$
+        </div>
+
+        <h4>NumPy Implementation</h4>
+        <code class="code-snippet">dW = (1/m) * np.dot(dZ, A_prev.T)</code>
+        
+        <p><strong>Why the Transpose ($T$)?</strong> To align the dimensions of our matrices. For a single weight $w_{jk}$, the gradient is $dZ_j \cdot a_k$. The dot product with a transpose calculates this for every weight in the layer at once.</p>
+    </div>
+
+    <div class="derivative-step">
+        <span class="tag" style="background:#3498db;">Step C</span>
+        <h4>Differentiation for the Next Layer ($\frac{\partial L}{\partial A_{i-1}}$)</h4>
+        <p>We "pass the baton" backward to the previous layer.</p>
+        
+        <div class="formula-container">
+            $$\frac{\partial L}{\partial A_{i-1}} = (W_i)^T \cdot \frac{\partial L}{\partial Z_i}$$
+        </div>
+        <code class="code-snippet">dA_prev = np.dot(W.T, dZ)</code>
+        <div class="intuition-box">
+            <strong>Why the Transpose ($W^T$)?</strong> To move the error backwards, we must use the connection weights in reverse order.
+        </div>
+    </div>
+
+    <h3>3. Visualizing the "Chain"</h3>
+    <p>Each layer calculates its own local derivative and multiplies it by the one it received:</p>
+    <div class="formula-container" style="background: #f8f9fa; padding: 15px; text-align: center;">
+        $$\frac{\partial L}{\partial W_i} = \underbrace{\frac{\partial L}{\partial A_n} \cdot \dots \frac{\partial A_{i+1}}{\partial A_i}}_{\text{Received Error}} \cdot \underbrace{\frac{\partial A_i}{\partial Z_i} \cdot \frac{\partial Z_i}{\partial W_i}}_{\text{Local Gradient}}$$
+    </div>
+
+    <h3>Summary for NumPy Implementation</h3>
+    <table class="data-table">
+        <thead>
+            <tr style="background-color: #f4f4f4;">
+                <th>Derivative</th>
+                <th>Math Symbol</th>
+                <th>NumPy Variable</th>
+                <th>Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Output Error</strong></td>
+                <td>$\frac{\partial L}{\partial A_i}$</td>
+                <td><code>dA</code></td>
+                <td>The error signal received from the next layer.</td>
+            </tr>
+            <tr>
+                <td><strong>Activation Grad</strong></td>
+                <td>$\frac{\partial L}{\partial Z_i}$</td>
+                <td><code>dZ</code></td>
+                <td>The error signal filtered through the activation function.</td>
+            </tr>
+            <tr>
+                <td><strong>Weight Grad</strong></td>
+                <td>$\frac{\partial L}{\partial W_i}$</td>
+                <td><code>dW</code></td>
+                <td>The final differentiation used to update weight values.</td>
+            </tr>
+            <tr>
+                <td><strong>Input Grad</strong></td>
+                <td>$\frac{\partial L}{\partial A_{i-1}}$</td>
+                <td><code>dA_prev</code></td>
+                <td>The error signal to be passed backward.</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
