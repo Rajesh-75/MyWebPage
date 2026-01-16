@@ -17,6 +17,18 @@
         };
     </script>
     <style>
+		h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
         .backprop-section {
             font-family: Arial, sans-serif;
             line-height: 1.6;
@@ -78,14 +90,43 @@
             font-size: 0.8rem;
             font-weight: bold;
         }
+		/* Algorithm Box Style */
+        .algorithm-box { background-color: #f5f5dc; border: 2px solid #2980b9; padding: 20px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; margin: 20px 0; }
+        .algorithm-title { color: #0000CC; font-weight: bold; font-size: 1.5rem; margin-bottom: 15px; display: block; }
     </style>
 </head>
 <body>
 
 <div class="backprop-section">
-    <h2 class="detail-title">Backpropagation in MLP</h2>
-    <p class="detail-description">To understand Backpropagation in an MLP, we need to look at exactly what happens inside one single layer. In your 4-layer network, each layer is performing a <strong>"Local Chain Rule."</strong></p>
-
+    <h1 class="detail-title">Backpropagation in MLP</h2>
+    <p class="detail-description"><p class="detail-description"> 
+        To understand Backpropagation in an MLP, we need to look at exactly what happens inside one single layer. 
+        <strong>Backpropagation</strong> is the specific algorithm used to compute the derivatives (gradients), 
+        while <strong>Gradient Descent</strong> is the optimization algorithm that uses those derivatives to update the weights and reduce loss.Gradient Descent is the rule that actually changes the weight; it uses the derivative to decide exactly how much to adjust each value to reach the minimum error.In this tutorial, both the logic of Gradient Descent and the step-by-step derivation of differentials at each neuron will be discussed.</p>
+	<h2> Gradient Descent </h2>
+	<p>Based on the optimization framework used in neural network training:</p>
+    
+    <div class="math-breakdown">
+        <span class="algorithm-title">Overall Gradient Descent Algorithm</span>
+        <ul>
+            <li><strong>Initialize:</strong>
+                <ul>
+                    <li>$x^0$</li>
+                    <li>$k = 0$</li>
+                </ul>
+            </li>
+        </ul>
+        <div style="border: 1px solid #2980b9; padding: 15px; margin-left: 20px; background-color: #fdfdfd;">
+            <strong>do</strong>
+            <ul>
+                <li>$x^{k+1} = x^k - \eta\frac{\partial f}{\partial x^k}$</li>
+                <li>$k = k + 1$</li>
+            </ul>
+            <strong>while</strong> $|f(x^{k+1}) - f(x^k)| > \epsilon$
+        </div>
+		<p>$f(x)$ (The Objective/Loss Function): This represents the "landscape" or the error. In machine learning, $f(x)$ measures how far off your model's predictions are. Our goal is to find the value of $x$ that makes $f(x)$ as small as possible.$x^k$ (Current State): This is the value of your parameters (like weights) at step $k$.$\frac{\partial f}{\partial x^k}$ (The Gradient): This is the derivative. It tells you the slope and the direction of the steepest ascent.$\eta$. This derivative computation is the central part of Back Propogation algorithm (Learning Rate / Step Size): This determines how large of a step you take. If it's too large, you might overstep the bottom; if it's too small, the hiker moves too slowly.$\epsilon$ (Epsilon/Tolerance): This is your "stopping condition." Since the algorithm might never reach the exact zero, we stop when the change in error becomes so tiny that it’s no longer worth calculating.Learnining rate/Step size and epsilon are parameters set externally.There are many such parameters in the advanced versions of Gradient Descent. We should discuss separately about these parameters later</p>
+    </div>
+	<h2> Computation of Derivatives </h2>
     <h3>1. The Variables</h3>
     <div class="variable-list">
         <ul>
