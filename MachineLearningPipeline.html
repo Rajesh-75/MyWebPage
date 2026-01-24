@@ -252,20 +252,46 @@
     <hr>
 
     <!-- NEW SECTION ADDED HERE -->
-    <h2>Model Training</h2>
+    <h2>Model Training: The Computational Heart</h2>
     <p class="detail-description">
-        Model Training is the computational heart of the pipeline where the chosen algorithm learns to map inputs to outputs (supervised learning) or discover hidden structures (unsupervised learning) by minimizing a specific loss function. This stage involves feeding the processed data into the model, which then iteratively adjusts its internal parameters—such as weights and biases—to reduce error.
+        Once the features are defined—either manually through traditional feature engineering or automatically via Deep Learning's internal layers—the **Model Training** phase begins. This is the orchestrated interaction between three distinct components: the Model, the Cost Function, and the Optimization.
     </p>
+
+    <h3>1. The Model (The Hypothesis Space)</h3>
     <p class="detail-description">
-        The choice of algorithm is vast and highly dependent on the nature of the data and the problem at hand:
+        The Model is the mathematical "blueprint." Depending on whether the features were engineered by a human or the machine, the model structure varies:
     </p>
     <ul>
-        <li><strong>Classical Algorithms:</strong> For structured, tabular data where interpretability is key, lightweight algorithms like <strong>Decision Trees</strong>, <strong>Naive Bayes</strong>, and <strong>Support Vector Machines (SVM)</strong> are often preferred.</li>
-        <li><strong>Deep Learning & LLMs:</strong> For complex, high-dimensional tasks like image recognition or text generation, <strong>Deep Learning (DL)</strong> architectures and <strong>Large Language Models (LLMs)</strong> are dominant, leveraging massive compute power to learn intricate patterns.</li>
-        <li><strong>Unsupervised Learning:</strong> When data lacks explicit labels, algorithms like <strong>K-Means Clustering</strong> are used to group similar data points based on inherent characteristics.</li>
+        <li><strong>Structured Models:</strong> For tabular data, we use algorithms like <strong>Decision Trees</strong>, <strong>Naive Bayes</strong>, or <strong>Support Vector Machines (SVM)</strong>. These rely on the high-quality features created in the previous pipeline stage.</li>
+        <li><strong>End-to-End Architectures:</strong> In <strong>Deep Learning</strong> and <strong>LLMs</strong>, the "Model" is massive. Here, the early layers of the model perform automated feature extraction, while the later layers map those features to the final output.</li>
     </ul>
+
+    <h3>2. The Cost Function (The Scorer)</h3>
     <p class="detail-description">
-        Regardless of whether the model is a simple Linear Regression or a massive Transformer-based LLM, the training phase concludes when the model generalizes well enough to make accurate predictions on data it has never seen before.
+        The Cost Function (or Loss Function) is the "Evaluation Metric" of the training heart. It calculates a numerical score representing the gap between the model's prediction and the ground truth.
+    </p>
+    <ul>
+        <li><strong>Goal:</strong> The training phase is mathematically defined as the quest to find parameters that yield the lowest possible cost.</li>
+    </ul>
+
+    <h3>3. The Optimization (The Mechanism of Change)</h3>
+    <p class="detail-description">
+        Optimization is the "Learning Engine." It uses the score from the Cost Function to iteratively adjust the model’s internal parameters (weights and biases).
+    </p>
+    <ul>
+        <li><strong>Gradient Descent:</strong> Most modern models, especially DL and LLMs, use some form of Gradient Descent to "step" toward the minimum error.</li>
+        <li><strong>Greedy Search:</strong> Algorithms like <strong>K-Means</strong> or <strong>Decision Trees</strong> use specific logic to group data or split nodes to optimize their internal structure.</li>
+    </ul>
+
+    <h3>The Iterative Loop: From Logic to Generalization</h3>
+    <p class="detail-description">
+        The training phase is not a single event but a continuous loop. The model makes a guess, the cost function measures the error, and the optimizer applies a correction.
+    </p>
+    
+    
+    
+    <p class="detail-description">
+        This cycle continues until the model achieves <strong>Generalization</strong>—the ability to apply its learned patterns to new, unseen data accurately. Whether you are clustering data with K-Means or generating text with a Transformer, this three-part harmony is what transforms raw data into intelligence.
     </p>
 
 </body>
