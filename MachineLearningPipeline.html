@@ -286,6 +286,7 @@
     <h3>The Iterative Loop: From Logic to Generalization</h3>
     <p class="detail-description">
         The training phase is not a single event but a continuous loop. The model makes a guess, the cost function measures the error, and the optimizer applies a correction.
+		The ultimate goal of the Training Phase is to solve for the <strong>optimal parameters (such as weights and biases) of the chosen ML model</strong>. These parameters represent the <strong>'knowledge'</strong> the model has acquired and discovered through optimization strategy. 
     </p>
     
     
@@ -293,6 +294,19 @@
     <p class="detail-description">
         This cycle continues until the model achieves <strong>Generalization</strong>—the ability to apply its learned patterns to new, unseen data accurately. Whether you are clustering data with K-Means or generating text with a Transformer, this three-part harmony is what transforms raw data into intelligence.
     </p>
+	<h2>Evaluation Phase </h2>
+	<p class="detail-description">
+       In a professional ML pipeline, the Model Evaluation step acts as the final gatekeeper, ensuring that the patterns learned during training are truly predictive and not just the result of memorization <strong>(overfitting)</strong>. This stage is conducted using a <strong>Test Dataset</strong>—a subset of data that was strictly withheld during the training phase to simulate real-world conditions
+    </p>
+	<p class="detail-description">The evaluation process typically follows these four critical steps:</p>
+	<h3>1. Quantitative Scoring: </h3>
+    <p class="detail-description">The model generates predictions for the test set,which are compared against the ground truth using specific metrics such as <strong>Accuracy, Precision, and Recall for classification, or Root Mean Square Error (RMSE) for regression</strong>.</p>   
 
+    <h3>2. Generalization check: </h3>
+    <p class="detail-description">compare the <strong>training error against the test error</strong>; a large gap between the two signals that the model has overfit and requires better <strong>regularization</strong></p> 
+	
+	<h3>3. Residual & Error Analysis: </h3><p class="detail-description"> Beyond aggregate metrics, this step involves a granular examination of failure cases. By using tools like a <strong>Confusion Matrix</strong>, identification of the consistently fails on specific classes (e.g., mistaking 'dogs' for 'cats') or if the errors are concentrated within certain data sub-groups in the model, allowing for targeted model improvements.</p>
+   <h2>Deployment </h2>
+   <p>Shall be covered later</p>
 </body>
 </html>
