@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Variable and Expectation</title>
+    <title>Probability Distributions</title>
     
     <script type="text/javascript" async
         src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
@@ -122,7 +122,7 @@
 <body>
 
 <div class="container">
-    <h1>Random Variable and Expectation</h1>
+    <h1>Probability Distributions</h1>
 
     <h2>Random variable</h2>
     <p>A real valued function defined over a sample space of random experiment is called the random variable. A variable which takes corresponding to the outcomes of a random experiment is called random variable.</p>
@@ -132,7 +132,7 @@
         <strong>(2)</strong> In the case of tossing 3 coins the outcome are getting 0 head, 1 head, 2 heads and 3 head. So the random variable of getting heads takes the value 0,1,2,3.
     </div>
 
-    <h2>Distribution of a random variable (Probability Distribution)</h2>
+    <h2>Probability Distribution (Distribution of random variables) </h2>
     <p>Let 'X' be a random variable. Let X assume values as $x_1, x_2, x_3 \dots$</p>
     <p>The probability that X takes any x ($x_1$ or $x_2$ or $x_3 \dots$) is given by $P(X = x)$. It can also be denoted by $f(x)$.</p>
     <p><strong>Probability Density</strong> is the distribution of probabilities with respect to its random variable. These distributions are classified into two main types:</p>
@@ -262,14 +262,44 @@
     <p>It provides a measure of how much variability there is in the values of $f(x)$ around its mean $E[f]$.</p>
 </div>
     <hr>
-    <p><strong>What's Next?</strong> Would you like to explore how to calculate the <em>Expected Value</em> of the sum of these dice rolls?</p>
+    
 </div>
 <div class="example-box" style="border-left-color: #e74c3c;">
     <strong>3. Covariance:</strong>Covariance involves variances between two or random variables For two random variables x and y, the covariance measures the extent to which the two variables vary together and is defined by
     <p>$$cov[x; y] = E[[x − E[x]][y − E[y]]]= E[xy] − E[x]E[y]$$</p>
 </div>
     <hr>
-    <p><strong>What's Next?</strong> Would you like to explore how to calculate the <em>Expected Value</em> of the sum of these dice rolls?</p>
+
+</div>
+<h2>Key Probability Distributions</h2>
+<p>
+    Probability distributions are categorized based on whether the random variable is <strong>Discrete</strong> (countable values) or <strong>Continuous</strong> (any value within a range). While the <strong>Normal Distribution</strong> (Gaussian) is the most famous, it is part of a broader family of distributions used to model different types of data.
+</p>
+
+
+
+<h3>1. Continuous Distributions</h3>
+<ul>
+    <li>
+        <strong>Normal (Gaussian) Distribution:</strong> The "Bell Curve." It is defined by its mean ($\mu$) and standard deviation ($\sigma$). It is the cornerstone of the Central Limit Theorem.
+    </li>
+    <li>
+        <strong>Uniform Distribution (Continuous):</strong> Every value in a specific range $[a, b]$ has an equal probability of occurring.
+    </li>
+</ul>
+
+<h3>2. Discrete Distributions</h3>
+<ul>
+    <li>
+        <strong>Binomial Distribution:</strong> Models the number of "successes" in a fixed number of independent trials (e.g., flipping a coin 10 times).
+    </li>
+    <li>
+        <strong>Poisson Distribution:</strong> Models the number of events occurring within a fixed interval of time or space (e.g., how many customers arrive at a shop in an hour).
+    </li>
+</ul>
+
+<div class="intuition-box">
+    <strong>Key Point:</strong> Although these distributions are distinct, the <strong>Law of Large Numbers</strong> and the <strong>Central Limit Theorem</strong> show that both Binomial and Poisson distributions start to look like a Normal Distribution as the number of trials or events increases.
 </div>
 
 
