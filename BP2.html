@@ -165,7 +165,7 @@
     <p>
         These parameters are the variables of the <strong>Loss Function</strong>. During training, the <strong>Derivative</strong> is computed specifically with respect to these weights. This tells the network exactly how to "nudge" each weight to minimize the error.
     </p>
-    
+	
     
 
     <hr style="border: 0; border-top: 1px solid #fab1a0; margin: 15px 0;">
@@ -367,48 +367,7 @@
         <p><strong>Why the Transpose ($T$)?</strong> To align the dimensions of our matrices. For a single weight $w_{jk}$, the gradient is $dZ_j \cdot a_k$. The dot product with a transpose calculates this for every weight in the layer at once.</p>
     </div>
 	<div style="text-align: center; margin: 30px 0; background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #eee;">
-    <svg width="600" height="320" viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg">
-        <g stroke="#cbd5e0" stroke-width="1.5">
-            <line x1="100" y1="80" x2="300" y2="160" />
-            <line x1="100" y1="160" x2="300" y2="160" />
-            <line x1="100" y1="240" x2="300" y2="160" />
-            <line x1="300" y1="160" x2="500" y2="160" />
-        </g>
-
-        <circle cx="100" cy="80" r="18" fill="#edf2f7" stroke="#4a5568" stroke-width="2" />
-        <circle cx="100" cy="160" r="18" fill="#edf2f7" stroke="#4a5568" stroke-width="2" />
-        <circle cx="100" cy="240" r="18" fill="#edf2f7" stroke="#4a5568" stroke-width="2" />
-        <text x="75" y="165" font-family="Arial" font-size="12" font-weight="bold" fill="#2d3748">A_{i-1}</text>
-
-        <circle cx="300" cy="160" r="25" fill="#fffaf0" stroke="#f6ad55" stroke-width="3" />
-        <text x="293" y="166" font-family="Arial" font-size="16" font-weight="bold" fill="#dd6b20">Σ</text>
-        
-        <text x="200" y="145" font-family="Arial" font-size="12" font-style="italic" fill="#718096">W_i, b_i</text>
-        <text x="275" y="125" font-family="Arial" font-size="12" font-weight="bold" fill="#e67e22">Z_i</text>
-        <text x="340" y="150" font-family="Arial" font-size="12" font-weight="bold" fill="#38a169">A_i</text>
-
-        <rect x="480" y="140" width="40" height="40" rx="5" fill="#fff5f5" stroke="#fc8181" stroke-width="2" />
-        <text x="495" y="165" font-family="Arial" font-size="14" font-weight="bold" fill="#c53030">L</text>
-
-        <g fill="none" stroke="#3182ce" stroke-width="3" stroke-linecap="round">
-            <path d="M 470 200 L 330 200" marker-end="url(#arrow)" />
-            <path d="M 270 200 L 130 200" marker-end="url(#arrow)" />
-        </g>
-        
-        <defs>
-            <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
-                <path d="M0,0 L10,5 L0,10 Z" fill="#3182ce" />
-            </marker>
-        </defs>
-
-        <text x="360" y="225" font-family="Arial" font-size="11" fill="#3182ce" font-weight="bold">Step A: Received ∂L/∂A_i</text>
-        <text x="140" y="225" font-family="Arial" font-size="11" fill="#3182ce" font-weight="bold">Step C: Pass ∂L/∂A_{i-1}</text>
-        
-        <rect x="180" y="260" width="240" height="40" rx="5" fill="#ebf8ff" />
-        <text x="195" y="285" font-family="Times New Roman" font-size="16" font-style="italic" fill="#2c5282">
-            ∂L/∂Z_i = ∂L/∂A_i * σ'(Z_i)
-        </text>
-    </svg>
+   
     <p style="font-size: 0.9rem; color: #718096; margin-top: 10px;">
         <em>Figure: Visualization of Layer $i$ processing. The blue arrows indicate the <strong>Backward Pass</strong> where gradients are calculated.</em>
     </p>
@@ -426,13 +385,16 @@
             <strong>Why the Transpose ($W^T$)?</strong> To move the error backwards, we must use the connection weights in reverse order.
         </div>
     </div>
-
+	<div style="text-align: center; margin: 30px 0;">
+            <img src="BackPropagGraidenFlow.png" alt="BP Graident Flow Diagram" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+            <p style="font-size: 0.95rem; color: #666; margin-top: 5px;"><em>Figure shows Gradient flow back to the network</em></p>
+        </div>
     <h3>3. Visualizing the "Chain"</h3>
     <p>Each layer calculates its own local derivative and multiplies it by the one it received:</p>
     <div class="formula-container" style="background: #f8f9fa; padding: 15px; text-align: center;">
         $$\frac{\partial L}{\partial W_i} = \underbrace{\frac{\partial L}{\partial A_n} \cdot \dots \frac{\partial A_{i+1}}{\partial A_i}}_{\text{Received Error}} \cdot \underbrace{\frac{\partial A_i}{\partial Z_i} \cdot \frac{\partial Z_i}{\partial W_i}}_{\text{Local Gradient}}$$
     </div>
-
+	
     <h3>Summary for NumPy Implementation</h3>
     <table class="data-table">
         <thead>
