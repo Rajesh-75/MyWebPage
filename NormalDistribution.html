@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Normal Distribution</title>
+    <script type="text/javascript" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        /* GLOBAL RESET & COMPACT SPACING */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            background-color: #f4f7f9;
+            display: flex;
+            justify-content: center;
+        }
+
+        .content-wrapper {
+            max-width: 800px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        h1, h2, h3 {
+            margin-top: 18px;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #0056b3;
+        }
+
+        .detail-title {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .detail-description {
+            margin-top: 0;
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        .example-section {
+            background-color: #fdfdfd;
+            border: 1px solid #e1e8ed;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #0056b3;
+        }
+
+        .example-header {
+            font-weight: bold;
+            color: #0056b3;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .plot-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        ul {
+            margin-top: 5px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        .area-distribution {
+            background-color: #f0f7ff;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content-wrapper">
+    <h1 class="detail-title">Normal (Gaussian) Distributions</h1>
+    
+    <p class="detail-description">
+        The Normal Distribution, also known as the Gaussian Distribution, is a widely used continuous probability distribution. Its fundamental importance lies in the fact that many natural populations follow a pattern that approximates the Normal Curve. Numerous phenomena—such as the age distribution of a specific animal species, the heights of adults, and various industrial measurements—are considered to be normally distributed. As in the case of any probability distributions, Gaussian distribution gives a probability for a given random variable.
+    </p>
+
+    <div class="example-section">
+        <span class="example-header">Manufacturing Example:</span>
+        <p class="detail-description" style="margin-bottom: 0;">
+            Consider a company manufacturing screws of a specific diameter. While the machinery is precise, there will always be slight variations in measurement. Most screws will have a diameter very close to the target; however, a few will be slightly larger or smaller.
+        </p>
+    </div>
+
+    <p class="detail-description">
+        If we plot a histogram of these measurements, the highest frequency occurs at the center (the mean). As we move away from the center, the frequency decreases symmetrically on both sides. By reducing the class intervals to be infinitely small, the histogram transforms into a smooth, bell-shaped curve. This is the <strong>Normal Curve</strong>. By dividing the frequency by the total number of observations, the distribution is normalized to represent probability, where the total area under the curve is exactly 1. The ordinate at mean divides the whole part into two parts. The area to the right of the ordinate and that of left of the ordinate are both 0.5. 
+    </p>
+
+    <div class="plot-container">
+        <svg width="500" height="280" viewBox="0 0 500 280" xmlns="http://www.w3.org/2000/svg">
+            <line x1="60" y1="220" x2="60" y2="40" stroke="#333" stroke-width="2" />
+            <path d="M 55 50 L 60 40 L 65 50" fill="none" stroke="#333" stroke-width="2" /> 
+            <line x1="60" y1="220" x2="460" y2="220" stroke="#333" stroke-width="2" />
+            <path d="M 450 215 L 460 220 L 450 225" fill="none" stroke="#333" stroke-width="2" /> 
+            <line x1="260" y1="220" x2="260" y2="60" stroke="#ddd" stroke-dasharray="5,5" />
+            
+            <path d="M 60 215 C 160 215, 190 60, 260 60 C 330 60, 360 215, 460 215" 
+                  fill="none" stroke="#0056b3" stroke-width="3" />
+            
+            <path d="M 60 220 C 160 220, 190 60, 260 60 C 330 60, 360 220, 460 220 L 60 220 Z" 
+                  fill="#0056b3" fill-opacity="0.1" />
+
+            <text x="30" y="130" font-family="Arial" font-size="14" font-weight="bold" fill="#333" transform="rotate(-90, 30, 130)" text-anchor="middle">
+                Probability (y-axis)
+            </text>
+            
+            <text x="260" y="260" font-family="Arial" font-size="14" font-weight="bold" fill="#333" text-anchor="middle">
+                Random Variable (x-axis)
+            </text>
+
+            <text x="260" y="235" font-family="Arial" font-size="12" font-style="italic" fill="#0056b3" text-anchor="middle">Mean (μ)</text>
+        </svg>
+        <p style="font-size: 0.85rem; color: #666; margin-top: 5px;">
+            <em>Figure: The relationship between the Random Variable and its Probability in a Normal Distribution.</em>
+        </p>
+    </div>
+
+    
+
+    <h3>Mathematical Definition of Normal Distribution</h3>
+    <p class="detail-description">
+        A continuous random variable $X$ is said to follow a <strong>Normal Distribution</strong> (Gaussian distribution) if its probability density function (PDF) is defined by the following equation:
+    </p>
+
+    <div style="text-align: center; background: #f8f9fa; padding: 20px; border-radius: 4px; margin: 15px 0; border: 1px solid #e1e8ed;">
+        $$f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{1}{2} \left( \frac{x - \mu}{\sigma} \right)^2}$$
+    </div>
+
+    <p class="detail-description">
+        Where the parameters are defined as:
+    </p>
+    <ul>
+        <li>$\mu$ (Mu): The <strong>Mean</strong> or center of the distribution.</li>
+        <li>$\sigma$ (Sigma): The <strong>Standard Deviation</strong>, representing the spread.</li>
+		<li>A random variable $X$ following a Normal Distribution is typically represented as $X \sim N(\mu, \sigma^2)$, where $\mu$ is the mean and $\sigma^2$ is the variance.</li>
+        <li>$e$: The base of natural logarithms (approx. 2.718).</li>
+        <li>$\pi$: The constant Pi (approx. 3.1415).</li>
+        <li>The curve is <strong>asymptotic</strong> to the base on either side; i.e., the curve approaches nearer and nearer to the base, but never touches.</li>
+        <li>The <strong>points of inflection</strong> occur at $\mu \pm \sigma$.</li>
+		
+        <li><strong>Area Distribution (The Empirical Rule):</strong>
+            <ul class="area-distribution">
+                <li>$\mu \pm 1\sigma$ covers <strong>68.27%</strong> of the area.</li>
+                <li>$\mu \pm 2\sigma$ covers <strong>95.45%</strong> of the area.</li>
+                <li>$\mu \pm 3\sigma$ covers <strong>99.73%</strong> of the area.</li>
+            </ul>
+        </li>
+		<li><strong>Additive Property:</strong> A linear function of normal variates is also a normal variate. This property ensures that the sum or difference of independent normally distributed variables results in a new variable that is also normally distributed.</li>
+    </ul>
+	
+    <p class="detail-description" style="margin-top: 15px;">
+        The variable $X$ is defined over the <strong>theoretical range</strong> $-\infty < X < +\infty$. However, for most practical applications, the range is considered to be $\mu - 3\sigma$ to $\mu + 3\sigma$, as it encompasses nearly all possible outcomes. In this context, $X$ is treated as a Continuous Random Variable representing a single measurement, allowing us to calculate the probability of any specific outcome occurring within the Gaussian curve.
+    </p>
+	<h3>Proof for The Additive Property</h3>
+    <p class="detail-description">
+        A significant characteristic of the Normal Distribution is that it is <strong>stable</strong> under linear combinations. This means that if you add two independent normally distributed random variables, the resulting variable is also normally distributed.
+    </p>
+
+    <div style="background: #fff8f0; padding: 20px; border-radius: 4px; border-left: 4px solid #f39c12; margin: 15px 0;">
+        <strong>Mathematical Proof Sketch:</strong>
+        <p style="font-size: 0.95rem;">
+            Given independent $X \sim N(\mu_X, \sigma_X^2)$ and $Y \sim N(\mu_Y, \sigma_Y^2)$, let $Z = X + Y$. Using Moment Generating Functions (MGF):
+        </p>
+        <p style="text-align: center;">
+            $M_Z(t) = M_X(t) \cdot M_Y(t)$ <br>
+            $M_Z(t) = e^{\mu_X t + \frac{1}{2}\sigma_X^2 t^2} \cdot e^{\mu_Y t + \frac{1}{2}\sigma_Y^2 t^2}$ <br>
+            $M_Z(t) = e^{(\mu_X + \mu_Y)t + \frac{1}{2}(\sigma_X^2 + \sigma_Y^2)t^2}$
+        </p>
+        <p style="font-size: 0.95rem; margin-top: 10px;">
+            Because the result is in the form $e^{\mu_{new} t + \frac{1}{2}\sigma_{new}^2 t^2}$, we conclude that $Z \sim N(\mu_X + \mu_Y, \sigma_X^2 + \sigma_Y^2)$.
+        </p>
+    </div>
+</div>
+
+</body>
+</html>
