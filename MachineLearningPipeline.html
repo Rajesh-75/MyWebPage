@@ -8,7 +8,7 @@
         /* GLOBAL RESET & TIGHT SPACING */
         body {
             font-family: sans-serif;
-            line-height: 1.4; /* Reduced from 1.6 for tighter text block */
+            line-height: 1.4;
             margin: 20px;
             padding: 0;
             color: #333;
@@ -16,8 +16,8 @@
 
         /* HEADINGS */
         h1, h2, h3, h4 {
-            margin-top: 15px;    /* Slight space above new sections */
-            margin-bottom: 5px;  /* Very little space below headings */
+            margin-top: 15px;    
+            margin-bottom: 5px;  
             font-weight: bold;
         }
         h1, h2 {
@@ -27,7 +27,7 @@
         /* PARAGRAPHS */
         .detail-description {
             margin-top: 0px;
-            margin-bottom: 8px; /* Small gap between paragraphs */
+            margin-bottom: 8px; 
             text-align: justify;
         }
 
@@ -38,7 +38,7 @@
             padding-left: 20px;
         }
         li {
-            margin-bottom: 3px; /* Tighter list items */
+            margin-bottom: 3px; 
         }
 
         /* IMAGES & TITLES */
@@ -59,7 +59,7 @@
             max-width: 60%;
             height: auto;
             display: block;
-            margin: 10px auto 5px auto; /* Tighter margins around images */
+            margin: 10px auto 5px auto; 
             border: 1px solid #ccc;
             border-radius: 5px;
         }
@@ -184,7 +184,21 @@
     <ul>
         <li>Dimensionality Reduction: Feature Selection or Extraction (PCA).</li>
         <li>Data Compression and Numerosity Reduction.</li>
-    </ul>   
+    </ul>    
+
+    <h3 style="margin-top: 20px;">4. Handling Imbalanced Data ⚖️</h3>
+    <p class="detail-description">
+        Whenever you are working on text classification problems, it is a good idea to examine the distribution of examples across the classes. A dataset with a <strong>skewed class distribution</strong> might require a different treatment in terms of the training loss and evaluation metrics than a balanced one.
+    </p>
+
+    
+
+    <p class="detail-description">There are several ways to deal with imbalanced data, including:</p>
+    <ul>
+        <li><strong>Randomly oversample the minority class:</strong> Replicating examples from the smaller class to increase its representation.</li>
+        <li><strong>Randomly undersample the majority class:</strong> Removing examples from the larger class to balance the proportions.</li>
+        <li><strong>Gather more labeled data:</strong> Specifically collecting more data from the underrepresented classes to strengthen the predictive signal.</li>
+    </ul>
 
     <hr>
     
@@ -251,7 +265,6 @@
 
     <hr>
 
-    <!-- NEW SECTION ADDED HERE -->
     <h2>Model Training: The Computational Heart</h2>
     <p class="detail-description">
         Once the features are defined—either manually through traditional feature engineering or automatically via Deep Learning's internal layers—the **Model Training** phase begins. This is the orchestrated interaction between three distinct components: the Model, the Cost Function, and the Optimization.
@@ -286,26 +299,25 @@
     <h3>The Iterative Loop: From Logic to Generalization</h3>
     <p class="detail-description">
         The training phase is not a single event but a continuous loop. The model makes a guess, the cost function measures the error, and the optimizer applies a correction.
-		The ultimate goal of the Training Phase is to solve for the <strong>optimal parameters (such as weights and biases) of the chosen ML model</strong>. These parameters represent the <strong>'knowledge'</strong> the model has acquired and discovered through optimization strategy. 
+        The ultimate goal of the Training Phase is to solve for the <strong>optimal parameters (such as weights and biases) of the chosen ML model</strong>. These parameters represent the <strong>'knowledge'</strong> the model has acquired and discovered through optimization strategy. 
     </p>
-    
-    
     
     <p class="detail-description">
         This cycle continues until the model achieves <strong>Generalization</strong>—the ability to apply its learned patterns to new, unseen data accurately. Whether you are clustering data with K-Means or generating text with a Transformer, this three-part harmony is what transforms raw data into intelligence.
     </p>
-	<h2>Evaluation Phase </h2>
-	<p class="detail-description">
-       In a professional ML pipeline, the Model Evaluation step acts as the final gatekeeper, ensuring that the patterns learned during training are truly predictive and not just the result of memorization <strong>(overfitting)</strong>. This stage is conducted using a <strong>Test Dataset</strong>—a subset of data that was strictly withheld during the training phase to simulate real-world conditions
+    <h2>Evaluation Phase </h2>
+    <p class="detail-description">
+       In a professional ML pipeline, the Model Evaluation step acts as the final gatekeeper, ensuring that the patterns learned during training are truly predictive and not just the result of memorization <strong>(overfitting)</strong>. This stage is conducted using a <strong>Test Dataset</strong>—a subset of data that was strictly withheld during the training phase to simulate real-world conditions.
     </p>
-	<p class="detail-description">The evaluation process typically follows these four critical steps:</p>
-	<h3>1. Quantitative Scoring: </h3>
-    <p class="detail-description">The model generates predictions for the test set,which are compared against the ground truth using specific metrics such as <strong>Accuracy, Precision, and Recall for classification, or Root Mean Square Error (RMSE) for regression</strong>.</p>   
+    <p class="detail-description">The evaluation process typically follows these four critical steps:</p>
+    <h3>1. Quantitative Scoring: </h3>
+    <p class="detail-description">The model generates predictions for the test set, which are compared against the ground truth using specific metrics such as <strong>Accuracy, Precision, and Recall for classification, or Root Mean Square Error (RMSE) for regression</strong>.</p>    
 
     <h3>2. Generalization check: </h3>
-    <p class="detail-description">compare the <strong>training error against the test error</strong>; a large gap between the two signals that the model has overfit and requires better <strong>regularization</strong></p> 
-	
-	<h3>3. Residual & Error Analysis: </h3><p class="detail-description"> Beyond aggregate metrics, this step involves a granular examination of failure cases. By using tools like a <strong>Confusion Matrix</strong>, identification of the consistently fails on specific classes (e.g., mistaking 'dogs' for 'cats') or if the errors are concentrated within certain data sub-groups in the model, allowing for targeted model improvements.</p>
+    <p class="detail-description">Compare the <strong>training error against the test error</strong>; a large gap between the two signals that the model has overfit and requires better <strong>regularization</strong>.</p> 
+    
+    <h3>3. Residual & Error Analysis: </h3>
+    <p class="detail-description">Beyond aggregate metrics, this step involves a granular examination of failure cases. By using tools like a <strong>Confusion Matrix</strong>, identification of whether the model consistently fails on specific classes (e.g., mistaking 'dogs' for 'cats') allows for targeted improvements.</p>
    <h2>Deployment </h2>
    <p>Shall be covered later</p>
 </body>
