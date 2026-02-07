@@ -264,75 +264,64 @@
         ];
         
         // --- START OF TUTORIALS DATA STRUCTURE UPDATE (File path corrected) ---
-        const tutorials = [
-            // NEW: Moved Introduction to the top-level array, making it the first item
-			// --- CORRECTED FIRST OBJECT (Introduction) ---
+       // --- UPDATED TUTORIALS DATA STRUCTURE ---
+const tutorials = [
     {	
-        // A tutorial item must have a title if it contains subtopics, 
-        // even if the title is just a placeholder or repeats the subtopic title.
-        title: "Introduction", // You need a title for the collapsible element
+        title: "Introduction", 
         subtopics: [
-            { 
-                title: "Machine learning Pipeline ", 
-                filePath: "MachineLearningPipeline.html" 
-            } // Correct object definition inside the array
+            { title: "Machine learning Pipeline", filePath: "MachineLearningPipeline.html" }
         ]
     },
-            
-            {	
-                title: "Machine Learning",	
-                subtopics: [
-                    // --- UPDATED SUB-SECTION CONTENT FOR RAG ---
-                    {	
-                        title: "Nearest Neighbor",	
-                        content: `
-                            <h2 class="detail-title">Nearest Neighbor (k-NN)</h2>
-                            <p class="detail-description">The k-Nearest Neighbors (k-NN) algorithm is a non-parametric, lazy learning algorithm used for classification and regression. In both cases, the input consists of the k closest training examples in the feature space. The output depends on whether k-NN is used for classification or regression.</p>
-                            <ul>
-                                <li>**Classification:** An object is classified by a majority vote of its neighbors, with the object being assigned to the class most common among its k nearest neighbors.</li>
-                                <li>**Regression:** The output is the property value for the object, which is the average of the values of k nearest neighbors.</li>
-                            </ul>
-                            <p class="detail-description">It is a simple yet powerful algorithm, though its computational cost can be high with large datasets.</p>
-                            <h3 style="margin-top: 20px;">Use in RAG Systems</h3>
-                            <p class="detail-description">In Retrieval-Augmented Generation (RAG) systems, the core task is to find relevant documents or text chunks to inform a Large Language Model (LLM). **Nearest Neighbor search is the foundation of this retrieval step.** The user's query is converted into a vector embedding, and the k-NN algorithm is used to efficiently search a vector database (the knowledge base) to find the 'k' closest document embeddings. These retrieved documents are then passed to the LLM to generate a contextually relevant and accurate response.</p>
-                        `	
-                    },
-                    // --- END UPDATED SUB-SECTION ---
-                    // REMOVED "Introduction" from here
-                    { title: "K-Mean Clustering", filePath: "decision-trees.htm" },	
-                    { title: "Decision Trees", filePath: "decision-trees.html" },	{ title: "Random Forests", filePath: "random-forests.html" },
-                    { title: "Support Vector Machines (SVM)", filePath: "svm.html" },	
-                    
-                    // Content kept local for demonstration purposes
-                    { title: "Kernel Density Estimation (KDE)", content: "Explore **KDE** as a non-parametric way to estimate the probability density function of a random variable." }
-                ]
+    {	
+        title: "Machine Learning",	
+        subtopics: [
+            { 
+                title: "Machine Learning Basics", 
+                content: "Machine Learning use cases and terminologies shall be discussed here. Further Model, Cost, and Optimization aspects shall be discussed more taking examples of ML Models." 
             },
             {	
-                title: "Deep Learning",	
-                subtopics: [
-                    { title: "Convolutional Neural Networks (CNN)", content: "Tutorial on CNNs, the backbone of modern image recognition systems. Learn about layers: convolution, pooling, and fully connected." },
-                    { title: "Recurrent Neural Networks (RNN)", content: "Focus on RNNs for sequential data, such as time series and natural language processing. Includes an overview of LSTMs and GRUs." }
-                ]
+                title: "Nearest Neighbor",	
+                content: `<h2 class="detail-title">Nearest Neighbor (k-NN)</h2><p class="detail-description">The k-Nearest Neighbors (k-NN) algorithm is a non-parametric, lazy learning algorithm...</p>`	
             },
-            {	
+            { title: "K-Mean Clustering", filePath: "decision-trees.htm" },	
+            { title: "Decision Trees", filePath: "decision-trees.html" },
+            { title: "Random Forests", filePath: "random-forests.html" },
+            { title: "Support Vector Machines (SVM)", filePath: "svm.html" },	
+            { title: "Shallow Neural Networks", filePath: "ShallowNeuralNetwork.html"}, // Fixed Case: filePath
+            { title: "Gradient Descent and Backpropagation", filePath: "BP2.html"}, // Fixed Case and Spelling
+            { title: "Kernel Density Estimation (KDE)" }
+        ]
+    },
+    {	
+        title: "Probability & MLE",	
+        subtopics: [
+            { title: "Basic Probability", filePath:"Probability.html" },
+            { title: "Random Variable and Operations", filePath:"RandomVariableandExpectations.html" },
+            { title: "Normal Distributions", filePath: "NormalDistribution.html" },
+            { title: "Maximum Likelihood Estimation (MLE)",filePath:"MaximumLikelihoodEstimation.html" }
+        ]
+    },
+    {	
+        title: "Deep Learning",	
+        subtopics: [
+            { title: "Convolutional Neural Networks (CNN)", content: "Tutorial on CNNs for image recognition." },
+            { title: "Recurrent Neural Networks (RNN)", content: "Focus on RNNs for sequential data." }
+        ]
+    },
+    {	
         title: "Statistics",	
         subtopics: [
             { title: "Measures of Central Tendency", filePath: "CentralTendency.html" },
-			{ title: "Probability Theory", filePath: "Probability.html" },
-            { title: "Hypothesis Testing", content: "Detailed steps on how to formulate and test hypotheses, covering Z-tests and T-tests." },
-            { title: "Regression Analysis", content: "Simple and multiple linear regression, including interpretation of R-squared." },
-            // --- NEWLY ADDED LINK TO YOUR HTML PAGE ---
-            { 
-                title: "Statistical Data Visualization", 
-                filePath: "StatisticalDataVisualization.html" 
-            }
+            { title: "Hypothesis Testing", content: "Steps for Z-tests and T-tests." },
+            { title: "Regression Analysis", content: "Simple and multiple linear regression." },
+            { title: "Statistical Data Visualization", filePath: "StatisticalDataVisualization.html" }
         ]
     },
-            {	
-                title: "Python",	
-                content: "Master Python libraries crucial for data science, including Pandas for data manipulation, NumPy for numerical operations, and Matplotlib for visualization. This is a standalone topic without sub-topics."
-            }
-        ];
+    {	
+        title: "Python",	
+        content: "Master Python libraries crucial for data science (Pandas, NumPy, Matplotlib)."
+    }
+];
         // --- END OF TUTORIALS DATA STRUCTURE UPDATE ---
 
         const bookTrack = document.getElementById('bookTrack');
