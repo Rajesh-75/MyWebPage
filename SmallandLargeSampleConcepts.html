@@ -1,0 +1,84 @@
+<h2 class="detail-title">Small and Large Sample Concepts</h2>
+
+<p class="detail-description">
+    In statistics and data science, the choice between <strong>"Large"</strong> and <strong>"Small"</strong> sample theory dictates which mathematical tools you use to draw conclusions from your data. 
+    The "magic number" usually cited is $n = 30$, though this is more of a rule of thumb than a hard mathematical law.
+</p>
+
+<script type="text/javascript" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+
+
+
+
+<h3 style="color: #2a6496;">The Core Comparison</h3>
+<table style="width:100%; border-collapse: collapse; margin: 20px 0; font-size: 0.9em; text-align: left; border: 1px solid #ddd;">
+    <thead>
+        <tr style="background-color: #f2f2f2; border-bottom: 2px solid #ddd;">
+            <th style="padding: 12px; border: 1px solid #ddd;">Feature</th>
+            <th style="padding: 12px; border: 1px solid #ddd;">Large Sample Theory (Asymptotic)</th>
+            <th style="padding: 12px; border: 1px solid #ddd;">Small Sample Theory (Exact)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Sample Size</td>
+            <td style="padding: 12px; border: 1px solid #ddd;">Generally $n \ge 30$.</td>
+            <td style="padding: 12px; border: 1px solid #ddd;">Generally $n < 30$.</td>
+        </tr>
+        <tr>
+            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Distribution</td>
+            <td style="padding: 12px; border: 1px solid #ddd;">Relies on the CLT. Assumes the sampling distribution is Normal.</td>
+            <td style="padding: 12px; border: 1px solid #ddd;">Relies on the population's distribution (usually $t$-dist).</td>
+        </tr>
+        <tr>
+            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Test Statistics</td>
+            <td style="padding: 12px; border: 1px solid #ddd;">Uses $Z$-tests ($Z$-scores).</td>
+            <td style="padding: 12px; border: 1px solid #ddd;">Uses $t$-tests, $F$-tests, or Chi-square.</td>
+        </tr>
+        <tr>
+            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Parameters</td>
+            <td style="padding: 12px; border: 1px solid #ddd;">$\sigma$ is known or well-estimated by $s$.</td>
+            <td style="padding: 12px; border: 1px solid #ddd;">$\sigma$ is unknown; uses "Degrees of Freedom".</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3 style="color: #2a6496;">1. Large Sample Theory: The Power of $n$</h3>
+<p class="detail-description">
+    When your sample size is large, the <strong>Central Limit Theorem (CLT)</strong> acts as a safety net. It states that regardless of the shape of your original data (skewed, uniform, etc.), the mean of those samples will follow a Normal distribution as $n$ increases.
+</p>
+
+
+
+<p class="detail-description">In this realm, we use the standard Normal variable:</p>
+<p style="text-align: center; font-size: 1.2em;">
+    $$Z = \frac{\bar{X} - \mu}{\sigma / \sqrt{n}}$$
+</p>
+
+<h3 style="color: #2a6496;">2. Small Sample Theory: Handling Uncertainty</h3>
+<p class="detail-description">
+    When $n$ is small, your estimates of mean and variance are "shaky." If you used a Normal distribution, you would likely underestimate the probability of extreme values (outliers). To fix this, we use the <strong>Student’s $t$-distribution</strong>.
+</p>
+
+
+
+<div style="background-color: #f9f9f9; border-left: 5px solid #2a6496; padding: 15px; margin: 20px 0;">
+    <strong>Note:</strong> The $t$-distribution has "heavier tails" than the Normal distribution. This extra area accounts for the higher likelihood of extreme results when you have less data.
+</div>
+
+<h2 class="detail-title">Why this matters in Deep Learning</h2>
+<ul class="detail-description">
+    <li><strong>Batch Size:</strong> When training, your "Mini-batch size" (32, 64, or 128) is technically a "large sample." This ensures gradient estimates are stable.</li>
+    <li><strong>Low-Data Regimes:</strong> In medical imaging with few samples, traditional Deep Learning often overfits. You might switch to <strong>Few-Shot Learning</strong> to handle that uncertainty.</li>
+    <li><strong>Evaluation:</strong> For very small validation sets, you should use $t$-intervals rather than $Z$-intervals to report accuracy.</li>
+</ul>
