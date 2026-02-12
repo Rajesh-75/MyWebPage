@@ -163,6 +163,40 @@
 <p>Probability is defined as the ratio of the number of favouring cases to the total number of equally likely cases i.e. probability of the occurrence of event A is expressed as:
     $$P(A) = \frac{\text{Number of Favourable Cases}}{\text{Total Number of Possible Cases}}$$
 </p>
+<h3>The Foundation: Sample Space ($S$)</h3>
+        <p>Before calculating probabilities, we must define the <strong>Sample Space</strong>. The Sample Space is the set of all possible outcomes of a random experiment. Each individual outcome in this space is called a <strong>Sample Point</strong>.</p>
+        
+        <ul>
+            <li><strong>Finite Sample Space:</strong> When the outcomes can be counted (e.g., tossing a coin).</li>
+            <li><strong>Infinite Sample Space:</strong> When outcomes are continuous (e.g., the time it takes for a bulb to fail).</li>
+        </ul>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Experiment</th>
+                    <th>Sample Space ($S$)</th>
+                    <th>Total Outcomes $n(S)$</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Tossing a Coin</td>
+                    <td>$\{H, T\}$</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>Rolling a Die</td>
+                    <td>$\{1, 2, 3, 4, 5, 6\}$</td>
+                    <td>6</td>
+                </tr>
+                <tr>
+                    <td>Tossing Two Coins</td>
+                    <td>$\{HH, HT, TH, TT\}$</td>
+                    <td>4</td>
+                </tr>
+            </tbody>
+        </table>
 <h3>Some Sample problems using idea of Relative Frequency Approach</h3>
 <P>Three unbaied coins are tossed. What is the probability of obtaining (1) All heads (2)two heads (3) one head (4) at least one head (5) atleast two heads (6) all tails.</p> 
 
@@ -445,9 +479,21 @@
             </div>
         </div>
 		
-        <h3>D. Conditional Probability and Independence</h3>
-        <p><strong>Conditional Probability:</strong> $P(A|B) = \frac{P(A \cap B)}{P(B)}$</p>
-        <p><strong>Independence:</strong> Two events are independent if $P(A \cap B) = P(A) \cdot P(B)$</p>
+        <h3>D. Conditional Probability and Statistical Independence</h3>
+<p><strong>Conditional Probability:</strong> The probability of event $A$ occurring given that event $B$ has already occurred.</p>
+<div class="formula-container">
+    $$P(A|B) = \frac{P(A \cap B)}{P(B)} \quad \text{or} \quad P(B|A) = \frac{P(A \cap B)}{P(A)}$$
+</div>
+
+<p><strong>The General Multiplication Rule:</strong> For any two events (dependent or independent), the probability that both occur is:</p>
+<div class="formula-container">
+    $$P(A \cap B) = P(A) \cdot P(B|A)$$
+</div>
+
+<p><strong>Statistical Independence:</strong> Two events are considered statistically independent if the occurrence of one does not affect the probability of the other. In this specific case, $P(B|A) = P(B)$, and the formula simplifies to:</p>
+<div class="formula-container">
+    $$P(A \cap B) = P(A) \cdot P(B)$$
+</div>
 		<div class="example-problem">
             <div class="problem-header">Example: Successive Draws Without Replacement</div>
             <div class="problem-content">
@@ -472,8 +518,7 @@
                     <p><strong>Answer:</strong> The probability is <span class="math-highlight">7/429</span>.</p>
                 </div>
             </div>
-        </div>
-    </div>
+        </div>   
 	<div class="data-type-card highlight-green">
     <span class="tag">Real-World Perspective</span>
     <h3>Where does $P(A)$ come from?</h3>
