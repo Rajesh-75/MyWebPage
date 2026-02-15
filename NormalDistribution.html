@@ -72,7 +72,8 @@
             font-size: 0.9rem;
             text-transform: uppercase;
         }
-		/* FLEXBOX LAYOUT FOR SIDE-BY-SIDE SVGS */
+
+        /* FLEXBOX LAYOUT FOR SIDE-BY-SIDE SVGS */
         .svg-flex-layout {
             display: flex;
             flex-wrap: wrap;
@@ -111,6 +112,41 @@
             border-radius: 4px;
             margin-top: 10px;
             list-style-type: none;
+        }
+
+        /* INTEGRATED STYLES FOR MULTIVARIATE SECTION */
+        .highlight-box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .grid-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .grid-item {
+            background: #f1f3f5;
+            padding: 15px;
+            border-radius: 4px;
+            border-top: 3px solid #0056b3;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #0056b3;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
         }
     </style>
 </head>
@@ -163,8 +199,6 @@
         </p>
     </div>
 
-    
-
     <h3>Mathematical Definition of Normal Distribution</h3>
     <p class="detail-description">
         A continuous random variable $X$ is said to follow a <strong>Normal Distribution</strong> (Gaussian distribution) if its probability density function (PDF) is defined by the following equation:
@@ -180,12 +214,12 @@
     <ul>
         <li>$\mu$ (Mu): The <strong>Mean</strong> or center of the distribution.</li>
         <li>$\sigma$ (Sigma): The <strong>Standard Deviation</strong>, representing the spread.</li>
-		<li>A random variable $X$ following a Normal Distribution is typically represented as $X \sim N(\mu, \sigma^2)$, where $\mu$ is the mean and $\sigma^2$ is the variance.</li>
+        <li>A random variable $X$ following a Normal Distribution is typically represented as $X \sim N(\mu, \sigma^2)$, where $\mu$ is the mean and $\sigma^2$ is the variance.</li>
         <li>$e$: The base of natural logarithms (approx. 2.718).</li>
         <li>$\pi$: The constant Pi (approx. 3.1415).</li>
         <li>The curve is <strong>asymptotic</strong> to the base on either side; i.e., the curve approaches nearer and nearer to the base, but never touches.</li>
         <li>The <strong>points of inflection</strong> occur at $\mu \pm \sigma$.</li>
-		
+        
         <li><strong>Area Distribution (The Empirical Rule):</strong>
             <ul class="area-distribution">
                 <li>$\mu \pm 1\sigma$ covers <strong>68.27%</strong> of the area.</li>
@@ -193,14 +227,15 @@
                 <li>$\mu \pm 3\sigma$ covers <strong>99.73%</strong> of the area.</li>
             </ul>
         </li>
-		<li><strong>Additive Property:</strong> A linear function of normal variates is also a normal variate. This property ensures that the sum or difference of independent normally distributed variables results in a new variable that is also normally distributed.</li>
+        <li><strong>Additive Property:</strong> A linear function of normal variates is also a normal variate. This property ensures that the sum or difference of independent normally distributed variables results in a new variable that is also normally distributed.</li>
     </ul>
-	
+    
     <p class="detail-description" style="margin-top: 15px;">
         The variable $X$ is defined over the <strong>theoretical range</strong> $-\infty < X < +\infty$. However, for most practical applications, the range is considered to be $\mu - 3\sigma$ to $\mu + 3\sigma$, as it encompasses nearly all possible outcomes. In this context, $X$ is treated as a Continuous Random Variable representing a single measurement, allowing us to calculate the probability of any specific outcome occurring within the Gaussian curve.
     </p>
-	<h3>Standarized Normal Distribution</h3>
-	<p c lass="detail-description"> If X is a random variable following normal distribution with $\mu$ and standard deviation(variance) $\sigma$ then the variable $Z$ = $\frac{x - \mu}{\sigma}$ is known as the <strong>Standard Normal Variable</strong>.It is usually  represented as $ \sim N(0,1)$, where 0 is the mean and 1 is the variance of the standard Normal Distributions.<p class="detail-description">
+    <h3>Standarized Normal Distribution</h3>
+    <p class="detail-description"> If X is a random variable following normal distribution with $\mu$ and standard deviation(variance) $\sigma$ then the variable $Z$ = $\frac{x - \mu}{\sigma}$ is known as the <strong>Standard Normal Variable</strong>.It is usually  represented as $ \sim N(0,1)$, where 0 is the mean and 1 is the variance of the standard Normal Distributions.</p>
+    <p class="detail-description">
     When we standardize the distribution ($ \mu=0, \sigma=1 $), the complex Gaussian equation simplifies significantly. This is the version used to calculate <strong>Z-scores</strong> and probability tables:The table is used to compute the area within two values of any variable following ND.
 </p>
 
@@ -215,7 +250,7 @@
     The Z-Score table is useful to compute the area between two values of any variable following the Standard Normal Distribution.
 </p>
 
-<div class="example-box">
+<div class="example-section">
     For example, when $Z = 1.17$, the table value is $0.3790$. This represents the area between zero and $1.17$, written as:
     <center>$P(0 < Z < 1.17) = 0.3790$</center>
     <br>
@@ -226,14 +261,16 @@
     If neither value is zero, for example $P(-1.78 < Z < 1.78)$, we must calculate the area from each point to zero and then sum them (if they are on opposite sides of the mean):
 </p>
 
-<div class="formula-display">
+<div class="example-section" style="text-align:center;">
     $P(-1.78 < Z < 1.78) = P(-1.78 < Z < 0) + P(0 < Z < 1.78)$ <br>
     $= 0.4625 + 0.4625 = 0.9250$
 </div>
-<div class="formula-display">
+<div class="example-section" style="text-align:center;">
     $P(Z > 1.8) = P(0 < Z < \infty) - P(0 < Z < 1.8)$ <br>
     $P(Z > 1.8) = 0.5000 - 0.4641 = 0.0359$
-	<div class="plot-container">
+</div>
+
+<div class="plot-container">
     <svg width="500" height="320" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg">
         <line x1="60" y1="220" x2="60" y2="40" stroke="#333" stroke-width="2" />
         <path d="M 55 50 L 60 40 L 65 50" fill="none" stroke="#333" stroke-width="2" /> 
@@ -278,7 +315,7 @@
 <div class="svg-flex-layout">
         
         <div class="svg-column">
-            <div class="formula-display">
+            <div class="example-section" style="text-align:center; border-left:none;">
                 $P(Z > 1.8) = 0.5000 - 0.4641 = 0.0359$
             </div>
             <div class="plot-container">
@@ -286,12 +323,12 @@
                     <line x1="60" y1="220" x2="60" y2="40" stroke="#333" stroke-width="2" />
                     <line x1="60" y1="220" x2="460" y2="220" stroke="#333" stroke-width="2" />
                     <defs>
-                        <clipPath id="tailClip">
+                        <clipPath id="tailClip2">
                             <rect x="380" y="0" width="100" height="280" />
                         </clipPath>
                     </defs>
                     <path d="M 60 220 C 160 220, 190 60, 260 60 C 330 60, 360 220, 460 220 L 60 220 Z" 
-                          fill="#d9534f" fill-opacity="0.4" clip-path="url(#tailClip)" />
+                          fill="#d9534f" fill-opacity="0.4" clip-path="url(#tailClip2)" />
                     <line x1="260" y1="220" x2="260" y2="60" stroke="#333" stroke-width="1.5" stroke-dasharray="5,5" />
                     <path d="M 60 215 C 160 215, 190 60, 260 60 C 330 60, 360 215, 460 215" fill="none" stroke="#0056b3" stroke-width="3" />
                     <text x="260" y="240" font-family="Arial" font-size="12" text-anchor="middle">0 (Mean)</text>
@@ -302,7 +339,7 @@
         </div>
 
         <div class="svg-column">
-            <div class="formula-display">
+            <div class="example-section" style="text-align:center; border-left:none;">
                 $P(Z < 1.2) = 0.5000 + 0.3849 = 0.8849$
             </div>
             <div class="plot-container">
@@ -327,7 +364,7 @@
         </div>
 
     </div>
-	
+    
 <div class="plot-container" style="text-align: center; margin: 20px 0; background: #fff; padding: 10px; border: 1px solid #eee; border-radius: 4px;">
     <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; height: auto;">
         <line x1="50" y1="250" x2="550" y2="250" stroke="#000" stroke-width="2" />
@@ -360,7 +397,7 @@
             Area ≈ 0.8664
         </text>
     </svg>
-</div>	
+</div>  
 <p class="detail-description"><strong>Key Rule for Calculations:</strong> To find the total area relative to a positive $Z$-value, consider the two halves of the curve. To compute the area <strong>less than</strong> a positive $Z$ (e.g., $P(Z &lt; 1.2)$), you take the entire left half $P(-\infty &lt; Z &lt; 0) = 0.5$ and <strong>add</strong> the area between zero and your value.Conversely, to compute the area <strong>greater than</strong> a positive $Z$ (the upper tail), you take the entire right half $P(0 &lt; Z &lt; \infty) = 0.5$ and <strong>subtract</strong> the area between zero and your value.</p>
 
 <div class="example-section">
@@ -432,8 +469,7 @@
         </div>
     </div>
 
-</div>
-	<h3>Proof for The Additive Property</h3>
+    <h3>Proof for The Additive Property</h3>
     <p class="detail-description">
         A significant characteristic of the Normal Distribution is that it is <strong>stable</strong> under linear combinations. This means that if you add two independent normally distributed random variables, the resulting variable is also normally distributed.
     </p>
@@ -452,8 +488,89 @@
             Because the result is in the form $e^{\mu_{new} t + \frac{1}{2}\sigma_{new}^2 t^2}$, we conclude that $Z \sim N(\mu_X + \mu_Y, \sigma_X^2 + \sigma_Y^2)$.
         </p>
     </div>
-</div>
 
+    <h2 class="detail-title" style="margin-top: 40px; border-top: 1px solid #ddd; padding-top: 20px;">Multivariate Normal Distributions</h2>
+
+    <h3>1. Key Components: Mean Vector and Covariance Matrix</h3>
+    <p class="detail-description">
+        In multiple dimensions, the distribution is characterized by two primary structures that generalize the univariate mean and variance.
+    </p>
+
+    <div class="example-section">
+        <span class="example-header">The Mean Vector ($\boldsymbol{\mu}$)</span>
+        <p class="detail-description">
+            It is perfectly fine to say $\boldsymbol{\mu}$ denotes the Mean, but it is more precise to call it the <strong>Mean Vector</strong>. In one dimension, $\mu$ is a single number. In a multivariate distribution, $\boldsymbol{\mu}$ is a vector containing the means of every individual variable:
+        </p>
+        <div style="text-align: center;">
+            $$\boldsymbol{\mu} = \begin{bmatrix} \mu_1 \\ \mu_2 \\ \vdots \\ \mu_n \end{bmatrix}$$
+        </div>
+    </div>
+
+    <div class="example-section">
+        <span class="example-header">The Covariance Matrix ($\Sigma$)</span>
+        <p class="detail-description">
+            It is incorrect to call $\Sigma$ (or its inverse) the "Standard Deviation."
+        </p>
+        <ul>
+            <li><strong>$\Sigma$ is the Covariance Matrix:</strong> It contains the variances of each variable on the diagonal and the covariances between pairs of variables on the off-diagonals.</li>
+            <li><strong>Standard Deviation vs. Variance:</strong> In 1D, standard deviation is $\sigma$ and variance is $\sigma^2$. In multivariate math, $\Sigma$ is the "matrix version" of variance ($s^2$), not standard deviation ($s$).</li>
+        </ul>
+    </div>
+    
+
+    <h3>2. The Mathematical Foundation</h3>
+    <p class="detail-description">The PDF of a bivariate normal distribution (where $N=2$) is given by:</p>
+    <div style="text-align: center; background: #f8f9fa; padding: 20px; border-radius: 4px; margin: 15px 0; border: 1px solid #e1e8ed;">
+        $$f(\mathbf{x}) = \frac{1}{2\pi \sqrt{|\Sigma|}} \exp\left( -\frac{1}{2} (\mathbf{x} - \boldsymbol{\mu})^T \Sigma^{-1} (\mathbf{x} - \boldsymbol{\mu}) \right)$$
+    </div>
+    <p class="detail-description">For the density $f(\mathbf{x})$ to be a constant (a contour), the exponent must be constant:</p>
+    <div style="text-align: center; background: #f8f9fa; padding: 20px; border-radius: 4px; margin: 15px 0; border: 1px solid #e1e8ed;">
+        $$(\mathbf{x} - \boldsymbol{\mu})^T \Sigma^{-1} (\mathbf{x} - \boldsymbol{\mu}) = c^2$$
+    </div>
+    <p class="detail-description">This quadratic form is the equation of an ellipse. Therefore, the contours of a Multivariate Normal Distribution are always concentric ellipses centered at the mean $\boldsymbol{\mu}$.</p>
+
+    <h3>3. What the Contours Tell You</h3>
+    <p class="detail-description">The shape and orientation of these ellipses are entirely determined by the Covariance Matrix ($\Sigma$):</p>
+    
+    <div class="grid-list">
+        <div class="grid-item">
+            <span class="tag">Circle</span>
+            <p style="font-size: 0.9rem; margin-top:5px;">If the variables are independent and have equal variance ($\sigma_1 = \sigma_2$ and $\rho = 0$), the contours are perfect circles.</p>
+        </div>
+        <div class="grid-item">
+            <span class="tag">Axis-Aligned Ellipse</span>
+            <p style="font-size: 0.9rem; margin-top:5px;">If the variables are independent but have different variances, the ellipses stretch along the $x$ or $y$ axis.</p>
+        </div>
+        <div class="grid-item">
+            <span class="tag">Tilted Ellipse</span>
+            <p style="font-size: 0.9rem; margin-top:5px;">If there is a correlation ($\rho \neq 0$) between variables, the ellipse tilts. The angle represents the strength and direction of correlation.</p>
+        </div>
+    </div>
+    
+
+    <h3>4. Connection to Eigenvalues and Eigenvectors</h3>
+    <p class="detail-description">To physically "derive" or draw the plot, mathematicians look at the Spectral Decomposition of the covariance matrix $\Sigma$:</p>
+    <ul>
+        <li><strong>Eigenvectors:</strong> Define the direction of the principal axes (the "tilt") of the ellipse.</li>
+        <li><strong>Eigenvalues ($\lambda$):</strong> Define the lengths of the axes. The width of the contour in the direction of an eigenvector is proportional to $\sqrt{\lambda}$.</li>
+    </ul>
+
+    <h3>5. Why this matters in Neyman-Pearson</h3>
+    <div class="highlight-box">
+        <p class="detail-description">Returning to our earlier discussion on Neyman-Pearson, if you are testing two multivariate hypotheses:</p>
+        <p style="text-align: center;">$H_0: \mathbf{x} \sim N(\boldsymbol{\mu}_0, \Sigma)$ &nbsp;&nbsp; $H_1: \mathbf{x} \sim N(\boldsymbol{\mu}_1, \Sigma)$</p>
+        <p class="detail-description">The "Likelihood Ratio" effectively compares two sets of these contour ellipses. The Optimal Decision Boundary where the ratio is constant ($k$) will actually be a straight line (or hyperplane in higher dimensions) that cuts through the intersection of these overlapping ellipses.</p>
+    </div>
+    
+
+    <h3>6. High-Dimensional "ND" (N > 2)</h3>
+    <p class="detail-description">If you have more than two dimensions (ND), you cannot visualize the full contour in a single 2D plot. Instead, you use:</p>
+    <ul>
+        <li><strong>Slice:</strong> Fix $N-2$ variables at their mean and plot the remaining two.</li>
+        <li><strong>Projection:</strong> Project the $N$-dimensional "hyper-ellipsoid" onto a 2D plane.</li>
+        <li><strong>Pair Plots:</strong> A grid of 2D contour plots showing every possible pair of variables.</li>
+    </ul>
+</div>
 
 </body>
 </html>
