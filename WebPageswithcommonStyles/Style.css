@@ -165,6 +165,36 @@ p, li {
             margin-bottom: 8px;
             text-transform: uppercase;
         }
+		.algorithm-box { 
+            background-color: #f5f5dc; 
+            border: 2px solid #2980b9; 
+            padding: 20px; 
+            border-radius: 8px; 
+            font-family: 'Courier New', Courier, monospace; 
+            margin: 20px 0; 
+        }
+        .algorithm-title { 
+            color: #0000CC; 
+            font-weight: bold; 
+            font-size: 1.5rem; 
+            margin-bottom: 15px; 
+            display: block; 
+        }
+		.intuition-box {
+            background-color: #eef7ff;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            border-left: 4px solid #3498db;
+            margin-bottom: 10px;
+        }
+        .math-breakdown {
+            background-color: #fffaf0;
+            padding: 15px;
+            border: 1px dashed #f39c12;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
 and in the every page you have to add 
 
 <head>

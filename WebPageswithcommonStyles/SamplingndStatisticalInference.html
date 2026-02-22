@@ -8,42 +8,116 @@
 
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	  <script type="text/javascript" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
 </head>
 <body>
 
 <div class="content-wrapper">
     <h1>Sampling & Statistical Inference</h1>
-	
-    <p class="detail-description
-		While probability distributions like the Multivariate Normal Distribution allow us to describe the "shape" of data, <strong>Sampling and Statistical Inference</strong> empower us to use that mathematical shape to predict the unknown. In the real world, we are rarely given the true parameters ($\mu, \Sigma$) of a distribution; instead, we must act as detectives, using the fingerprints found in a small Sample to reconstruct the entire Population with mathematical certainty.
-        In both modern AI development and traditional research, the relationship between a Sample and Statistical Inference is the fundamental bridge between observed data and actionable truth. Whether you are a researcher conducting a Sample Survey to predict societal trends or an ML engineer training a Large Language Model, you are working with a finite slice of a much larger Population.
-		Statistical Inference provides the rigorous framework needed to generalize from these limited observations—turning raw data into reliable Predictions. Through <strong>Estimation Theory</strong>, we move from specific sample statistics to generalized parameters, whether we are calculating a population mean or optimizing billions of model weights. Meanwhile, <strong>Hypothesis Testing<strong> serves as the ultimate "sanity check," distinguishing real signal from random noise to ensure that a survey result or a model’s performance gain is truly representative of the "unseen" world.
-    </p>
     
-    <div class="table-container">
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Concept</th>
-                    <th>The Statistical Goal</th>
-                    <th>The Machine Learning Equivalent</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Estimation Theory</strong></td>
-                    <td>Moving from sample statistics to generalized parameters (e.g., Population Mean $\mu$).</td>
-                    <td>Optimizing billions of <strong>model weights</strong> ($\theta$) based on training data.</td>
-                </tr>
-                <tr>
-                    <td><strong>Hypothesis Testing</strong></td>
-                    <td>Distinguishing real signal from random noise (The "Sanity Check").</td>
-                    <td>Evaluating if a <strong>model’s performance gain</strong> is truly representative or just luck.</td>
-                </tr>
-            </tbody>
-        </table>
+    <p class="detail-description">
+        Probability distributions like the <strong>Multivariate Normal Distribution</strong> allow us to describe the "shape" of data when we already know the parameters ($\mu, \Sigma$). However, in the real world, we are rarely given these true parameters; instead, we use a small <strong>Sample</strong> to infer the shape of the entire <strong>Population</strong> with mathematical certainty.
+    </p>
+
+    
+
+    <p class="detail-description">
+        In both modern AI development and traditional statistical thinking, the relationship between a sample and Statistical Inference is the fundamental bridge between observed data and the truth about the population. Whether you are a researcher conducting a Sample Survey or an ML engineer training a Large Language Model, you are working with a finite slice of a much larger Population.
+    </p>
+
+    <div style="text-align: center; background: #f8f9fa; padding: 20px; border-radius: 4px; margin: 15px 0; border: 1px solid #e1e8ed; font-family: 'Courier New', monospace;">
+        <strong>Statistical Inference:</strong> Given a sample $X_1, X_2, \dots, X_N$ which follows a distribution $F$, how do we infer $F$?
     </div>
 
-  
+    <p class="detail-description">
+        In the world of statistics, measures obtained from a population are called <strong>Population Parameters</strong>. Conversely, measures calculated from a sample are known as <strong>Sample Statistics</strong>. We draw conclusions about the parameters based on the statistics. 
+    </p>
+
+    <p class="detail-description">
+        The two main branches of statistical inference are:
+    </p>
+    
+    <ul>
+        <li><strong>Estimation:</strong> Using sample data to calculate a specific value or range for a population parameter.</li>
+        <li><strong>Hypothesis Testing:</strong> Using sample data to evaluate the validity of a claim or "sanity check" regarding the population.</li>
+    </ul>
+
+    
+</div>
+ <h2>Statistical Test of Hypothesis</h2>
+ <div class="content-wrapper">
+ <p class="detail-description"> Statistical Test of Hypothesis is  process or procedure under which statistical hypothesis is laid down and it is rejected or accepted. The test conducted to accept or to reject the Hypothesis are known of statistical test of Hypothesis.In other words, A <strong>Statistical Test of Hypothesis</strong> is a formal procedure used to decide whether the data from a sample supports a particular claim about the population. Think of it as a "Trial by Data": we start with an assumption, look at the evidence, and determine if that assumption holds up under scrutiny. </p>
+ <p class="detail-description">
+    In this process, we evaluate two competing statements:
+</p>
+
+<ul>
+    <li><strong>Null Hypothesis ($H_0$):</strong> The "default" assumption that there is no effect or no difference. (e.g., "This new medicine has the same effect as a sugar pill.")</li>
+    <li><strong>Alternative Hypothesis ($H_1$):</strong> The claim we are trying to prove. (e.g., "This new medicine is more effective than a sugar pill.")</li>
+</ul>
+<p class="detail-description">
+One can generalize the examples of the Testing Hypothesis as 
+<ul>
+	<li> To test whether a give sample is a give sample is a true sample</li>
+	<li> To test whether two attributes are independent</li>
+	<li> To test whether a give sample is a give sample is a true sample</li>
+	<li> To test whether population proportion is grate than a give value etc </li>
+</ul>	</p>
+<h3>Statistical Distributions for Tests of Hypothesis</h3>
+<div class="content-wrapper">
+    <p class="detail-description">
+        When we perform a hypothesis test, we calculate a <strong>Test Statistic</strong><span style="color: #555;">(It is a single number that summarizes how much your sample data disagrees with your starting assumption. The further this score is from zero, the more "guilty" your Null Hypothesis looks)</span>.. To decide if that value is "rare" or "normal," we compare it to a known probability distribution. While you have already studied the <strong>Normal Distribution</strong>, it has several "cousins" used depending on what we are testing:
+    </p>
+
+    
+        <ul>
+            <li>
+                <strong>Z-test (Standard Normal):</strong> Used when your sample size is large ($n > 30$) or when you already know the population variance. It is the "gold standard" for A/B testing in high-traffic ML systems.
+            </li>
+            <li>
+                <strong>t-test (Student’s t):</strong> Used when the sample size is small ($n < 30$) and the population variance is unknown. It looks like a Normal Distribution but has "fresher" (heavier) tails to account for greater uncertainty.
+            </li>
+            
+            <li>
+                <strong>$\chi^2$-test (Chi-Square):</strong> Used to test the "Goodness of Fit" or independence between variables. For example: "Is the distribution of user clicks across different regions truly random?"
+            </li>
+            <li>
+                <strong>F-test (Fisher-Snedecor):</strong> Used to compare the variances of two different groups. In ML, we use this to see if one model's error variance is significantly lower than another's.
+            </li>
+        </ul>
+    </div>
+
+    <div class="stat-box" style="background: #fdfaf0; border: 1px solid #f1e4bc;">
+        <strong>Key Connection:</strong> Most of these distributions are derived from the Normal Distribution. For instance, if you square a Standard Normal variable, you get a $\chi^2$ distribution. If you divide two $\chi^2$ variables, you get an $F$ distribution.
+    </div>
+	<h3>Algorithmic appraoch for Testing of hypothesis</h3>
+	<div class="algorithm-box">
+        <span class="algorithm-title">Testing Hypothesis generic steps</span>
+	 <ol>
+            <li>Set a Null hypothesis($H_0$)and alternative hypothesis($H_1$) appropriate to the test to be conducted  </li>
+            <li>Decide the test criterion suitable to the test statistic (such as t test, F-test) mentioned above,based on your data</li>
+            <li>Specifiy the suitable <strong>level of Significance (such as 5%,1% etc)</strong></li>
+			<li>Calculate the value of the <strong>test statistic</strong> using the appropriate forumula</li>
+			<li>Then find the <strong>table value</strong> of the test statistic using the approximate formula.Table Value" is often called the <strong>Critical Value</strong> and this value depends on <strong>Degrees of Freedom</strong></li>
+			<li>Make the decisions about accepting or rejecting the null hypothesis. The decision depends on whether the computed value of the test statistic falls in the acceptance region or rejection region. When the computed value of the test statistic is numerically less than the table value the test statistic falls in the acceptance region,otherwise in the rejection region.
+			<ul>
+                <li>If the <strong>Calculated Test Statistic Value < Table Value</strong>: We fall in the "Acceptance Region" (Fail to reject $H_0$).</li>
+                <li>If the <strong>Calculated Test Statistic Value  > Table Value</strong>: We fall in the "Rejection Region" (Accept $H_1$ as likely true).</li>
+            </ul>		
+	 </ol>
+	 <p class="detail-description"> In the subsequent part of the tutorial, we shall discuss each of steps in detail. 
+	 <p>
+    </div>
+	
 </body>
 </html>
