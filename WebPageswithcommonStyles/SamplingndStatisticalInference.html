@@ -114,10 +114,76 @@ One can generalize the examples of the Testing Hypothesis as
                 <li>If the <strong>Calculated Test Statistic Value < Table Value</strong>: We fall in the "Acceptance Region" (Fail to reject $H_0$).</li>
                 <li>If the <strong>Calculated Test Statistic Value  > Table Value</strong>: We fall in the "Rejection Region" (Accept $H_1$ as likely true).</li>
             </ul>		
-	 </ol>
-	 <p class="detail-description"> In the subsequent part of the tutorial, we shall discuss each of steps in detail. 
-	 <p>
+	 </ol>	 
     </div>
+	<p class="detail-description"> In the subsequent part of the tutorial, we shall discuss each of steps in detail. 
+	 </p>
+	<div class="description-box"> 
+	<h3>Null and Alternative Hypothesis</h3>
+	<p class="detail-description"> In any test of hypothesis first step is to set up a hypothesis about the population parameter. The conventional approach is to set up two different hypothesis. The two hypothesis are so constructed that if one hypothesis is accpeted,other is rejected. These two hypothesis is know n as the <strong>Null Hypothesis </strong>(Population mean is 65) and <strong>Alternative hypothesis </strong>(Population mean is not 65).Null hypothesis is assumed to be accpted. If test fails we choose alternative hypothesis</p>
 	
+		
+	<div class="highlight-box">
+    <h3 style="margin-top: 0;">The Four Possible Outcomes</h3>
+    <p class="detail-description">
+        Because we use sample data to make guesses about a population, there are four possible scenarios based on our decision:
+    </p>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th style="background-color: #eee;"></th>
+                <th style="color: #2e7d32;">$H_0$ is True (Innocent)</th>
+                <th style="color: #d32f2f;">$H_0$ is False (Guilty)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="background-color: #f4f4f4; font-weight: bold;">Accept $H_0$</td>
+                <td style="background-color: #f0fdf4;">
+                    <strong>Correct Decision</strong><br>
+                    <span style="font-size: 0.7rem;">(Confidence Level)</span>
+                </td>
+                <td style="background-color: #fff5f5;">
+                    <span style="color: #d32f2f; font-weight: bold;">Type II Error ($\beta$)</span><br>
+                    <span style="font-size: 0.7rem;">(False Negative)</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="background-color: #f4f4f4; font-weight: bold;">Reject $H_0$</td>
+                <td style="background-color: #fff5f5;">
+                    <span style="color: #d32f2f; font-weight: bold;">Type I Error ($\alpha$)</span><br>
+                    <span style="font-size: 0.7rem;">(False Positive)</span>
+                </td>
+                <td style="background-color: #f0fdf4;">
+                    <strong>Correct Decision</strong><br>
+                    <span style="font-size: 0.7rem;">(Power of the Test)</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="example-box">
+        Suppose the population mean is 125. But the test conducted on the basis of a sample drawn from the populaion leads to the conclusion that population mean is not equal to 125. This is type 1 error.
+    </div>
+<div class="description-box"> 
+	<h3>Step 3: Level of Significance ($\alpha$)</h3>
+<p class="detail-description">
+    The confidence with which we reject a Null Hypothesis depends on the <strong>Level of Significance</strong>. This is essentially the "Risk" we are willing to take of being wrong.
+</p>
+
+<div class="intuition-box">
+    <strong>Non-Mathematical View:</strong> Think of the significance level as your "Standard of Proof." If you set it to 5%, you are saying: "I will only reject the Null Hypothesis if there is less than a 5% chance that my results were just a lucky coincidence."
+</div>
+
+<div class="math-breakdown">
+    <strong>Mathematical Definition:</strong>
+    <p>The probability of rejecting a Null Hypothesis when it is actually true (Type I Error) is denoted by the Greek letter <strong>$\alpha$ (alpha)</strong>.</p>
+    $$ \alpha = P(\text{Reject } H_0 \mid H_0 \text{ is True}) $$
+	<p> When you increase value of  $\alpha$, you are increasing the acceptance region.Y.Imagine the University wants to be 99.9% sure that every graduate is a genius ($\alpha = 0.001$).They move the passing mark from 43 to 95.The Acceptance Region (Fail Zone): Now covers scores from 0 to 94.The Result: You will almost never let an unqualified person pass (Low Type I Error). However, you will likely fail many perfectly qualified people who got an 85 or a 90 (High Type II Error).ou will only reject the Null if the data is so incredibly rare that it’s almost impossible for it to have happened by chance.Imagine the University wants to be 99.9% sure that every graduate is a genius ($\alpha = 0.001$).They move the passing mark from 43 to 95.The Acceptance Region (Fail Zone): Now covers scores from 0 to 94.The Result: You will almost never let an unqualified person pass (Low Type I Error). However, you will likely fail many perfectly qualified people who got an 85 or a 90 (High Type II Error).
+</div>
+
+
+
 </body>
 </html>
