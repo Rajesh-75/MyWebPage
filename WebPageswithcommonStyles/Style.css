@@ -50,6 +50,13 @@ p, li {
             margin-bottom: 10px;
             text-align: justify;
         }
+		.description-box {
+            background: #fff;
+            padding: 10px;
+            border-radius: 1px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
 
 .code-style {
     font-family: 'Courier New', Courier, monospace;
@@ -173,7 +180,7 @@ p, li {
             font-family: 'Courier New', Courier, monospace; 
             margin: 20px 0; 
         }
-        .algorithm-title { 
+        .algorithm-title { D
             color: #0000CC; 
             font-weight: bold; 
             font-size: 1.5rem; 
