@@ -6,19 +6,21 @@
     <title>Sampling and Statistical Inference</title>
     <link rel="stylesheet" href="style.css">
 
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-	  <script type="text/javascript" async
-        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-    </script>
     <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
-            }
-        };
-    </script>
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true
+        },
+        options: {
+            skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        }
+    };
+</script>
+
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+3 Common Reasons for Failure:
 </head>
 <body>
 
@@ -169,18 +171,18 @@ One can generalize the examples of the Testing Hypothesis as
 <div class="description-box"> 
 	<h3>Step 3: Level of Significance ($\alpha$)</h3>
 <p class="detail-description">
-    The confidence with which we reject a Null Hypothesis depends on the <strong>Level of Significance</strong>. This is essentially the "Risk" we are willing to take of being wrong.
+    The confidence with which we reject a Null Hypothesis depends on the <strong>Level of Significance.</strong>
 </p>
 
 <div class="intuition-box">
-    <strong>Non-Mathematical View:</strong> Think of the significance level as your "Standard of Proof." If you set it to 5%, you are saying: "I will only reject the Null Hypothesis if there is less than a 5% chance that my results were just a lucky coincidence."
+    <strong>Non-Mathematical View:</strong> Think of the significance level as your "Standard of Proof." If you set it to 5%, you are saying: "I will only reject the Null Hypothesis if there is less than a 5% chance and I am looking for 95% confidence."
 </div>
 
 <div class="math-breakdown">
     <strong>Mathematical Definition:</strong>
     <p>The probability of rejecting a Null Hypothesis when it is actually true (Type I Error) is denoted by the Greek letter <strong>$\alpha$ (alpha)</strong>.</p>
-    $$ \alpha = P(\text{Reject } H_0 \mid H_0 \text{ is True}) $$
-	<p> When you increase value of  $\alpha$, you are increasing the acceptance region.Y.Imagine the University wants to be 99.9% sure that every graduate is a genius ($\alpha = 0.001$).They move the passing mark from 43 to 95.The Acceptance Region (Fail Zone): Now covers scores from 0 to 94.The Result: You will almost never let an unqualified person pass (Low Type I Error). However, you will likely fail many perfectly qualified people who got an 85 or a 90 (High Type II Error).ou will only reject the Null if the data is so incredibly rare that it’s almost impossible for it to have happened by chance.Imagine the University wants to be 99.9% sure that every graduate is a genius ($\alpha = 0.001$).They move the passing mark from 43 to 95.The Acceptance Region (Fail Zone): Now covers scores from 0 to 94.The Result: You will almost never let an unqualified person pass (Low Type I Error). However, you will likely fail many perfectly qualified people who got an 85 or a 90 (High Type II Error).
+    $$ \alpha = P(\text{Reject } H_0 \mid H_0 \text{ is True}) $$. This level of significance is usually determined before conducting the test of hypothesis</p>
+	<p> When you increase value of  $\alpha$, you are increasing the acceptance region.Y.Imagine the University wants to be 99.9% sure that every graduate is a genius ($\alpha = 0.001$).They move the passing mark from 43 to 95.The Acceptance Region (Fail Zone): Now covers scores from 0 to 94.The Result: You will almost never let an unqualified person pass (Low Type I Error). However, you will likely fail many perfectly qualified people who got an 85 or a 90 (High Type II Error).you will only reject the Null if the data is so incredibly rare that it’s almost impossible for it to have happened by chance.Imagine the University wants to be 99.9% sure that every graduate has passed ($\alpha = 0.001$).They move the passing mark from 43 to 95.The Acceptance Region (Fail Zone): Now covers scores from 0 to 94.The Result: You will almost never let an unqualified person pass (Low Type I Error). However, you will likely fail many perfectly qualified people who got an 85 or a 90 (High Type II Error).</p>
 </div>
 
 
