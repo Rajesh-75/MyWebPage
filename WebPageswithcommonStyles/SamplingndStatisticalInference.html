@@ -173,19 +173,91 @@ One can generalize the examples of the Testing Hypothesis as
 <p class="detail-description">
     The confidence with which we reject a Null Hypothesis depends on the <strong>Level of Significance.</strong>
 </p>
+    <div class="intuition-box">
+        <strong>The Balancing Act:</strong> As you decrease $\alpha$ (e.g., from 5% to 0.1%), you become more strict. 
+        In our University example: If you raise the passing mark from 43 to 95, you rarely pass an unqualified person (Low Type I Error), but you might fail many geniuses (High Type II Error).
+    </div>
 
-<div class="intuition-box">
-    <strong>Non-Mathematical View:</strong> Think of the significance level as your "Standard of Proof." If you set it to 5%, you are saying: "I will only reject the Null Hypothesis if there is less than a 5% chance and I am looking for 95% confidence."
+    <div class="math-breakdown">
+        <strong>Mathematical Definitions:</strong>
+        <p>$$ \alpha = P(\text{Reject } H_0 \mid H_0 \text{ is True}) \text{ [Type I Error]} $$</p>
+        <p>$$ \beta = P(\text{Accept } H_0 \mid H_0 \text{ is False}) \text{ [Type II Error]} $$</p>
+    </div>
+<div class="description-box"> 
+	<h3>Critical Region</h3>
+<p class="detail-description">
+    The statistical procedure divides the <strong>Sample Space ($S$)</strong>—which represents all possible outcomes of our test statistic—into two distinct subsets:
+</p>
+
+<div class="grid-list">
+    <div class="grid-item">
+        <span class="tag">Acceptance Region ($A$)</span>
+        <p>The set of outcomes that are likely to occur if the Null Hypothesis is true. If our calculated statistic falls here, we <strong>fail to reject $H_0$</strong>.</p>
+    </div>
+    <div class="grid-item">
+        <span class="tag" style="background: #d32f2f;">Critical Region ($R$)</span>
+        <p>Also known as the <strong>Rejection Region</strong>. If our calculated statistic falls in this subset, we <strong>reject $H_0$</strong> in favor of $H_1$.</p>
+    </div>
 </div>
+
+
 
 <div class="math-breakdown">
-    <strong>Mathematical Definition:</strong>
-    <p>The probability of rejecting a Null Hypothesis when it is actually true (Type I Error) is denoted by the Greek letter <strong>$\alpha$ (alpha)</strong>.</p>
-    $$ \alpha = P(\text{Reject } H_0 \mid H_0 \text{ is True}) $$. This level of significance is usually determined before conducting the test of hypothesis</p>
-	<p> When you increase value of  $\alpha$, you are increasing the acceptance region.Y.Imagine the University wants to be 99.9% sure that every graduate is a genius ($\alpha = 0.001$).They move the passing mark from 43 to 95.The Acceptance Region (Fail Zone): Now covers scores from 0 to 94.The Result: You will almost never let an unqualified person pass (Low Type I Error). However, you will likely fail many perfectly qualified people who got an 85 or a 90 (High Type II Error).you will only reject the Null if the data is so incredibly rare that it’s almost impossible for it to have happened by chance.Imagine the University wants to be 99.9% sure that every graduate has passed ($\alpha = 0.001$).They move the passing mark from 43 to 95.The Acceptance Region (Fail Zone): Now covers scores from 0 to 94.The Result: You will almost never let an unqualified person pass (Low Type I Error). However, you will likely fail many perfectly qualified people who got an 85 or a 90 (High Type II Error).</p>
+    <strong>Size of the Critical Region ($\alpha$):</strong>
+    <p>The "size" of the critical region is exactly equal to our Level of Significance. It represents the probability that a sample result will fall in the rejection zone even though the Null Hypothesis is actually true.</p>
+    $$ \alpha = P(\text{Test Statistic} \in R \mid H_0 \text{ is True}) $$
 </div>
 
+<p class="detail-description">
+    In simpler terms, if the outcome of our test belongs to the subset $R$, the evidence is considered "significant," and the Null Hypothesis is rejected.
+</p>
+
+<div class="plot-container" style="text-align: center; margin: 20px 0;">
+        <svg width="600" height="320" viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg">
+            <line x1="50" y1="250" x2="550" y2="250" stroke="#333" stroke-width="2" />
+            <path d="M 50 250 C 150 250 200 50 300 50 C 400 50 450 250 550 250" fill="none" stroke="#0056b3" stroke-width="3" />
+            
+            <path d="M 185 250 V 165 C 220 100 260 50 300 50 C 340 50 380 100 415 165 V 250 Z" fill="#e7f3ff" opacity="0.6" />
+            
+            <path d="M 50 250 C 100 250 150 220 185 165 V 250 Z" fill="#d32f2f" opacity="0.7" />
+            <path d="M 415 165 C 450 220 500 250 550 250 H 415 Z" fill="#d32f2f" opacity="0.7" />
+
+            <text x="300" y="130" text-anchor="middle" font-family="sans-serif" font-weight="bold" fill="#0056b3">Acceptance Region (R')</text>
+            <text x="100" y="280" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#d32f2f" font-weight="bold">Critical Region (R)</text>
+            <text x="500" y="280" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#d32f2f" font-weight="bold">Critical Region (R)</text>
+        </svg>
+    </div>
+
+<div class="description-box"> 
+    <h3>Test Statistic or Test Criterion</h3>
+    
+    <p class="detail-description">
+        The decision to accept or reject a null hypothesis ($H_0$) is made based on a statistic computed from a sample drawn from a population. Since a statistic is a function of sample values, it serves as our "evidence."
+    </p>
+
+    <p class="detail-description">
+        If the computed value of this statistic falls within the <strong>Acceptance Region</strong>, we fail to reject the null hypothesis. This calculated value is known as the <strong>Test Statistic</strong>.
+    </p>
+
+    
+
+    <p class="detail-description">
+        Test statistics follow specific sampling distributions such as the <strong>Normal (Z)</strong>, <strong>t-distribution</strong>, <strong>$\chi^2$ (Chi-square)</strong>, or <strong>F-distribution</strong>. Most statistical tests are actually named after these distributions.
+    </p>
+
+    <div style="background: #fdfdfd; padding: 15px; border: 1px solid #ddd; border-left: 5px solid #0056b3; margin: 10px 0;">
+        <strong>Standardizing the Test Statistic:</strong><br>
+        If a statistic $t$ follows a normal distribution, we convert it into a standard Z-score to use the Z-table:
+        $$Z = \frac{t - E(t)}{\sqrt{\text{Var}(t)}}$$
+    </div>
+
+    <p class="detail-description">
+        There are many other test statistics depending on the parameters being tested. We shall discuss these specific test statistics using numerical examples in the following sections.
+    </p>
+</div>
 
 
 </body>
 </html>
+
+
