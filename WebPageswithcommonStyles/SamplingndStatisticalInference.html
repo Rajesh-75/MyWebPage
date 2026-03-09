@@ -297,8 +297,60 @@ One can generalize the examples of the Testing Hypothesis as
 </div>
     <div>
 </div>
+<div class="example-problem" style="border: 1px solid #0056b3; border-radius: 8px; overflow: hidden; margin: 20px 0;">
+    <div class="problem-header" style="background-color: #0056b3; color: white; padding: 10px 15px; font-weight: bold;">
+        Numerical Example: Size and Power of a Test
+    </div>
+    
+    <div style="padding: 15px; background-color: #fcfcfc;">
+        <p class="detail-description">
+            A box contains 10 balls, of which $\theta$ are white and the rest are black. 
+            We wish to test: <br>
+            $H_0: \theta = 5$ (5 White, 5 Black) <br>
+            $H_1: \theta = 4$ (4 White, 6 Black)
+        </p>
+        <p>
+            <strong>Test Procedure:</strong> Draw two balls at random <em>with replacement</em>. 
+            Reject $H_0$ if both balls are of the same color. 
+            Find the <strong>Size of the Critical Region</strong> and the <strong>Power of the Test</strong>.
+        </p>
+    </div>
+</div>
 
+<div class="solution-content" style="padding: 15px; border: 1px solid #ddd; border-top: none; background-color: #fff;">
+    <h3 style="color: #0056b3;">Solution:</h3>
+    
+    
 
+    <h4>1. Size of the Critical Region ($\alpha$)</h4>
+    <p>
+        The size ($\alpha$) is the probability of a <strong>Type I Error</strong>: rejecting $H_0$ when it is actually true.
+    </p>
+    <div style="background: #f4f4f4; padding: 10px; border-radius: 4px;">
+        $\alpha = P(\text{Reject } H_0 \mid \theta = 5)$ <br>
+        $\alpha = P(\text{Both balls same color} \mid \text{5 White, 5 Black})$ <br>
+        $\alpha = P(WW \text{ or } BB \mid \theta = 5)$ <br>
+        $\alpha = \left(\frac{5}{10} \times \frac{5}{10}\right) + \left(\frac{5}{10} \times \frac{5}{10}\right)$ <br>
+        $\alpha = 0.25 + 0.25 = \mathbf{0.50}$
+    </div>
+
+    <h4>2. Power of the Test ($1 - \beta$)</h4>
+    <p>
+        The power is the probability of <strong>rightly rejecting</strong> $H_0$ when the alternative $H_1$ is true.
+    </p>
+    <div style="background: #e7f3ff; padding: 10px; border-radius: 4px; border-left: 5px solid #0056b3;">
+        Power $= P(\text{Reject } H_0 \mid H_1 \text{ is true})$ <br>
+        Power $= P(WW \text{ or } BB \mid \theta = 4)$ <br>
+        Power $= \left(\frac{4}{10} \times \frac{4}{10}\right) + \left(\frac{6}{10} \times \frac{6}{10}\right)$ <br>
+        Power $= 0.16 + 0.36 = \mathbf{0.52}$
+    </div>
+
+    <p style="margin-top: 15px;">
+        <strong>Conclusion:</strong> In this specific test, the probability of a false alarm is $50\%$, 
+        and the probability of correctly detecting the change to $\theta=4$ is $52\%$.
+    </p>
+</div>
+		
 </body>
 </html>
 
