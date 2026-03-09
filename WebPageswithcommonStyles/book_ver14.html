@@ -2,18 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Machine Learning Tutorial</title>
-    <script type="text/javascript" async
-        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-    </script>
+    <title>Machine Learning Tutorial - Yamuna Publications</title>
+    
     <script>
         window.MathJax = {
             tex: {
-                inlineMath: [['$', '$'], ['\(', '\)']],
-                displayMath: [['$$', '$$'], ['\[', '\]']]
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
             }
         };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
     </script>
 </head>
 <body>
@@ -34,17 +36,12 @@
         <a id="navGalleries" class="nav-link">Galleries</a>
     </div>
 
-    <div class="carousel-wrapper" id="carouselWrapper" style="display: block;">	
-        
+    <div class="carousel-wrapper" id="carouselWrapper">	
         <button id="prevBtn" class="carousel-arrow prev" aria-label="Previous Book">❮</button>	
-        
         <div class="carousel-container">
-            <div id="bookTrack" class="book-track">
-                </div>
+            <div id="bookTrack" class="book-track"></div>
         </div>
-        
         <button id="nextBtn" class="carousel-arrow next" aria-label="Next Book">❯</button>
-
     </div>
 
     <div id="mainContentArea" class="main-content-area">
@@ -55,6 +52,7 @@
             <p id="authorInfoText" class="detail-description"></p>
         </div>
     </div>
+
     <script>
         const authorBio = "L.R.Potti is a renowned academic with over two decades of experience in the field of Statistics and Business Studies. His passion lies in making complex mathematical concepts accessible to students across various disciplines.";
         
@@ -73,71 +71,69 @@
             { id: 13, title: "FCS (Vol 5)", author: "L.R.Potti", description: "Fifth volume for the Full Course in Statistics.", authorBio: authorBio }
         ];
         
-        // --- START OF TUTORIALS DATA STRUCTURE UPDATE (File path corrected) ---
-       // --- UPDATED TUTORIALS DATA STRUCTURE ---
-const tutorials = [
-    {	
-        title: "Introduction", 
-        subtopics: [
-            { title: "Machine learning Pipeline", filePath: "MachineLearningPipeline.html" }
-        ]
-    },
-    {	
-        title: "Machine Learning",	
-        subtopics: [
-            { 
-                title: "Machine Learning Basics", 
-                content: "Machine Learning use cases and terminologies shall be discussed here. Further Model, Cost, and Optimization aspects shall be discussed more taking examples of ML Models." 
+        const tutorials = [
+            {	
+                title: "Introduction", 
+                subtopics: [
+                    { title: "Machine learning Pipeline", filePath: "MachineLearningPipeline.html" }
+                ]
             },
             {	
-                title: "Nearest Neighbor",	
-                content: `<h2 class="detail-title">Nearest Neighbor (k-NN)</h2><p class="detail-description">The k-Nearest Neighbors (k-NN) algorithm is a non-parametric, lazy learning algorithm...</p>`	
+                title: "Machine Learning",	
+                subtopics: [
+                    { 
+                        title: "Machine Learning Basics", 
+                        content: "Machine Learning use cases and terminologies shall be discussed here. Further Model, Cost, and Optimization aspects shall be discussed more taking examples of ML Models." 
+                    },
+                    /* NEW SUBTOPIC ADDED HERE */
+                    { title: "ML and DL Comparison Table", filePath: "ComparisonTable.html" },
+                    {	
+                        title: "Nearest Neighbor",	
+                        content: `<h2 class="detail-title">Nearest Neighbor (k-NN)</h2><p class="detail-description">The k-Nearest Neighbors (k-NN) algorithm is a non-parametric, lazy learning algorithm...</p>`	
+                    },
+                    { title: "K-Mean Clustering", filePath: "decision-trees.htm" },	
+                    { title: "Decision Trees", filePath: "decision-trees.html" },
+                    { title: "Random Forests", filePath: "random-forests.html" },
+                    { title: "Support Vector Machines (SVM)", filePath: "svm.html" },	
+                    { title: "Shallow Neural Networks", filePath: "ShallowNeuralNetwork.html"},
+                    { title: "Gradient Descent and Backpropagation", filePath: "BP2.html"},
+                    { title: "Kernel Density Estimation (KDE)" }
+                ]
             },
-            { title: "K-Mean Clustering", filePath: "decision-trees.htm" },	
-            { title: "Decision Trees", filePath: "decision-trees.html" },
-            { title: "Random Forests", filePath: "random-forests.html" },
-            { title: "Support Vector Machines (SVM)", filePath: "svm.html" },	
-            { title: "Shallow Neural Networks", filePath: "ShallowNeuralNetwork.html"}, // Fixed Case: filePath
-            { title: "Gradient Descent and Backpropagation", filePath: "BP2.html"}, // Fixed Case and Spelling
-            { title: "Kernel Density Estimation (KDE)" }
-        ]
-    },
-    {	
-        title: "Probability & MLE",	
-        subtopics: [
-            { title: "Basic Probability", filePath:"Probability.html" },
-            { title: "Random Variable and Operations", filePath:"RandomVariableandExpectations.html" },
-            { title: "Normal Distributions", filePath: "NormalDistribution.html" },
-            { title: "Maximum Likelihood Estimation (MLE)",filePath:"MaximumLikelihoodEstimation.html" }
-        ]
-    },
-    {	
-        title: "Deep Learning",	
-        subtopics: [
-            { title: "Convolutional Neural Networks (CNN)", content: "Tutorial on CNNs for image recognition." },
-            { title: "Recurrent Neural Networks (RNN)", content: "Focus on RNNs for sequential data." }
-        ]
-    },
-    {	
-        title: "Statistics",	
-        subtopics: [
-            { title: "Measures of Central Tendency", filePath: "CentralTendency.html" },
-            { title: "Hypothesis Testing", content: "Steps for Z-tests and T-tests." },
-            { title: "Regression Analysis", content: "Simple and multiple linear regression." },
-            { title: "Statistical Data Visualization", filePath: "StatisticalDataVisualization.html" }
-        ]
-    },
-    {	
-        title: "Python",	
-        content: "Master Python libraries crucial for data science (Pandas, NumPy, Matplotlib)."
-    }
-];
-        // --- END OF TUTORIALS DATA STRUCTURE UPDATE ---
+            {	
+                title: "Probability & MLE",	
+                subtopics: [
+                    { title: "Basic Probability", filePath:"Probability.html" },
+                    { title: "Random Variable and Operations", filePath:"RandomVariableandExpectations.html" },
+                    { title: "Normal Distributions", filePath: "NormalDistribution.html" },
+                    { title: "Maximum Likelihood Estimation (MLE)",filePath:"MaximumLikelihoodEstimation.html" }
+                ]
+            },
+            {	
+                title: "Deep Learning",	
+                subtopics: [
+                    { title: "Convolutional Neural Networks (CNN)", content: "Tutorial on CNNs for image recognition." },
+                    { title: "Recurrent Neural Networks (RNN)", content: "Focus on RNNs for sequential data." }
+                ]
+            },
+            {	
+                title: "Statistics",	
+                subtopics: [
+                    { title: "Measures of Central Tendency", filePath: "CentralTendency.html" },
+                    { title: "Hypothesis Testing", content: "Steps for Z-tests and T-tests." },
+                    { title: "Regression Analysis", content: "Simple and multiple linear regression." },
+                    { title: "Statistical Data Visualization", filePath: "StatisticalDataVisualization.html" }
+                ]
+            },
+            {	
+                title: "Python",	
+                content: "Master Python libraries crucial for data science (Pandas, NumPy, Matplotlib)."
+            }
+        ];
 
         const bookTrack = document.getElementById('bookTrack');
         const carouselWrapper = document.getElementById('carouselWrapper');
         const mainContentArea = document.getElementById('mainContentArea');	
-        
         const initialContent = `<div style="padding: 20px; width: 100%;"><h2 class="detail-title">Book Details</h2><p id="descriptionText" class="detail-description">Click on any book in the carousel above to see its detailed description here.</p><h4 id="authorInfoHeading" class="detail-author-title" style="display: none;">About the Author: </h4><p id="authorInfoText" class="detail-description"></p></div>`;
 
         const navBooks = document.getElementById('navBooks');	
@@ -174,12 +170,8 @@ const tutorials = [
         function loadHomeView() {
             carouselWrapper.style.display = 'block';	
             mainContentArea.innerHTML = initialContent;	
-            document.querySelector('#mainContentArea #descriptionText').textContent = "Click on any book in the carousel above to see its detailed description here.";
-            document.querySelector('#mainContentArea #authorInfoHeading').style.display = 'none';
-            document.querySelector('#mainContentArea #authorInfoText').textContent = "";
         }
 
-        // --- Two-Column Book List View Logic (Updated to use new column classes) ---
         function displayBookDetails(book, listElement) {
             const detailsArea = document.getElementById('detailPane');
             detailsArea.innerHTML = `<h2 class="detail-title">${book.title}</h2><p class="detail-description">${book.description}</p><h4 class="detail-author-title">About the Author: ${book.author}</h4><p class="detail-author-bio">${book.authorBio}</p>`;
@@ -189,7 +181,6 @@ const tutorials = [
 
         function loadBookListView() {
             carouselWrapper.style.display = 'none';	
-            // Use the generic two-column structure with the new class names
             mainContentArea.innerHTML = `<div class="two-column-container"><div class="left-panel-nav"><h3 class="detail-title">All Titles</h3><ul id="bookList" style="padding: 0;"></ul></div><div id="detailPane" class="right-panel-content"><p class="detail-description">Select a title from the left to view details and author information.</p></div></div>`;
             
             const bookList = document.getElementById('bookList');
@@ -206,99 +197,54 @@ const tutorials = [
                 displayBookDetails(books[0], firstListItem);
             }
         }
-        
-        // -----------------------------------------------------------------
-        // 2. UPDATED: Two-Column Tutorial View Logic (NOW INCLUDES MATHJAX RENDER)
-        // -----------------------------------------------------------------
-        
-        // IMPORTANT: Function is now 'async' to allow for 'await fetch'
+
         async function displayTutorialContent(tutorial, listElement) {
             const contentArea = document.getElementById('tutorialContentPane');
             
-            // 1. Selection highlighting logic (happens instantly)
             document.querySelectorAll('.left-panel-nav .list-item').forEach(item => { item.classList.remove('selected'); });
             document.querySelectorAll('.left-panel-nav .topic-header').forEach(item => { item.classList.remove('selected'); });
             listElement.classList.add('selected');
-            
-            // If it's a sub-topic, ensure the parent header is also highlighted
-            const parentHeader = listElement.closest('.sub-topics')?.previousSibling;
-            if (parentHeader && parentHeader.classList.contains('topic-header')) {
-                parentHeader.classList.add('selected');
-            }
 
-            // 2. Logic to load content
             if (tutorial.filePath) {
-                // Show loading state while content is fetched
-                contentArea.innerHTML = `<h1 class="detail-title">Loading...</h1><p class="detail-description">Fetching content for ${tutorial.title} from **${tutorial.filePath}**...</p>`;
-                
-                // Fetch content from the external HTML file
+                contentArea.innerHTML = `<h1 class="detail-title">Loading...</h1>`;
                 try {
-                    const response = await fetch(tutorial.filePath); // CRITICAL: This is the network request
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status} for ${tutorial.filePath}`);
-                    }
+                    const response = await fetch(tutorial.filePath);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                     const htmlContent = await response.text();
-                    
-                    // Inject the fetched HTML content into the right pane
                     contentArea.innerHTML = htmlContent;
 
-                    // 3. >>> ADDED MATHJAX RERENDER AFTER INJECTING FETCHED CONTENT <<<
                     if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
                         MathJax.typesetPromise([contentArea]);
                     }
-
                 } catch (error) {
-                    console.error('Error fetching tutorial content:', error);
-                    contentArea.innerHTML = `
-                        <h1 class="detail-title" style="color: red;">Error Loading Content</h1>
-                        <p class="detail-description">Could not load tutorial from **${tutorial.filePath}**. Please ensure the file is in the correct directory and the server is running.</p>
-                        <p class="detail-description">**Error Details**: ${error.message}</p>
-                    `;
+                    contentArea.innerHTML = `<h1 class="detail-title" style="color: red;">Error Loading Content</h1><p>${error.message}</p>`;
                 }
-
             } else if (tutorial.content) {
-                // Fallback for tutorials that still have local content (like KDE, CNN, or the new top-level Introduction)
+                contentArea.innerHTML = tutorial.content.trim().startsWith('<h') ? 
+                    tutorial.content : `<h1 class="detail-title">${tutorial.title}</h1><div class="detail-description">${tutorial.content}</div>`;
                 
-                // If the content starts with an <h1> tag, we assume it's pre-formatted (like the new Introduction)
-                if (tutorial.content.trim().startsWith('<h')) {
-                    contentArea.innerHTML = tutorial.content;	
-                } else {
-                    // Otherwise, wrap the content with default structure
-                    contentArea.innerHTML = `<h1 class="detail-title">${tutorial.title}</h1><div class="detail-description">${tutorial.content}</div>`;
-                }
-                
-                // 3. >>> ADDED MATHJAX RERENDER AFTER INJECTING LOCAL CONTENT <<<
                 if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
                     MathJax.typesetPromise([contentArea]);
                 }
-
-            } else {
-                contentArea.innerHTML = `<h1 class="detail-title">No Content Found</h1><p class="detail-description">The content for ${tutorial.title} is either missing a 'content' or 'filePath' property.</p>`;
             }
         }
 
-
         function loadTutorialsView() {
             carouselWrapper.style.display = 'none';	
-            
-            // Use the new two-column structure
             mainContentArea.innerHTML = `
                 <div class="two-column-container">
                     <div id="tutorialNav" class="left-panel-nav">
                         <h3 class="topic-header" style="margin-top: 0; padding-top: 10px; font-weight: bold; color: #000;">Tutorial Topics</h3>
-                        <ul id="tutorialList" style="padding: 0;">
-                        </ul>
+                        <ul id="tutorialList" style="padding: 0;"></ul>
                     </div>
                     <div id="tutorialContentPane" class="right-panel-content">
                         <h1 class="detail-title">Welcome to Tutorials</h1>
                         <p class="detail-description">Click a topic to view its detailed content here.</p>
-                        <p class="detail-description">**Note:** Topics using a file path are now loaded from separate files using the **fetch** API.</p>
                     </div>
                 </div>
             `;
             
             const tutorialList = document.getElementById('tutorialList');
-            
             tutorials.forEach(topic => {
                 if (topic.subtopics) {
                     const header = document.createElement('li');
@@ -310,16 +256,9 @@ const tutorials = [
 
                     header.addEventListener('click', (e) => {
                         const isVisible = subList.style.display === 'block';
-                        // Toggle icon
                         e.currentTarget.innerHTML = isVisible ? `▶ ${topic.title}` : `▼ ${topic.title}`;
-                        // Toggle visibility
                         subList.style.display = isVisible ? 'none' : 'block';
-                        
-                        // Clear selection from all other topics/headers
                         document.querySelectorAll('.left-panel-nav .topic-header').forEach(item => item.classList.remove('selected'));
-                        document.querySelectorAll('.left-panel-nav .list-item').forEach(item => item.classList.remove('selected'));
-
-                        // Highlight the main topic header upon click/expansion
                         e.currentTarget.classList.add('selected');
                     });
                     
@@ -327,89 +266,52 @@ const tutorials = [
                         const subItem = document.createElement('li');
                         subItem.className = 'list-item';
                         subItem.textContent = subtopic.title;
-                        
-                        subItem.addEventListener('click', (e) => {
-                            displayTutorialContent(subtopic, e.currentTarget);
-                        });
-                        
+                        subItem.addEventListener('click', (e) => { displayTutorialContent(subtopic, e.currentTarget); });
                         subList.appendChild(subItem);
                     });
                     
                     tutorialList.appendChild(header);
                     tutorialList.appendChild(subList);
-                    
                 } else {
-                    // This handles top-level items like "Python" and now "Introduction"
                     const listItem = document.createElement('li');
-                    // Use 'topic-header' for main topics or 'list-item' for standalone topics depending on preference. Using 'list-item' for consistency in clicking.
                     listItem.className = 'list-item';	
                     listItem.textContent = topic.title;
-                    
-                    listItem.addEventListener('click', (e) => {
-                        displayTutorialContent(topic, e.currentTarget);
-                    });
-                    
+                    listItem.addEventListener('click', (e) => { displayTutorialContent(topic, e.currentTarget); });
                     tutorialList.appendChild(listItem);
                 }
             });
-            
-            // Auto-select the first item (Introduction) to show initial content
-            const firstTutorialItem = tutorialList.querySelector('.list-item');
-            if (firstTutorialItem) {
-                // Find the actual tutorial data object associated with the first item
-                const firstTopic = tutorials.find(t => t.title === firstTutorialItem.textContent);
-                if (firstTopic) {
-                     displayTutorialContent(firstTopic, firstTutorialItem);
-                }
-            }
         }
 
-        // --- Setup Functions & Event Listeners (Unchanged) ---
-        books.forEach(book => { bookTrack.appendChild(createBookElement(book)); });
-        function createBookElement(book) {
+        books.forEach(book => {
             const item = document.createElement('div');
             item.className = 'book-item';
             item.style.backgroundColor = getRandomColor();
             item.innerHTML = `<span class="book-author">${book.title}<br>(${book.author})</span>`;	
             item.addEventListener('click', () => { handleCarouselBookClick(book); });
-            return item;
-        }
+            bookTrack.appendChild(item);
+        });
+
         function updateTrackPosition() {
             const offset = -currentIndex * moveDistance;
             bookTrack.style.transform = `translateX(${offset}px)`;
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            prevBtn.disabled = currentIndex === 0;
+            document.getElementById('prevBtn').disabled = currentIndex === 0;
             const nextIndexMax = totalBooks - booksToShow;
-            if (nextIndexMax < 0) nextBtn.disabled = true;
-            else nextBtn.disabled = currentIndex >= nextIndexMax;
+            document.getElementById('nextBtn').disabled = currentIndex >= (nextIndexMax < 0 ? 0 : nextIndexMax);
         }
 
-        // 1. Navigation Link Listener for "Books" (calls old two-column view)
         navBooks.addEventListener('click', loadBookListView);
-        
-        // 2. Navigation Link Listener for "Tutorials" (calls new two-column view)
         navTutorials.addEventListener('click', loadTutorialsView);
-        
-        // 3. Navigation Listeners for "Return Home"
         navBlogs.addEventListener('click', loadHomeView);
         navGalleries.addEventListener('click', loadHomeView);
         
-        // 4. Carousel Arrow Listeners
         document.getElementById('prevBtn').addEventListener('click', () => {
-            if (carouselWrapper.style.display !== 'none' && currentIndex > 0) {
-                currentIndex -= 1;
-                updateTrackPosition();
-            }
+            if (currentIndex > 0) { currentIndex -= 1; updateTrackPosition(); }
         });
         document.getElementById('nextBtn').addEventListener('click', () => {
-            if (carouselWrapper.style.display !== 'none' && currentIndex < totalBooks - booksToShow) {
-                currentIndex += 1;
-                updateTrackPosition();
-            }
+            if (currentIndex < totalBooks - booksToShow) { currentIndex += 1; updateTrackPosition(); }
         });
 
-        updateTrackPosition(); // Initial call to set state
+        updateTrackPosition();
     </script>
 </body>
 </html>
