@@ -350,6 +350,149 @@ One can generalize the examples of the Testing Hypothesis as
         and the probability of correctly detecting the change to $\theta=4$ is $52\%$.
     </p>
 </div>
+<div class="example-box">
+    <h4>Mathematical Derivation: Finding the Best Critical Region (BCR)</h4>
+    <p class="detail-description">
+        To find the most powerful test for example let's say $H_0: \mu = 5$ vs $H_1: \mu > 5$ with $\sigma = 1$, Assuming that Since the population is Normal with a known variance, we are looking for the region that is best critical region (maximizes the power of the test for a fixed $\alpha = 0.05). Hence we apply the <strong>Neyman-Pearson Lemma</strong>.
+    </p>
+
+    <div class="math-breakdown">
+        <strong>1. The Likelihood Ratio</strong>
+        <p>The BCR ($R$) consists of all points where the ratio of the Null Likelihood to the Alternative Likelihood is less than a constant $k'$:</p>
+        $$ \frac{L(\mu_0)}{L(\mu_1)} \le k' $$
+
+        <strong>2. Substitute the Normal Density</strong>
+        <p>For a sample of size $n$ from $N(\mu, 1)$, the joint likelihood is:</p>
+        $$ L(\mu) = (2\pi)^{-n/2} \exp\left( -\frac{1}{2} \sum_{i=1}^n (x_i - \mu)^2 \right) $$
+        
+        <p>Plugging in $\mu_0 = 5$ and a specific $\mu_1 > 5$:</p>
+        $$ \frac{\exp\left( -\frac{1}{2} \sum (x_i - 5)^2 \right)}{\exp\left( -\frac{1}{2} \sum (x_i - \mu_1)^2 \right)} \le k' $$
+
+        <strong>3. Simplify via Logarithms</strong>
+        <p>Taking the natural log ($\ln$) and expanding the squares:</p>
+        $$ -\frac{1}{2} \left[ \sum (x_i - 5)^2 - \sum (x_i - \mu_1)^2 \right] \le \ln(k') $$
+        
+        <p>After algebraic simplification (terms like $\sum x_i^2$ cancel out):</p>
+        $$ (\mu_1 - 5) \sum x_i + \frac{n}{2}(5^2 - \mu_1^2) \ge \text{constant} $$
+
+        <strong>4. Isolate the Sufficient Statistic ($\bar{x}$)</strong>
+        <p>Since $\mu_1 > 5$, the term $(\mu_1 - 5)$ is positive. Dividing by it gives:</p>
+        $$ \sum x_i \ge C \implies \frac{\sum x_i}{n} \ge k \implies \mathbf{\bar{x} \ge k} $$
+    </div>
+
+    <div class="intuition-box">
+        <strong>Conclusion:</strong> The derivation proves that for a normal population, the <strong>Sample Mean ($\bar{x}$)</strong> is the best tool for the test. We reject $H_0$ if:
+        $$ \bar{x} \ge 5 + z_{\alpha} \frac{\sigma}{\sqrt{n}} $$
+        For $\alpha = 0.05$, $z_{\alpha} = 1.645$.
+    </div>
+	<div class="intuition-box">
+    <strong>What makes a Critical Region the "Best"?</strong>
+    <p>
+        A Critical Region is considered the <strong>Best (or Most Powerful)</strong> if, for a fixed significance level ($\alpha$), it provides the maximum possible <strong>Power ($1 - \beta$)</strong>. 
+    </p>
+    <p>
+        In other words, it is the region that is most "sensitive" at detecting a real effect when one actually exists.
+    </p>
+	</div>
+	
+	
+	<div class="example-problem" style="border: 1px solid #0056b3; border-radius: 8px; overflow: hidden; margin: 20px 0;">
+    <div class="problem-header" style="background-color: #0056b3; color: white; padding: 10px 15px; font-weight: bold;">
+        Worked Example: Finding Critical Regions
+    </div>
+    
+    <div style="padding: 15px; background-color: #fcfcfc;">
+        <p class="detail-description">
+            <strong>Question:</strong> For a Normal population $N(\mu, 144)$, a random sample of size $n=16$ is drawn. For testing $H_0: \mu = 35$ against $H_1: \mu = 38$, find the one-tailed and two-tailed critical regions of size $\alpha = 0.05$.
+        </p>
+       </div>
+</div>
+
+
+    <div class="math-breakdown">
+        <strong>Step 1: Identify Given Data</strong>
+        <ul>
+            <li>Population Variance ($\sigma^2$): $144 \implies$ Standard Deviation ($\sigma$): $12$</li>
+            <li>Sample size ($n$): $16$</li>
+            <li>Standard Error ($SE$): $\frac{\sigma}{\sqrt{n}} = \frac{12}{\sqrt{16}} = \frac{12}{4} = \mathbf{3}$</li>
+            <li>Null Hypothesis ($H_0$): $\mu = 35$</li>
+            <li>Alternative Hypothesis ($H_1$): $\mu = 38$</li>
+            <li>Significance Level ($\alpha$): $0.05$</li>
+        </ul>
+    </div>
+
+    <hr>
+
+    <h4>Part 1: One-Tailed Critical Region (Right-Tailed)</h4>
+    <p class="detail-description">
+        Since $H_1$ specifies $\mu = 38$ (which is greater than $35$), we look for the rejection zone in the <strong>right tail</strong>.
+    </p>
+    
+    <div class="math-breakdown">
+        <ul>
+            <li><strong>Critical Z-value:</strong> For $\alpha = 0.05$ (one-tailed), $Z_{0.05} = 1.645$.</li>
+            <li><strong>The Inequality:</strong> We reject $H_0$ if $Z_{calc} > 1.645$.</li>
+            <li><strong>Calculate the Boundary ($k$):</strong>
+                $$ \frac{\bar{x} - 35}{3} > 1.645 $$
+                $$ \bar{x} - 35 > 1.645 \times 3 \implies \bar{x} - 35 > 4.935 $$
+                $$ \mathbf{\bar{x} > 39.935} $$
+            </li>
+        </ul>
+        <p><strong>One-Tailed Critical Region:</strong> $R = \{ \bar{x} : \bar{x} > 39.935 \}$</p>
+    </div>
+
+    <hr>
+
+    <h4>Part 2: Two-Tailed Critical Region</h4>
+    <p class="detail-description">
+        For a two-tailed test, we split the $5\%$ risk into two tails of $2.5\%$ each ($\alpha/2 = 0.025$).
+    </p>
+    
+    <div class="math-breakdown">
+        <ul>
+            <li><strong>Critical Z-values:</strong> For $\alpha/2 = 0.025$, the critical values are $\pm 1.96$.</li>
+            <li><strong>The Inequalities:</strong> We reject $H_0$ if $Z_{calc} > 1.96$ or $Z_{calc} < -1.96$.</li>
+            <li><strong>Calculate the Boundaries:</strong>
+                <ul>
+                    <li>Upper Bound: $\bar{x} > 35 + (1.96 \times 3) \implies \mathbf{\bar{x} > 40.88}$</li>
+                    <li>Lower Bound: $\bar{x} < 35 - (1.96 \times 3) \implies \mathbf{\bar{x} < 29.12}$</li>
+                </ul>
+            </li>
+        </ul>
+        <p><strong>Two-Tailed Critical Region:</strong> $R = \{ \bar{x} : \bar{x} < 29.12 \text{ or } \bar{x} > 40.88 \}$</p>
+    </div>
+
+    <hr>
+
+    <h4>Comparison of Results</h4>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Measure</th>
+                <th>$\sigma = \sqrt{12}$ (Old Context)</th>
+                <th>$\sigma = 12$ (Current Question)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Standard Error</strong></td>
+                <td>$0.866$</td>
+                <td>$3.000$</td>
+            </tr>
+            <tr>
+                <td><strong>One-Tailed Cutoff</strong></td>
+                <td>$36.42$</td>
+                <td>$39.94$</td>
+            </tr>
+            <tr>
+                <td><strong>Two-Tailed Cutoffs</strong></td>
+                <td>$33.30$ & $36.70$</td>
+                <td>$29.12$ & $40.88$</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</div>
 		
 </body>
 </html>
