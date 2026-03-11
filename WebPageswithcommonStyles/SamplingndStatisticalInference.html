@@ -20,7 +20,6 @@
 </script>
 
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-3 Common Reasons for Failure:
 </head>
 <body>
 
@@ -30,8 +29,6 @@
     <p class="detail-description">
         Probability distributions like the <strong>Multivariate Normal Distribution</strong> allow us to describe the "shape" of data when we already know the parameters ($\mu, \Sigma$). However, in the real world, we are rarely given these true parameters; instead, we use a small <strong>Sample</strong> to infer the shape of the entire <strong>Population</strong> with mathematical certainty.
     </p>
-
-    
 
     <p class="detail-description">
         In both modern AI development and traditional statistical thinking, the relationship between a sample and Statistical Inference is the fundamental bridge between observed data and the truth about the population. Whether you are a researcher conducting a Sample Survey or an ML engineer training a Large Language Model, you are working with a finite slice of a much larger Population.
@@ -53,9 +50,8 @@
         <li><strong>Estimation:</strong> Using sample data to calculate a specific value or range for a population parameter.</li>
         <li><strong>Hypothesis Testing:</strong> Using sample data to evaluate the validity of a claim or "sanity check" regarding the population.</li>
     </ul>
-
-    
 </div>
+
  <h2>Statistical Test of Hypothesis</h2>
  <div class="content-wrapper">
  <p class="detail-description"> Statistical Test of Hypothesis is  process or procedure under which statistical hypothesis is laid down and it is rejected or accepted. The test conducted to accept or to reject the Hypothesis are known of statistical test of Hypothesis.In other words, A <strong>Statistical Test of Hypothesis</strong> is a formal procedure used to decide whether the data from a sample supports a particular claim about the population. Think of it as a "Trial by Data": we start with an assumption, look at the evidence, and determine if that assumption holds up under scrutiny. </p>
@@ -106,7 +102,7 @@ One can generalize the examples of the Testing Hypothesis as
 	<div class="algorithm-box">
         <span class="algorithm-title">Testing Hypothesis generic steps</span>
 	 <ol>
-            <li>Set a Null hypothesis($H_0$)and alternative hypothesis($H_1$) appropriate to the test to be conducted  </li>
+            <li>Set a Null hypothesis($H_0$)and alternative hypothesis($H_1$) appropriate to the test to be conducted </li>
             <li>Decide the test criterion suitable to the test statistic (such as t test, F-test) mentioned above,based on your data</li>
             <li>Specifiy the suitable <strong>level of Significance (such as 5%,1% etc)</strong></li>
 			<li>Calculate the value of the <strong>test statistic</strong> using the appropriate forumula</li>
@@ -297,9 +293,9 @@ One can generalize the examples of the Testing Hypothesis as
 </div>
     <div>
 </div>
-<div class="example-problem" style="border: 1px solid #0056b3; border-radius: 8px; overflow: hidden; margin: 20px 0;">
+<div class="example-box" style="border: 1px solid #0056b3; border-radius: 8px; overflow: hidden; margin: 20px 0;">
     <div class="problem-header" style="background-color: #0056b3; color: white; padding: 10px 15px; font-weight: bold;">
-        Numerical Example: Size and Power of a Test
+        Worked Example: Size and Power of a Test
     </div>
     
     <div style="padding: 15px; background-color: #fcfcfc;">
@@ -354,6 +350,20 @@ One can generalize the examples of the Testing Hypothesis as
     <h4>Mathematical Derivation: Finding the Best Critical Region (BCR)</h4>
     <p class="detail-description">
         To find the most powerful test for example let's say $H_0: \mu = 5$ vs $H_1: \mu > 5$ with $\sigma = 1$, Assuming that Since the population is Normal with a known variance, we are looking for the region that is best critical region (maximizes the power of the test for a fixed $\alpha = 0.05). Hence we apply the <strong>Neyman-Pearson Lemma</strong>.
+		<div class="intuition-box">
+    <strong>Neyman-Pearson Theorem:</strong> 
+    Let $L_1$ (or $L(\mu_1)$) be the Likelihood Function when the null hypothesis $H_0$ is true, 
+    and $L_2$ (or $L(\mu_2)$) be the Likelihood Function when the alternative hypothesis $H_1$ is true. 
+    Let $\alpha$ be the level of significance and $\omega$ be the critical region 
+    (where $\omega$ is the set of samples for which the test statistic falls in the rejection region). 
+    
+    The <strong>Neyman-Pearson</strong> theorem states we can determine $\omega$ in such a way that:
+    <div style="text-align: center; margin: 15px 0; font-weight: bold;">
+        $$\frac{L_1}{L_2} \leq k$$
+    </div>
+    where $k$ is a value determined on the basis of the level of significance $\alpha$. 
+    This region $\omega$ is the <strong>most powerful critical region</strong> of the significance level $\alpha$ for testing $H_0$ against $H_1$.
+</div>
     </p>
 
     <div class="math-breakdown">
@@ -405,7 +415,7 @@ One can generalize the examples of the Testing Hypothesis as
         <p class="detail-description">
             <strong>Question:</strong> For a Normal population $N(\mu, 144)$, a random sample of size $n=16$ is drawn. For testing $H_0: \mu = 35$ against $H_1: \mu = 38$, find the one-tailed and two-tailed critical regions of size $\alpha = 0.05$.
         </p>
-       </div>
+        </div>
 </div>
 
 
@@ -492,9 +502,50 @@ One can generalize the examples of the Testing Hypothesis as
         </tbody>
     </table>
 </div>
+
+<div class="example-box">
+
+    <div class="problem-header" style="background-color: #0056b3; color: white; padding: 10px 15px; font-weight: bold;">
+        Worked example: Z-Test for Single Mean (Tyres)
+    </div>
+    
+    <div style="padding: 15px; background-color: #fcfcfc;">
+        <p class="detail-description">
+            <strong>Problem:</strong> It is claimed that a random sample of 100 tyres with a mean life of 15269 KM is drawn from a population of tyres which has a mean life of 15200 KM and a Standard Deviation (SD) of 1248 KM. Test the validity of this claim.
+        </p>
+
+        <h3 class="detail-author-title">Solution:</h3>
+        <p class="detail-description">
+            Given: 
+            <ul>
+                <li>Population Mean ($\mu_0$) = 15200 KM</li>
+                <li>Population SD ($\sigma$) = 1248 KM</li>
+                <li>Sample Size ($n$) = 100</li>
+                <li>Sample Mean ($\bar{x}$) = 15269 KM</li>
+            </ul>
+        </p>
+
+        <p class="detail-description">
+            <strong>1. Null Hypothesis ($H_0$):</strong> $\mu = 15200$ (The claim is valid).<br>
+            <strong>2. Alternative Hypothesis ($H_1$):</strong> $\mu \neq 15200$ (The claim is invalid).
+        </p>
+
+        <p class="detail-description">
+            <strong>3. Test Statistic (Z-score):</strong><br>
+            The formula is $Z = \frac{\bar{x} - \mu_0}{\sigma / \sqrt{n}}$.
+            <br><br>
+            $Z = \frac{15269 - 15200}{1248 / \sqrt{100}} = \frac{69}{124.8} = 0.5529$
+        </p>
+
+        <div class="intuition-box" style="border-left: 4px solid #2ecc71; background-color: #f0fff4;">
+            <strong>Final Conclusion:</strong><br>
+            Since the calculated value of $|Z| = 0.5529$ is less than the critical value of $1.96$ (at the 5% level of significance), we <strong>fail to reject the Null Hypothesis ($H_0$)</strong>. 
+            <br><br>
+            The difference between the sample mean and the population mean is not statistically significant. Therefore, the claim is <strong>valid</strong>.
+        </div>
+    </div>
+</div>
 </div>
 		
 </body>
 </html>
-
-
