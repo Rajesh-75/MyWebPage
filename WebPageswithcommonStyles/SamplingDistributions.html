@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sampling Distribution</title>
+    <link rel="stylesheet" href="Style.css">
+
+    <script>
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true
+        },
+        options: {
+            skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<div class="content-wrapper">
+    <h1>Sampling Distribution</h1>
+    
+    <div class="description-box">
+        <h3>Statistics and Parameters</h3>
+        <p class="detail-description">
+            A measurable, single-valued function of the observations in a sample is called a <strong>statistic.</strong>
+            If $x_1, x_2, \dots, x_n$ is a sample drawn from a population, then $t = f(x_1, x_2, \dots, x_n)$ is a statistic. 
+            For example: Sample mean = $\frac{x_1 + x_2 + \dots + x_n}{n}$ is a function of the sample values. So it is a statistic. 
+            Any function of the population values is called parameters. For example mean and standard deviation are parameters of the population distribution.
+        </p>
+    </div>
+</div>
+<div class="description-box">
+    <h3>Sampling Distribution</h3>
+    <p class="detail-description">
+        A statistic is a random variable,  
+        Because the sample is random, the statistic calculated from it changes with every new sample and distribution of samples thus obtained is the <strong>sampling distribution</strong>.
+		Sample mean is a statistic and therefore the 
+		is the distribution of statistic. Sample mean is a statistic and therefore the 
+        distribution of a sample mean is a <strong>sampling distribution</strong>.
+    </p>
+</div>
+<div class="description-box">
+    <h3>Standard Error</h3>
+    <p class="detail-description">
+        The standard deviation of a sampling distribution is called the <strong>Standard Error (S.E.)</strong>.
+    </p>
+    
+    <ul class="detail-description">
+        <li>$\bar{x}$ has a sampling distribution. The S.D. of this distribution is called the <strong>Standard Error of $\bar{x}$</strong>.</li>
+        <li>If '$t$' is a statistic, then the Standard Error of '$t$' is the S.D. of the sampling distribution of $t$.</li>
+        <li>Mathematically, the S.E. of $t = \sqrt{E[t - E(t)]^2}$. This is analogous to the S.D. of the population.</li>
+		<li>In practical terms, the Standard Error is the standard deviation of the means calculated from all possible samples of the same size drawn from the population.</li>
+    </ul>
+
+    <div class="stat-box" style="background: #e7f3ff; border-left: 5px solid #0056b3; padding: 10px; margin-top: 10px;">
+        <strong>Note:</strong> When the population follows a normal distribution, we can study the sampling distributions even if the sample size is small. Similarly, if the sample size is large, we can study the sampling distribution even without knowing the specific distribution of the population.
+    </div>
+	
+<div class="content-wrapper">
+    <h3>Sampling Distribution of mean of samples drawn from a normal population</h3>
+    
+    <p class="detail-description">
+        To derive the sampling distribution of the mean $\bar{x}$, we use the property that the Moment Generating Function (MGF) of a sum of independent random variables is the product of their individual MGFs.
+    </p>
+
+    <div class="derivation-container" style="border: 2px solid #0056b3; border-radius: 8px; padding: 20px; background-color: #fcfdfe; margin: 20px 0;">
+        <h4 style="margin-top: 0; color: #0056b3;">Mathematical Derivation via MGF</h4>
+        
+        <div class="math-breakdown">
+            <strong>1. The MGF of the Population</strong>
+            <p>Given that $x \sim N(\mu, \sigma^2)$, the MGF of a single observation $x_i$ is:</p>
+            $$M_{x_i}(t) = E[e^{tx_i}] = \exp\left( \mu t + \frac{\sigma^2 t^2}{2} \right)$$
+
+            <strong>2. Define the Sample Mean</strong>
+            <p>Let $x_1, x_2, \dots, x_n$ be a random sample of size $n$. The sample mean is defined as:</p>
+            $$\bar{x} = \frac{1}{n} \sum_{i=1}^n x_i$$
+
+            <strong>3. Derive the MGF of $\bar{x}$</strong>
+            <p>By definition, the MGF of the sample mean is:</p>
+            $$M_{\bar{x}}(t) = E[e^{t\bar{x}}] = E\left[ e^{t \left( \frac{1}{n} \sum x_i \right)} \right]$$
+            
+            <p>Using the properties of exponents and independence, we can rewrite this as the product of expectations:</p>
+            $$M_{\bar{x}}(t) = E[e^{\frac{t}{n}x_1}] \cdot E[e^{\frac{t}{n}x_2}] \cdots E[e^{\frac{t}{n}x_n}]$$
+            $$M_{\bar{x}}(t) = \prod_{i=1}^n M_{x_i}\left( \frac{t}{n} \right)$$
+
+            <strong>4. Substitute the Normal MGF</strong>
+            <p>Substitute the expression for $M_{x_i}$ where the argument is $\frac{t}{n}$:</p>
+            $$M_{\bar{x}}(t) = \prod_{i=1}^n \exp\left( \mu \left(\frac{t}{n}\right) + \frac{\sigma^2 \left(\frac{t}{n}\right)^2}{2} \right)$$
+            
+            <p>Since we are multiplying $n$ identical terms, we raise the expression to the power of $n$ and simplify:</p>
+            $$M_{\bar{x}}(t) = \left[ \exp\left( \frac{\mu t}{n} + \frac{\sigma^2 t^2}{2n^2} \right) \right]^n$$
+            $$M_{\bar{x}}(t) = \exp\left( n \cdot \frac{\mu t}{n} + n \cdot \frac{\sigma^2 t^2}{2n^2} \right)$$
+            $$M_{\bar{x}}(t) = \exp\left( \mu t + \frac{(\sigma^2/n) t^2}{2} \right)$$
+        </div>
+    </div>
+
+    <div class="intuition-box" style="margin-top: 15px; background: #f0f7ff; padding: 15px; border-left: 5px solid #0056b3;">
+        <strong>Conclusion:</strong> The final expression is the MGF of a Normal distribution with mean $\mu$ and variance $\sigma^2/n$. Therefore, we have proven:
+        <p style="text-align: center; font-weight: bold; font-size: 1.1rem; margin-top: 10px;">$\bar{x} \sim N\left(\mu, \frac{\sigma^2}{n}\right)$</p>
+    </div>
+</div>
+    
+</div>
+</div>
