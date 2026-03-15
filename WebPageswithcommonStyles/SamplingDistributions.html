@@ -104,7 +104,123 @@
         <strong>Conclusion:</strong> The final expression is the MGF of a Normal distribution with mean $\mu$ and variance $\sigma^2/n$. Therefore, we have proven:
         <p style="text-align: center; font-weight: bold; font-size: 1.1rem; margin-top: 10px;">$\bar{x} \sim N\left(\mu, \frac{\sigma^2}{n}\right)$</p>
     </div>
+	<div class="note-box" style="background-color: #fff9db; border-left: 5px solid #fcc419; padding: 15px; margin-bottom: 20px;">
+        <strong>Note: Why use MGF to derive Sampling Distributions?</strong>
+        <p class="detail-description" style="margin-top: 10px;">
+            When we derive the distribution of a sample mean ($\bar{x}$), we are essentially adding up $n$ different random variables. Doing this directly with Probability Density Functions (PDFs) is extremely difficult. The MGF is the preferred tool because:
+        </p>
+        <p><strong>Multiplication is easier than Convolution</strong></p>
+        <p>In the "Normal" world (PDFs), adding two variables requires a mathematical operation called <strong>Convolution</strong>, which involves solving a complex integral. However, in the "MGF" world, adding variables is equivalent to simple multiplication.</p>
+        
+        <ul style="list-style-type: none; padding-left: 0;">
+            <li><strong>PDF Approach:</strong> $\int f(x) \cdot f(z-x) dx$ <span style="color: #c92a2a;">(Hard)</span></li>
+            <li><strong>MGF Approach:</strong> $M_x(t) \cdot M_y(t)$ <span style="color: #2b8a3e;">(Easy)</span></li>
+        </ul>
+    </div>
 </div>
+ <div class="example-box" style="border: 2px solid #0056b3; border-radius: 8px; margin-top: 30px; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <div class="example-header" style="background-color: #0056b3; color: white; padding: 12px 20px; font-weight: bold; font-size: 1.2rem;">
+        Example: Probability and the Sampling Distribution
+    </div>
     
+    <div class="example-body" style="padding: 20px; background-color: #f8f9fa; line-height: 1.6;">
+        <p><strong>Question:</strong> A sample of 20 items is drawn from a normal population with mean $\mu = 30$ and $SD = 10$. Find the probability that the mean of the sample ($\bar{x}$):
+            <br>(1) Exceeds 35 
+            <br>(2) Lies between 28 and 32.
+        </p>
+
+        <hr style="border: 0; border-top: 1px solid #dee2e6; margin: 20px 0;">
+
+        <h4 style="color: #0056b3;">Solution</h4>
+
+        <p><strong>Step 1: Identify the Parameters</strong></p>
+        <ul style="list-style-type: none; padding-left: 10px;">
+            <li>Population Mean ($\mu$): $30$</li>
+            <li>Population SD ($\sigma$): $10$</li>
+            <li>Sample Size ($n$): $20$</li>
+            <li><strong>Standard Error (SE):</strong> 
+                $$SE = \frac{\sigma}{\sqrt{n}} = \frac{10}{\sqrt{20}} = \frac{10}{4.472} \approx 2.236$$
+            </li>
+        </ul>
+        <p>The sampling distribution is $\bar{x} \sim N(30, 2.236)$.</p>
+
+        
+
+        <p><strong>Step 2: Probability that $\bar{x}$ exceeds 35</strong></p>
+        <p>We want to find $P(\bar{x} > 35)$. First, calculate the Z-score:</p>
+        $$Z = \frac{\bar{x} - \mu}{SE} = \frac{35 - 30}{2.236} = \frac{5}{2.236} \approx 2.24$$
+        <p>Using the Z-table, the area to the left of $Z = 2.24$ is approximately $0.9875$.</p>
+        <p>Find the right tail:</p>
+        $$P(Z > 2.24) = 1 - 0.9875 = 0.0125$$
+        <p><strong>Answer (1):</strong> There is a <strong>1.25%</strong> probability that the sample mean exceeds 35.</p>
+
+        <p><strong>Step 3: Probability that $\bar{x}$ lies between 28 and 32</strong></p>
+        <p>We want to find $P(28 < \bar{x} < 32)$. Calculate Z-scores for both boundaries:</p>
+        <ul>
+            <li>For 32: $Z_1 = \frac{32 - 30}{2.236} = \frac{2}{2.236} \approx 0.89$</li>
+            <li>For 28: $Z_2 = \frac{28 - 30}{2.236} = \frac{-2}{2.236} \approx -0.89$</li>
+        </ul>
+        <p>Using the Z-table:</p>
+        <ul style="list-style-type: none;">
+            <li>Area for $Z = 0.89$ is $0.8133$</li>
+            <li>Area for $Z = -0.89$ is $0.1867$</li>
+        </ul>
+        <p>Subtract the areas to find the region between them:</p>
+        $$P(-0.89 < Z < 0.89) = 0.8133 - 0.1867 = 0.6266$$
+        <p><strong>Answer (2):</strong> There is a <strong>62.66%</strong> probability that the sample mean lies between 28 and 32.</p>
+    </div>
+</div>
+<div class="description-box">
+    <h3> Commonly Used Sampling Distributions</h3>
+	 <p class="detail-description">
+       There are several standard distributions used for testing of hypothesis and other statistical inferences purposes. Given below is a table listing the widely sampling distributions. For detailed derivations of the PDFs,please refer some standard references. Here we are only interested in important properties of the distributions. 
+    </p>
+   <div class="description-box">
+    
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px; background-color: #fff; font-size: 0.95rem;">
+            <thead>
+                <tr style="background-color: #0056b3; color: white; text-align: left;">
+                    <th style="padding: 12px; border: 1px solid #dee2e6;">Distribution</th>
+                    <th style="padding: 12px; border: 1px solid #dee2e6;">Probability Density Function $f(x)$</th>
+                    <th style="padding: 12px; border: 1px solid #dee2e6;">Mean</th>
+                    <th style="padding: 12px; border: 1px solid #dee2e6;">Standard Deviation (SD)</th>
+                    <th style="padding: 12px; border: 1px solid #dee2e6;">Purpose in Hypothesis Testing</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;"><strong>Normal</strong><br>$N(\mu, \sigma^2)$</td>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;">$f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}$</td>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;">$\mu$</td>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;">$\sigma$</td>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;">Used for Z-tests concerning population means when variance is known or sample size is large.It is the Sampling Distributions of sample means</td>
+                </tr>
+                <tr style="background-color: #f9f9f9;">
+                    <td style="padding: 12px; border: 1px solid #dee2e6;"><strong>Chi-Square ($\chi^2$)</strong><br>with $n$ d.f.</td>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;">$f(x) = \frac{1}{2^{n/2}\Gamma(n/2)} x^{(n/2)-1} e^{-x/2}$</td>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;">$n$</td>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;">$\sqrt{2n}$</td>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;">Used for testing population variance, Goodness of Fit, and Independence in contingency tables.It is the Sampling Distributions of sample variances</td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;"><strong>Student's $t$</strong><br>with $n$ d.f.</td>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;">$f(t) = \frac{\Gamma(\frac{n+1}{2})}{\sqrt{n\pi}\Gamma(\frac{n}{2})} \left(1 + \frac{t^2}{n}\right)^{-\frac{n+1}{2}}$</td>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;">$0$ <small>($n > 1$)</small></td>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;">$\sqrt{\frac{n}{n-2}}$ <small>($n > 2$)</small></td>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;">Used for testing means when the population variance is unknown and the sample size is small.</td>
+                </tr>
+                <tr style="background-color: #f9f9f9;">
+                    <td style="padding: 12px; border: 1px solid #dee2e6;"><strong>F-Distribution</strong><br>with $n_1, n_2$ d.f.</td>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;">$f(x) = \frac{\sqrt{\frac{(n_1 x)^{n_1} n_2^{n_2}}{(n_1 x + n_2)^{n_1 + n_2}}}}{x B(\frac{n_1}{2}, \frac{n_2}{2})}$</td>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;">$\frac{n_2}{n_2-2}$ <small>($n_2 > 2$)</small></td>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;">Large formula based on $n_1, n_2$</td>
+                    <td style="padding: 12px; border: 1px solid #dee2e6;">Used to compare two population variances and as the basis for Analysis of Variance (ANOVA).</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
 </div>
 </div>
