@@ -364,6 +364,127 @@
         </div>
 
     </div> </div> 
+	<div class="example-box" style="border: 2px solid #0056b3; border-radius: 8px; margin: 25px 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 800px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    
+    <div class="example-header" style="background-color: #0056b3; color: white; padding: 12px 20px; font-weight: bold; font-size: 1.2rem;">
+        Numerical Example: Inference with the $t$-Distribution
+    </div>
+
+    <div class="example-body" style="padding: 20px; background-color: #f8f9fa; line-height: 1.6;">
+        
+        <div style="background-color: #ffffff; padding: 15px; border-radius: 5px; border: 1px solid #dee2e6; margin-bottom: 20px;">
+            <p style="margin: 0;"><strong>Question:</strong> A sample of size $n=25$ drawn from a normal population has mean $\mu=20$ and sample variance $s^2=8$. Find the probability that:
+                <br><strong>(1)</strong> The sample mean ($\bar{x}$) is greater than 21.
+                <br><strong>(2)</strong> The sample mean ($\bar{x}$) lies between 19 and 21.
+            </p>
+        </div>
+
+        <p><strong>Note on Distribution Selection:</strong> Because the <strong>population variance ($\sigma^2$)</strong> is unknown and we are utilizing the <strong>sample variance ($s^2$)</strong>, we must use the Student's $t$-distribution rather than the Standard Normal ($Z$) distribution.</p>
+
+        <hr style="border: 0; border-top: 1px solid #dee2e6; margin: 20px 0;">
+
+        <div style="margin-bottom: 20px;">
+            <h4 style="color: #0056b3; margin-top: 0;">Step 1: Identify the Constituent Parameters</h4>
+            <ul style="list-style-type: none; padding-left: 10px;">
+                <li>• Sample Size ($n$): $25$</li>
+                <li>• Population Mean ($\mu$): $20$</li>
+                <li>• Sample Variance ($s^2$): $8$</li>
+                <li>• Sample Standard Deviation ($s$): $\sqrt{8} \approx 2.8284$</li>
+                <li>• Degrees of Freedom ($df$): $n - 1 = 24$</li>
+            </ul>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4 style="color: #0056b3;">Step 2: Calculate the Standard Error ($SE$)</h4>
+            <p>The standard error quantifies the expected stochastic variation of the sample mean:</p>
+            <div style="background: #ffffff; padding: 10px; border-radius: 5px; text-align: center; border: 1px solid #eee;">
+                $$SE = \frac{s}{\sqrt{n}} = \frac{2.8284}{\sqrt{25}} = \mathbf{0.5657}$$
+            </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4 style="color: #0056b3;">Step 3: Solve for $P(\bar{x} > 21)$</h4>
+            <p>First, calculate the $t$-statistic for $\bar{x} = 21$:</p>
+            <div style="text-align: center;">$$t = \frac{\bar{x} - \mu}{SE} = \frac{21 - 20}{0.5657} = \mathbf{1.768}$$</div>
+            <p>Consulting the $t$-table for $df = 24$, the area in the upper tail is:</p>
+            <div style="background-color: #e7f3ff; padding: 10px; border-radius: 5px; text-align: center; font-weight: bold;">
+                $P(t_{24} > 1.768) \approx \mathbf{0.0449}$ (4.49%)
+            </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h4 style="color: #0056b3;">Step 4: Solve for $P(19 < \bar{x} < 21)$</h4>
+            <p>Due to the symmetry of the $t$-distribution around the mean:</p>
+            <ul style="list-style-type: none; padding-left: 10px;">
+                <li>• For $\bar{x} = 21$, $t = 1.768$</li>
+                <li>• For $\bar{x} = 19$, $t = -1.768$</li>
+            </ul>
+            <div style="text-align: center;">
+                $$P(-1.768 < t_{24} < 1.768) = 1 - 2 \times P(t_{24} > 1.768)$$
+                $$1 - 2(0.0449) = \mathbf{0.9102}$$
+            </div>
+            <p><strong>Result:</strong> There is a <strong>91.02%</strong> probability that the sample mean falls within this range.</p>
+        </div>
+
+        <div style="margin-top: 20px; padding: 12px; background-color: #fff9db; border-left: 5px solid #fcc419; font-size: 0.9rem; color: #856404;">
+            <strong>Theoretical Note:</strong> The $t$-distribution effectively "penalizes" our uncertainty by having thicker tails. If we had used $Z$ here, our estimated probability would be slightly higher, potentially leading to an overconfident (and incorrect) conclusion.
+        </div>
+
+    </div> </div> ```
+	<div class="derivation-box" style="border: 1px solid #28a745; border-radius: 8px; margin: 25px 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 800px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    
+    <div class="derivation-box" style="border: 1px solid #0056b3; border-radius: 8px; margin: 25px 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 800px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    
+    <div style="background-color: #0056b3; color: white; padding: 15px 20px; font-weight: bold; font-size: 1.25rem;">
+        Mathematical Proof: The Derivation of the $F$-Distribution Ratio
+    </div>
+
+    <div style="padding: 25px; background-color: #ffffff; line-height: 1.7; color: #2c3e50;">
+        
+        <p style="margin-top: 0;">To demonstrate that the ratio of two independent sample variances ($s_1^2 / s_2^2$) follows an $F$-distribution, we must align it with the formal stochastic definition of the $F$-statistic.</p>
+
+        <h3 style="color: #0056b3; font-size: 1.15rem; border-bottom: 1px solid #eee; padding-bottom: 5px;">1. The Formal Definition of $F$</h3>
+        <p>By definition, an $F$-distributed random variable is the ratio of two <strong>independent Chi-square variables</strong>, each normalized by its respective degrees of freedom ($d_1$ and $d_2$):</p>
+        
+        <div style="text-align: center; background: #f8f9fa; padding: 15px; border-radius: 6px; margin: 15px 0; border: 1px dashed #0056b3;">
+            $$F = \frac{U / d_1}{V / d_2}$$
+            <small>where $U \sim \chi^2_{(d_1)}$ and $V \sim \chi^2_{(d_2)}$</small>
+        </div>
+
+        <h3 style="color: #0056b3; font-size: 1.15rem; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 25px;">2. Identify the Constituent Chi-square Components</h3>
+        <p>Consider two independent samples drawn from normal populations $N(\mu_1, \sigma_1^2)$ and $N(\mu_2, \sigma_2^2)$. The relationship between sample variance ($s^2$) and the Chi-square distribution is:</p>
+        
+        <div style="margin-left: 15px; background-color: #f0f7ff; padding: 10px; border-radius: 5px;">
+            <p><strong>Component 1 (Sample 1):</strong> $U = \frac{(n_1-1)s_1^2}{\sigma_1^2} \sim \chi^2_{(n_1-1)}$</p>
+            <p style="margin-bottom: 0;"><strong>Component 2 (Sample 2):</strong> $V = \frac{(n_2-1)s_2^2}{\sigma_2^2} \sim \chi^2_{(n_2-1)}$</p>
+        </div>
+
+        <h3 style="color: #0056b3; font-size: 1.15rem; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 25px;">3. Construct the Ratio</h3>
+        <p>Substituting these components and their respective degrees of freedom ($d_1 = n_1-1$ and $d_2 = n_2-1$) into the definition:</p>
+        <div style="text-align: center; background: #f8f9fa; padding: 15px; border-radius: 6px;">
+            $$F = \frac{\left[ \frac{(n_1-1)s_1^2}{\sigma_1^2} \right] / (n_1-1)}{\left[ \frac{(n_2-1)s_2^2}{\sigma_2^2} \right] / (n_2-1)}$$
+        </div>
+
+        <h3 style="color: #0056b3; font-size: 1.15rem; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 25px;">4. Algebraic Simplification</h3>
+        <p>The degrees of freedom terms ($(n_1-1)$ and $(n_2-1)$) cancel out within the numerator and denominator, leaving:</p>
+        <div style="text-align: center;">
+            $$F = \frac{s_1^2 / \sigma_1^2}{s_2^2 / \sigma_2^2}$$
+        </div>
+        <p>Under the <strong>Null Hypothesis ($\sigma_1^2 = \sigma_2^2$)</strong>, where we assume both samples originate from populations with identical variances, the population variance terms cancel entirely:</p>
+        <div style="text-align: center; font-size: 1.2rem; font-weight: bold; color: #0056b3;">
+            $$F = \frac{s_1^2}{s_2^2}$$
+        </div>
+
+        <h3 style="color: #0056b3; font-size: 1.15rem; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 25px;">5. Conclusion</h3>
+        <p>Because the ratio $\frac{s_1^2}{s_2^2}$ is algebraically equivalent to the ratio of two independent, normalized Chi-square variables, it follows the <strong>$F$-distribution with $(n_1-1, n_2-1)$ degrees of freedom.</strong></p>
+
+        <div style="margin-top: 20px; padding: 15px; background-color: #e7f3ff; border-left: 5px solid #0056b3; font-size: 0.95rem; color: #0c5460;">
+            <strong>Tutorial Insight:</strong> This proof is the reason why the $F$-test is so powerful for comparing variances. It allows us to determine if two samples have significantly different variabilities without needing to know the actual value of the population variance ($\sigma^2$), provided the populations are normally distributed.
+        </div>
+
+    </div> </div> ```
+
+
 
 
 </div> </body>
