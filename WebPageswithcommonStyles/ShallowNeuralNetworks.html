@@ -21,7 +21,49 @@
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-<h2>Shallow Neural Networks</h2>
+<h2>Neural Networks</h2>
+<div class="description-box">
+        <h3>Neural Networks</h3>
+<p>
+        A Neural Network is a powerful Machine Learning model designed to identify complex patterns in data. 
+        It is the foundational technology behind modern AI, widely used for <strong>Pattern Recognition</strong> (such as identifying objects in photos), 
+        <strong>Image Generation</strong>, and <strong>Natural Language Processing</strong> (like predicting the next word in a sentence).
+    </p>
+
+    <p>
+        A Neural Network is one of the few Machine Learning models capable of handling massive amounts of high-dimensional data, 
+        such as millions of pixels in an image or billions of tokens in text, to train for accurate predictions. 
+        Compared to the early days of AI, modern Neural Networks are significantly larger, both in terms of 
+        <strong>learnable parameters</strong> (the weights) and the <strong>depth of internal processing</strong> (the number of hidden layers).
+    </p>
+	<p> modern Neural Networks require massive computational infrastructure. Training these models on a standard CPU (Central Processing Unit) would take years because CPUs are designed for general-purpose tasks. Instead, modern AI relies on GPUs (Graphics Processing Units) and specialized chips like TPUs (Tensor Processing Units).These processors are built for massive parallelism, allowing them to perform thousands of mathematical calculations (like the matrix multiplications in our weighted sums) simultaneously. This hardware evolution, combined with large-scale data centers, is what allows us to train models with billions of parameters in a matter of weeks rather than decades. </p>
+	</div>
+	<div class="description-box">
+    <h3>From Linear Regression to Layers of Logistic Regression</h3>
+    
+    <p>
+        Linear and Logistic Regression, as seen in earlier chapters, take inputs, multiply them by weights, and produce an output. 
+        A Neural Network is a "multi-layer" stack of linear and logistic regression units that introduces intermediate processing steps. 
+        This multi-layer structure allows the model to process data in stages.
+    </p>
+
+	<div class="image-container">
+        <img src="NeuralNetworkDiagram.png" alt="Neural Network Layer Diagram" class="network-image">
+    </div>
+    <p>
+        In each layer, processing leads to the creation of new <strong>features</strong>. 
+        By using non-linear <strong>Activation Functions</strong> (like ReLU or Sigmoid) in hidden layers,
+<div class="math-block">
+        <strong>Math (Shallow NN):</strong> 
+        $$y = \sigma(W_2 \cdot \sigma(W_1x + b_1) + b_2)$$
+    </div>		
+        the network automatically learns to combine raw inputs into complex features that best solve the task.
+    </p>
+</div>
+
+
+ 
+	
 <div class="plot-container">
         <svg width="850" height="650" viewBox="0 0 850 650" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
             <defs>
@@ -112,12 +154,10 @@
         </svg>
     </div>
 
-    <div class="image-container">
-        <img src="NeuralNetworkDiagram.png" alt="Neural Network Layer Diagram" class="network-image">
-    </div>
+    
 
     <div class="detail-description">
-        A neural networks involves the following process 
+        A neural networks broadly involves the following process 
         <ol class="process-list">
             <li>(1) Forward Pass: Data is fed through the network to generate predictions.</li>
             <li>(2) Loss Calculation: A loss function measures how far off the predictions were from the true labels.</li>
@@ -126,7 +166,7 @@
         </ol>
         (1) - (4) will be repeated as desired no of loops
         <br><br>
-        While the above steps are  the same, the details of what the network is doing at each step are very different, especially when one kind of NN say MLP when compared with CNN 
+        While the above steps are  the same, the details of what the network is doing at each step are very different, Processing of  NN say MLP layers are different from the processing of layers in CNN
     </div>
 
     <div class="tutorial-content">
@@ -177,5 +217,32 @@
                 </ul>
             </li>
         </ul>
-    </div> </body>
+    </div>
+	<li class="section-item">
+    <span class="section-title">The Calculus of ReLU: Why the Gradient is 1</span>
+    It is important to distinguish between a constant and a linear slope. For all values where $z > 0$, ReLU acts as the identity function ($f(z) = z$).
+    <ul class="sub-list">
+        <li><strong>Linear Slope:</strong> Because $f(z) = z$ in the positive region, its derivative is exactly 1. It is like a ramp with a 45-degree angle.</li>
+        <li><strong>Not a Constant:</strong> If ReLU gave a constant value (like 5), the gradient would be 0 and the network would never learn. By providing a gradient of 1, it allows the "error signal" to pass through the neuron unchanged.</li>
+        <li><strong>Dead Neurons:</strong> If $z < 0$, the gradient <i>is</i> 0. This is known as the "Dying ReLU" problem, where a neuron stops updating because it is stuck in the negative region.</li>
+    </ul>
+</li>
+	<div style="border-left: 5px solid #2ecc71; background: #f0fff4; padding: 20px; border-radius: 8px; margin: 20px 0;">
+    <h4 style="margin-top: 0; color: #27ae60;">Architectural Math: Parameter Counting</h4>
+    <p class="detail-description">
+        To calculate the complexity of a <strong>Dense Layer</strong>, we multiply the input dimension by the output dimension.
+    </p>
+    
+    <div style="background: white; padding: 10px; border: 1px dashed #27ae60; font-family: monospace;">
+        Input Size ($L_1$): n <br>
+        Output Size ($L_2$): n - 4 <br>
+        -------------------------- <br>
+        <strong>Connection Count:</strong> n * (n - 4) = n² - 4n
+    </div>
+    
+    <p style="font-size: 0.85rem; margin-top: 15px;">
+        <em>Note:</em> In Large Language Models, $n$ is often 4096 or higher. A single layer can have <strong>16 million+</strong> connections!
+    </p>
+</div>
+	</body>
 </html>
