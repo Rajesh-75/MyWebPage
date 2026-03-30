@@ -124,16 +124,97 @@
     </div></p>
         </li>
 
-        <li class="section-item">
-            <span class="section-title">5. Final layer L4</span>
-            <p>Before the final output is emitted, the weighted sums(Z Values) are passed through a non-linear activation function $f(\mathbf{z})$. This function "interprets" the raw scores to match the mathematical requirements of the specific task:Multi-Class Classification (for example Softmax): Maps Zs to a categorical probability distribution where $\sum P_i = 1$. This is used when classes are mutually exclusive.Binary Classification (Sigmoid): Squashes a single Z value into a $(0, 1)$ range, representing the probability of the positive class.Regression (Identity/Linear): Pass-through activation used when the goal is to predict a continuous scalar value (e.g., price or coordinate).In the figure L4 outputs a values which are represented as <strong>Actual $yi (i=1,2)$which is also called the target variable</strong></p>
-			
-			Loss Function: Ultimate aim of the any Neural Networks is to compute the parameters(Here its is weights).Weights are computed throught Back Propogation. BP is determined by differentiating the Loss or Error Function which is defined <strong>$F($yi$,Targeti)$</strong>as shown in the Network Diagram. 
-			
-        </li>
-    </ul>
-</div>
+	<li class="section-item" style="list-style-type: none; margin-bottom: 30px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <span class="section-title" style="font-size: 1.4rem; font-weight: bold; color: #2c3e50; border-bottom: 2px solid #3498db;">
+        5. Final Layer (L4) & Loss Evaluation
+    </span>
+    
+    <p style="line-height: 1.6; color: #333; margin-top: 15px;">
+        Before the final output is emitted, the weighted sums (<strong>Logits or $Z$ values</strong>) are passed through a non-linear activation function $f(\mathbf{z})$. This function "interprets" the raw scores to match the mathematical requirements of the specific task:
+    </p>
 
+    <ul style="line-height: 1.8; color: #555;">
+        <li><strong>Multi-Class Classification (e.g., Softmax):</strong> Maps $Z$ values to a categorical probability distribution where $\sum P_i = 1$. This is used when classes are mutually exclusive.</li>
+        <li><strong>Binary Classification (Sigmoid):</strong> Squashes a single $Z$ value into a $(0, 1)$ range, representing the probability of the positive class.</li>
+        <li><strong>Regression (Identity/Linear):</strong> A pass-through activation used when the goal is to predict a continuous scalar value (e.g., price or coordinate).</li>
+    </ul>
+
+    <p style="line-height: 1.6; color: #333;">
+        In the architectural flow, L4 outputs values represented as <strong>$y_i$</strong> (the Network Prediction). The <strong>Loss Function</strong>, denoted as $f(y_i, t_i)$, measures the discrepancy between these predictions and the <strong>Target Output ($t_i$)</strong>.
+    </p>
+
+    <p style="line-height: 1.6; color: #333;">
+        The Loss Function is parameterized by the weight values $w_i$, often expressed as $L(y_i, t_i; w_i)$. It determines the "cost" or deviation of the network output from the expected target. The mathematical formulation of this error depends strictly on the nature of the problem, as summarized in the table below:
+    </p>
+	<img src="loss_landscape.png" alt="3D Loss Landscape" style="max-width: 100%; height: auto; border-radius: 5px;">	
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); font-family: sans-serif;">
+    <thead>
+        <tr style="background-color: #34495e; color: white; text-align: left;">
+            <th style="padding: 12px; border: 1px solid #ddd;">Loss Function</th>
+            <th style="padding: 12px; border: 1px solid #ddd;">Output Characteristics</th>
+            <th style="padding: 12px; border: 1px solid #ddd;">Primary Use Case</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="padding: 12px; border: 1px solid #ddd;">
+                <strong>Mean Squared Error (MSE)</strong>
+                <div class="math-display" style="margin-top: 8px;">
+                    $$L(w) = \frac{1}{n} \sum_{i=1}^{n} (y_i - t_i)^2$$
+                </div>
+            </td>
+            <td style="padding: 12px; border: 1px solid #ddd;">A positive scalar representing average squared distance. Penalizes large errors heavily.</td>
+            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Regression:</strong> Predicting house prices or coordinates.</td>
+        </tr>
+        <tr style="background-color: #f9f9f9;">
+            <td style="padding: 12px; border: 1px solid #ddd;">
+                <strong>Mean Absolute Error (MAE)</strong>
+                <div class="math-display" style="margin-top: 8px;">
+                    $$L(w) = \frac{1}{n} \sum_{i=1}^{n} |y_i - t_i|$$
+                </div>
+            </td>
+            <td style="padding: 12px; border: 1px solid #ddd;">A positive scalar representing average absolute distance.</td>
+            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Regression:</strong> Use when data contains many <strong>outliers</strong>.</td>
+        </tr>
+        <tr>
+            <td style="padding: 12px; border: 1px solid #ddd;">
+                <strong>Binary Cross-Entropy (BCE)</strong>
+                <div class="math-display" style="margin-top: 8px;">
+                    $$L(w) = -\frac{1}{n} \sum_{i=1}^{n} [t_i \ln y_i + (1 - t_i) \ln(1 - y_i)]$$
+                </div>
+            </td>
+            <td style="padding: 12px; border: 1px solid #ddd;">Measures the distance between two probability distributions (0 or 1).</td>
+            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Binary Classification:</strong> Yes/No, Spam detection.</td>
+        </tr>
+        <tr style="background-color: #f9f9f9;">
+            <td style="padding: 12px; border: 1px solid #ddd;">
+                <strong>Categorical Cross-Entropy</strong>
+                <div class="math-display" style="margin-top: 8px;">
+                    $$L(w) = -\sum_{i=1}^{n} \sum_{j=1}^{C} t_{i,j} \ln y_{i,j}$$
+                </div>
+            </td>
+            <td style="padding: 12px; border: 1px solid #ddd;">Compares predicted class distribution against one-hot encoded targets.</td>
+            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Multi-Class:</strong> Image recognition (MNIST, CIFAR) or LLMs.</td>
+        </tr>
+    </tbody>
+</table>
+</li>
+</div>
+<div class="description-box">
+    <h3>Gradient and Back Propogation</h3>
+	<div class="tutorial-content">
+	<p class="description-box">
+    Loss function is a surface with several minimums. Some of these minimums are called 
+    <strong>global minimums</strong> and <strong>local minimums</strong>. A core of the 
+    Neural Network training is finding these points. A minimum corresponds to a point where 
+    <strong>$$\nabla L(w) = 0$$</strong> 
+    where $\nabla L(w)$ is the gradient of the Loss Function. This gradient is computed 
+    by differentiating $L(w)$ with respect to weights ($w$). The gradients flow back 
+    through the network to update the weights in the fashion:
+    $$w_j \leftarrow w_j - \lambda \frac{\partial L}{\partial w_j}$$
+</p>
+</div>
 <div class="description-box">
     <h3>Universal Approximation capabilities of Neural Networks</h3>
 
