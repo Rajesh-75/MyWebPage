@@ -208,11 +208,17 @@
     Loss function is a surface with several minimums. Some of these minimums are called 
     <strong>global minimums</strong> and <strong>local minimums</strong>. A core of the 
     Neural Network training is finding these points. A minimum corresponds to a point where 
-    <strong>$$\nabla L(w) = 0$$</strong> 
-    where $\nabla L(w)$ is the gradient of the Loss Function. This gradient is computed 
-    by differentiating $L(w)$ with respect to weights ($w$). The gradients flow back 
-    through the network to update the weights in the fashion:
-    $$w_j \leftarrow w_j - \lambda \frac{\partial L}{\partial w_j}$$
+    <strong>$$\nabla L(w) = 0 ...(5)$$.</strong> 
+    where $\nabla L(w)$ is the gradient of the Loss Function.Rather than using a single equation to solve (5) for weights, a repetitive, step-by-step method locates the lowest point of error, much like walking down a hill This gradient is computed 
+    by differentiating $L(w)$ with respect to weights ($w$).The most straightforward way to use gradient information is to update weights by taking a small step in the opposite direction of the gradient. This is calculated using the formula:$$w(\tau) = w(\tau-1) - \eta \nabla L(w(\tau-1))....(6)$$In this equation, the positive value $\eta$ is called the learning rate.The symbol $\tau$ represents a discrete time index, representing the specific iteration count within the sequence of weight updates. After each update, the gradient is calculated again for the new weights, and the process repeats. Because the weights constantly move toward the sharpest possible drop in error, this method is known as <strong>gradient descent or steapest descent</strong>. More about the Gradient Descent is covered in <a href = "BP2.html">BackPropogation</a>. For various parameters used by Neural Network Learning algorithm,please refer <a href = "BP2.html">Parameters</a>
+    <p style="color: #444; line-height: 1.5;"><h3>About Initialization of weight values</h3> <ul>
+        <li>When we use an algorithm like Gradient Descent to train a model, we have to pick a starting value for all the weights (parameters). Think of this as the "starting position" of your hiker on the 3D loss mountain we discussed.</li>
+		<li>Why it matters: Where you start has a huge impact. It determines how fast the model learns and how accurate it will be on new, unseen data.</li>
+
+		<li>The Problem: There isn't a perfect mathematical "rulebook" that tells us the best place to start.</li></ul>
+
+The Reality: Because we lack a solid theory, we often rely on common "best practices" (like small random numbers) and trial-and-error to find an initialization that works.
+    </p>		
 </p>
 </div>
 <div class="description-box">
