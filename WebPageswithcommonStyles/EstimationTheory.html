@@ -258,8 +258,22 @@
         $$P[a < \theta < b] = 0.95$$
     </p>
     <p>
-        This interval thus obtained is called the <strong>95% confidence interval</strong> of the population parameter $\theta$.
-    </p>
+    When we are dealing with a <strong>Normal Distribution</strong> and the population standard deviation ($\sigma$) is <strong>known</strong>, the Confidence Interval estimate of $\mu$ is given by:
+</p>
+
+<p style="text-align: center; font-size: 1.3rem;">
+    <strong>
+        $$\left( \bar{x} - z_{\alpha/2} \cdot \frac{\sigma}{\sqrt{n}}, \bar{x} + z_{\alpha/2} \cdot \frac{\sigma}{\sqrt{n}} \right)$$
+    </strong>
+</p>
+
+<div class="intuition-box">
+    <strong>Breaking down the components:</strong>
+    <ul>
+        <li>$\bar{x}$: The sample mean (our point estimator).</li>
+        <li>$\sigma/\sqrt{n}$: The Standard Error, which represents the standard deviation of the sampling distribution.</li>
+        <li>$z_{\alpha/2}$: The critical value from the standard normal distribution corresponding to the level of significance $\alpha$.</li>
+    </ul>
 </div>
 </body>
 </html>
