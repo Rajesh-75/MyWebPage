@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conventional Neural Networks - Training Algorithm</title>
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$']],
+            processEscapes: true
+        }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+    <h1>Conventional Neural Networks</h1>
+
+    <div class="intuition-box">
+        <strong>Tutorial Focus:</strong> 
+        This page outlines the end-to-end algorithmic flow of a network, from the initial weight setup using <strong>Xavier Initialization</strong> to the iterative optimization via the <strong>Adam Optimizer</strong>.
+    </div>
+
+  <h3>1. Initialization Phase</h3>
+    <div class="algorithm-block">
+        <strong>Algorithm: Xavier_Initialization</strong><br>
+        For each layer $l$ from $1$ to $L$: // $l$: current layer index; $L$: total layers<br>
+        1. Calculate variance: $\sigma^2 = \frac{2}{n_{in} + n_{out}}$ // $n_{in}/n_{out}$: connectivity units<br>
+        2. Sample weights: $W^{[l]} \sim \mathcal{N}(0, \sigma^2)$ // $W^{[l]}$: filter weights for convolution<br>
+        3. Set bias: $b^{[l]} = 0$ // $b^{[l]}$: bias vector
+    </div>
+
+    <hr>
+
+    <h3>2. Forward Pass (FP): The Convolution Engine</h3>
+    <p>This section now explicitly shows the <strong>Sliding Window</strong> algorithm that defines a Convolutional Layer.</p>
+
+    <div class="algorithm-block">
+        <strong>Algorithm: CNN_Forward_Step</strong><br>
+        <span class="comment">/*1. The Convolution Operation (Hidden Layers l = 1 to L-1)<br>
+		 The nested $\sum_m \sum_n$ executes a 2D element-wise dot product between the sliding kernel weightsand the local "receptive field" of the input.This operation effectively collapses the spatial information within that $M \times N$ window into a single scalar value for the output feature map.*/</span><br>
+        1.For each filter $k$ in layer $l$:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;For each position $(i, j)$ in the output feature map:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$Z^{[l]}_{i,j,k} = \sum_{m} \sum_{n} (A^{[l-1]}_{i+m, j+n} \cdot W^{[l]}_{m,n,k}) + b^{[l]}_k$ // $(m,n)$: filter dimensions; $W$: kernel weights<br>
+       
+        <span class="comment">// 2. Activation and Regularization</span><br>
+        2. <strong>Activation:</strong> $A^{[l]} = \max(0, Z^{[l]})$ // $A^{[l]}$: ReLU non-linear output<br>
+        3. <strong>Dropout:</strong> <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;If training == True:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$D^{[l]} = \text{Bernoulli}(p)$ // $D^{[l]}$: mask; $p$: keep probability<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$A^{[l]} = (A^{[l]} \cdot D^{[l]}) / p$ // Scale signal for consistency<br><br>
+        
+        <span class="comment">// 3. Final Output (Flattening & Softmax)</span><br>
+        4. <strong>Logits:</strong> $Z^{[L]} = W^{[L]} \cdot A^{[L-1]} + b^{[L]}$ // $W^{[L]}$: Fully connected weights; $A^{[L-1]}$: last feature map<br>
+        5. <strong>Softmax:</strong> $\hat{y} = \frac{e^{Z^{[L]}}}{\sum e^{Z^{[L]}}}$ // $\hat{y}$: probability of each class (e.g., Ship, Truck, Car)
+    </div>
+
+    <hr>
+
+    <h3>3. Loss Function: Cross-Entropy</h3>
+    <p>To measure the "Likelihood" of our prediction (linking back to our Estimation Theory), we use <strong>Categorical Cross-Entropy</strong>.</p>
+    
+    <div class="intuition-box">
+        $$L = -\sum_{i=1}^{C} y_i \log(\hat{y}_i)$$
+        Where $y$ is the ground truth (one-hot encoded) and $\hat{y}$ is the predicted probability.
+    </div>
+
+    <hr>
+
+    <h3>4. Backward Pass & Adam Optimizer</h3>
+    <p>The <strong>Adam (Adaptive Moment Estimation)</strong> algorithm updates the weights by calculating the moving averages of the gradients and their squares.</p>
+
+    <div class="algorithm-block">
+        <strong>Algorithm: Adam_Optimization_Update</strong><br>
+        <strong>Parameters:</strong> $\beta_1=0.9, \beta_2=0.999, \epsilon=10^{-8}, \eta = \text{learning\_rate}$<br><br>
+        1. <strong>Compute Gradient:</strong> $g_t = \nabla_W L$ (via backpropagation)<br>
+        2. <strong>Update 1st Moment (Mean):</strong> $m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t$<br>
+        3. <strong>Update 2nd Moment (Variance):</strong> $v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2$<br>
+        4. <strong>Bias Correction:</strong><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;$\hat{m}_t = \frac{m_t}{1 - \beta_1^t}$<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;$\hat{v}_t = \frac{v_t}{1 - \beta_2^t}$<br>
+        5. <strong>Update Weight:</strong> <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;$W_{t+1} = W_t - \eta \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon}$
+    </div>
+
+    
+
+    <div class="intuition-box">
+        <strong>Key Insight:</strong> Unlike basic Stochastic Gradient Descent (SGD), <strong>Adam</strong> provides each parameter with its own adaptive learning rate. This is particularly useful in CNNs where different filters may learn at vastly different speeds.
+    </div>
+
+</body>
+</html>
