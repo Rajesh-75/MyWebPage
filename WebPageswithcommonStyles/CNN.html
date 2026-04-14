@@ -20,6 +20,60 @@
 <body>
 
     <h1>Conventional Neural Networks</h1>
+	<div class="intuition-box">
+    <h3>Comparison: CNN vs. MLP</h3>
+    <p>While both are built from neurons and weights, their "philosophy" of data processing differs significantly.</p>
+    
+    <div class="intuition-box">
+    <h3>Comparison: CNN vs. MLP</h3>
+    <p>While both are built from neurons and weights, their mathematical "engines" process data through fundamentally different operations.</p>
+    
+    <table style="width:100%; border-collapse: collapse; margin: 20px 0;">
+        <thead>
+            <tr style="background-color: #f2f2f2; text-align: left;">
+                <th style="padding: 12px; border: 1px solid #ddd;">Feature</th>
+                <th style="padding: 12px; border: 1px solid #ddd;">Multi-Layer Perceptron (MLP)</th>
+                <th style="padding: 12px; border: 1px solid #ddd;">Convolutional Neural Network (CNN)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Mathematical Operation</td>
+                <td style="padding: 12px; border: 1px solid #ddd;"><strong>Matrix Multiplication:</strong> $Z = W \cdot A + b$. A global dot-product of the entire input vector.</td>
+                <td style="padding: 12px; border: 1px solid #ddd;"><strong>Convolution:</strong> $Z = W * A + b$. A local sliding-window dot-product (cross-correlation).</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Connectivity</td>
+                <td style="padding: 12px; border: 1px solid #ddd;"><strong>Fully Connected:</strong> Every input unit connects to every hidden neuron.</td>
+                <td style="padding: 12px; border: 1px solid #ddd;"><strong>Locally Connected:</strong> Neurons only connect to a small local region (kernel).The operation is a standard IP convolution, they are treated as neural layers because</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Parameter Efficiency</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">Total weights scale linearly with input size (leading to parameter explosion).</td>
+                <td style="padding: 12px; border: 1px solid #ddd;"><strong>Weight Sharing:</strong> The same filter is reused across the entire image.</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Spatial Awareness</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">None. Data must be "flattened," losing 2D relationships.</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">Excellent. Maintains spatial hierarchy and is <strong>Translation Invariant</strong>.</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Computational Goal</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">Finding complex non-linear combinations of independent features.</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">Identifying local patterns (edges, shapes) that compose global objects.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="background: #fff8e1; padding: 10px; border-left: 5px solid #ffc107; font-style: italic;">
+        <strong>The Verdict:</strong> Think of the MLP as a generalist that looks at every detail simultaneously, while the CNN is a specialist that scans the image like a detective with a magnifying glass.
+    </div>
+</div>
+
+    <div style="background: #fff8e1; padding: 10px; border-left: 5px solid #ffc107; font-style: italic;">
+        <strong>The Verdict:</strong> Think of the MLP as a generalist that looks at every detail simultaneously, while the CNN is a specialist that scans the image like a detective with a magnifying glass.
+    </div>
+</div>
 
     <div class="intuition-box">
         <strong>Tutorial Focus:</strong> 
@@ -47,7 +101,7 @@
         1.For each filter $k$ in layer $l$:<br>
         &nbsp;&nbsp;&nbsp;&nbsp;For each position $(i, j)$ in the output feature map:<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$Z^{[l]}_{i,j,k} = \sum_{m} \sum_{n} (A^{[l-1]}_{i+m, j+n} \cdot W^{[l]}_{m,n,k}) + b^{[l]}_k$ // $(m,n)$: filter dimensions; $W$: kernel weights<br>
-       
+        
         <span class="comment">// 2. Activation and Regularization</span><br>
         2. <strong>Activation:</strong> $A^{[l]} = \max(0, Z^{[l]})$ // $A^{[l]}$: ReLU non-linear output<br>
         3. <strong>Dropout:</strong> <br>
@@ -57,13 +111,13 @@
         
         <span class="comment">// 3. Final Output (Flattening & Softmax)</span><br>
         4. <strong>Logits:</strong> $Z^{[L]} = W^{[L]} \cdot A^{[L-1]} + b^{[L]}$ // $W^{[L]}$: Fully connected weights; $A^{[L-1]}$: last feature map<br>
-        5. <strong>Softmax:</strong> $\hat{y} = \frac{e^{Z^{[L]}}}{\sum e^{Z^{[L]}}}$ // $\hat{y}$: probability of each class (e.g., Ship, Truck, Car)
+        5. <strong>Softmax:</strong> $\hat{y} = \frac{e^{Z^{[L]}}}{\sum e^{Z^{[L]}}}$ // $\hat{y}$: probability of each class
     </div>
 
     <hr>
 
     <h3>3. Loss Function: Cross-Entropy</h3>
-    <p>To measure the "Likelihood" of our prediction (linking back to our Estimation Theory), we use <strong>Categorical Cross-Entropy</strong>.</p>
+    <p>To measure the "Likelihood" of our prediction, we use <strong>Categorical Cross-Entropy</strong>.</p>
     
     <div class="intuition-box">
         $$L = -\sum_{i=1}^{C} y_i \log(\hat{y}_i)$$
@@ -73,26 +127,89 @@
     <hr>
 
     <h3>4. Backward Pass & Adam Optimizer</h3>
-    <p>The <strong>Adam (Adaptive Moment Estimation)</strong> algorithm updates the weights by calculating the moving averages of the gradients and their squares.</p>
+    <p>The <strong>Adam</strong> algorithm updates weights by calculating moving averages of the gradients.</p>
 
     <div class="algorithm-block">
         <strong>Algorithm: Adam_Optimization_Update</strong><br>
         <strong>Parameters:</strong> $\beta_1=0.9, \beta_2=0.999, \epsilon=10^{-8}, \eta = \text{learning\_rate}$<br><br>
-        1. <strong>Compute Gradient:</strong> $g_t = \nabla_W L$ (via backpropagation)<br>
-        2. <strong>Update 1st Moment (Mean):</strong> $m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t$<br>
-        3. <strong>Update 2nd Moment (Variance):</strong> $v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2$<br>
-        4. <strong>Bias Correction:</strong><br>
-        &nbsp;&nbsp;&nbsp;&nbsp;$\hat{m}_t = \frac{m_t}{1 - \beta_1^t}$<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;$\hat{v}_t = \frac{v_t}{1 - \beta_2^t}$<br>
-        5. <strong>Update Weight:</strong> <br>
+        
+        1. <strong>Calculate Output Error ($dZ$):</strong><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;$dZ^{[L]} = \hat{y} - y$ // The derivative of Loss $L$ with respect to output $Z^{[L]}$<br><br>
+
+        2. <strong>Compute Gradients ($g_t$):</strong><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">/* Backward Pass "gathers" the error $dZ$ to find the gradient $g_t$ for each weight. */</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;For each filter $k$ in layer $l$:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For each position $(m, n)$ in the kernel:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$g_t = \sum_{i} \sum_{j} (dZ^{[l]}_{i,j,k} \cdot A^{[l-1]}_{i+m, j+n})$ // $g_t$: Gradient $\frac{\partial L}{\partial W}$ used for weight updates<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$db^{[l]}_k = \sum_{i} \sum_{j} dZ^{[l]}_{i,j,k}$ // Bias gradients<br><br>
+
+        3. <strong>Update 1st Moment (Mean):</strong> $m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t$<br>
+        4. <strong>Update 2nd Moment (Variance):</strong> $v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2$<br>
+        5. <strong>Bias Correction:</strong><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;$\hat{m}_t = \frac{m_t}{1 - \beta_1^t}$ , $\hat{v}_t = \frac{v_t}{1 - \beta_2^t}$<br>
+        6. <strong>Update Weight:</strong> <br>
         &nbsp;&nbsp;&nbsp;&nbsp;$W_{t+1} = W_t - \eta \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon}$
     </div>
 
-    
-
     <div class="intuition-box">
-        <strong>Key Insight:</strong> Unlike basic Stochastic Gradient Descent (SGD), <strong>Adam</strong> provides each parameter with its own adaptive learning rate. This is particularly useful in CNNs where different filters may learn at vastly different speeds.
+        <strong>Key Insight:</strong> The term $g_t$ in the optimizer is simply the mathematical gradient $\nabla_W L$. By calculating $dZ^{[L]} = \hat{y} - y$, we provide the "spark" that allows the chain rule to compute $g_t$ for every weight in the network.
     </div>
+<div class="intuition-box">
+    <h3>Comparison of Landmark CNN Architectures</h3>
+    <p>This comparison tracks how architectural shifts moved the industry from massive, parameter-heavy models to efficient, deep structures.</p>
+    
+    <table style="width:100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95rem;">
+        <thead>
+            <tr style="background-color: #f2f2f2; text-align: left;">
+                <th style="padding: 12px; border: 1px solid #ddd;">Architecture</th>
+                <th style="padding: 12px; border: 1px solid #ddd;">Key Innovation</th>
+                <th style="padding: 12px; border: 1px solid #ddd;">Depth</th>
+                <th style="padding: 12px; border: 1px solid #ddd;">Parameters</th>
+                <th style="padding: 12px; border: 1px solid #ddd;">Strategy</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">AlexNet (2012)</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">ReLU, Dropout, GPU usage</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">8 Layers</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">~60 Million</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">Heavy reliance on large $11 \times 11$ filters.</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">VGG-16 (2014)</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">Small $3 \times 3$ filter stacking</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">16 Layers</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">~138 Million</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">Very high memory cost due to massive Fully Connected layers.</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">GoogLeNet (2014)</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">Inception Modules & $1 \times 1$ Convs</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">22 Layers</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">~7 Million</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">Extreme efficiency; removed dense FC layers.</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">ResNet-152 (2015)</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">Skip Connections (Residuals)</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">152 Layers</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">~60 Million</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">Allows unprecedented depth without vanishing gradients.</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">EfficientNet-B0 (2019)</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">Compound Scaling</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">Variable</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">~5.3 Million</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">Optimized scaling of width, depth, and resolution.</td>
+            </tr>
+        </tbody>
+    </table>
 
+    <div style="background: #fff3e0; padding: 10px; border-left: 5px solid #ff9800; font-style: italic;">
+        <strong>The Efficiency Paradox:</strong> Notice how VGG-16 has nearly 20 times the parameters of GoogLeNet, yet GoogLeNet often outperforms it. This highlights that architectural "intelligence" usually beats "brute force" scaling.
+    </div>
+</div>
 </body>
-</html>
+</html>x
