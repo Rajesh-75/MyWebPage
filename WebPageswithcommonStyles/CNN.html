@@ -19,7 +19,21 @@
 </head>
 <body>
 
-    <h1>Conventional Neural Networks</h1>
+    <h1>Convolutional Neural Networks</h1>
+	MLP is a Neural Network which we delth in the previous in NN. Convolutional Neural Network is yet another kind of Neural Network, where layer processing is an mathematical operation called <strong>convolution</strong>. The basic idea is to divide the input into overlapping 2d image patches, and to compare each patch with a set of small weight matrices, or filters, which represent parts of an object; this is show in below. We can think of this as a form of <strong>template matching</strong>. 
+	<h2>Why MLPs Struggle with Visual Data</h2>
+<p>The primary failure of the Multi-Layer Perceptron (MLP) in image processing is its lack of Spatial Topology. When an image is flattened into a 1D vector to fit an MLP’s input layer, the physical proximity between pixels is destroyed; a pixel's neighbor to the right or bottom is suddenly shifted thousands of indices away. This forces the MLP to learn the relationship between every single pixel globally, leading to a Parameter Explosion. For instance, a high-definition image would require billions of weights for just one hidden layer, exceeding the memory capacity of most hardware. Furthermore, MLPs lack Translation Invariance; if the network learns to recognize a feature in the top-left, it will not recognize that same feature in the bottom-right because the weights are tied to specific, static pixel coordinates. Finally, as you noted, the Fixed-Input Constraint is a major hurdle: MLPs require a hard-coded number of input neurons, making them incapable of processing variable image sizes without destructive resizing.</p>
+<div class="illustration-container" style="text-align: center; margin: 30px 0;">
+    <figure style="display: inline-block; max-width: 100%; margin: 0;">
+        <img src="MLP.jpg" 
+             alt="Diagram showing MLP limitations: Flattening, Translation Invariance, and Fixed Input" 
+             style="width: 100%; height: auto; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        <figcaption style="margin-top: 10px; font-size: 0.9rem; color: #666; font-style: italic;">
+            Figure 1: Visualizing why MLPs are structurally ill-equipped for visual data compared to CNNs.
+        </figcaption>
+    </figure>
+</div>
+	
 	<div class="intuition-box">
     <h3>Comparison: CNN vs. MLP</h3>
     <p>While both are built from neurons and weights, their "philosophy" of data processing differs significantly.</p>
@@ -39,8 +53,9 @@
         <tbody>
             <tr>
                 <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Mathematical Operation</td>
-                <td style="padding: 12px; border: 1px solid #ddd;"><strong>Matrix Multiplication:</strong> $Z = W \cdot A + b$. A global dot-product of the entire input vector.</td>
-                <td style="padding: 12px; border: 1px solid #ddd;"><strong>Convolution:</strong> $Z = W * A + b$. A local sliding-window dot-product (cross-correlation).</td>
+                <td style="padding: 12px; border: 1px solid #ddd;"><strong>Matrix Multiplication:</strong> $Z = W \cdot A + b$. The operation between W and A is a dot-product of the entire input vector.
+				</td>
+                <td style="padding: 12px; border: 1px solid #ddd;"><strong>Convolution:</strong> $Z = W * A + b$. The operation between W and A is a local sliding-window dot-product (cross-correlation).</td>
             </tr>
             <tr>
                 <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Connectivity</td>
