@@ -10,7 +10,7 @@
     window.MathJax = {
         tex: {
             inlineMath: [['$', '$'], ['\\(', '\\)']],
-            displayMath: [['$$', '$$']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
             processEscapes: true
         }
     };
@@ -60,31 +60,102 @@
     </div>
 
     <h2>Convolutional Neural Networks Algorithm</h2>
+    <p>To overcome the parameter explosion and loss of topology in MLPs, we shift our focus from global connectivity to local feature detection. This is achieved through <strong>Weight Sharing</strong>.</p>
+
+    <p>When dealing with image data, we can apply the same weight matrix to each local patch of the image in order to reduce the number of parameters. If we “slide” this weight matrix over the image and add up the results, we get a technique known as <strong>convolution</strong>; in this case the weight matrix is often called a <strong>“kernel”</strong> or <strong>“filter.”</strong></p>
+
+    <p>More precisely, let $X \in \mathbb{R}^{H \times W}$ be the input image, and $W \in \mathbb{R}^{h \times w}$ be the kernel. The output is denoted by $Z = X \circledast W$, where (ignoring boundary conditions) we have the following mathematical definition:</p>
+
+    <div style="text-align: center; margin: 20px 0; font-size: 1.2rem;">
+        $$Z_{i,j} = \sum_{u=0}^{h-1} \sum_{v=0}^{w-1} X_{i+u, j+v} \cdot W_{u,v}$$
+    </div>
+
+    <p>Essentially, we compare a local patch of $X$, of size $h \times w$ and centered at $(i,j)$, to the filter $W$. The output $Z_{i,j}$ measures the <strong>similarity</strong> between the input patch and the filter's learned pattern.</p>
+
+    <p>While the convolution formula above defines the mathematical "how," the <strong>motivation</strong> lies in capturing <strong>Spatial Local Correlations</strong>. In an MLP, every neuron is connected to every pixel, which is computationally expensive and ignores the fact that pixels are only meaningful in relation to their immediate neighbors. By using local kernels, we ensure the network focuses on these relationships first, drastically reducing parameters while granting the model <strong>Translation Invariance</strong>—the ability to recognize a pattern regardless of where it appears in the frame.</p>
+
+    <p>Building on this mathematical foundation, a <strong>Convolutional Neural Network (CNN)</strong> is a deep learning architecture designed to automatically and adaptively learn spatial hierarchies of features. It sequences multiple layers of convolution and specialized operations to transform raw pixel data into sophisticated, high-level semantic representations.</p>
+
+    <hr>
+
+    <h3>Convolution layers</h3>
+    <p>CNN involves several convolutions before the raw pixels becomes a probability as shown in Figure 1. Convolution in these layers are multi-filter and multi-channel operations.</p>
+
+    <h4>The Multi-Filter, Multi-Channel Operation</h4>
+    <p>A standard CNN is composed of <strong>many layers</strong> stacked sequentially. Within each layer, we don't apply just one filter; we apply a <strong>bank of several filters</strong> (e.g., 32, 64, or 128) simultaneously.</p>
+
+    <h4>Several filters?</h4>
+    <p>Each filter acts as a specialized feature detector. Because a single filter can only learn to recognize one specific pattern—such as a vertical edge or a specific color gradient—a single-filter layer would be "blind" to all other visual information. By using a large bank of filters, the network can:</p>
+    <ul>
+        <li><strong>Capture Diversity:</strong> One filter might detect horizontal lines, another diagonal curves, and a third specific color blobs.</li>
+        <li><strong>Build a Rich Vocabulary:</strong> These filters collectively create a high-dimensional "vocabulary" of features that the next layer can use to build even more complex shapes.</li>
+    </ul>
+
+    <h4>Processing RGB Channels</h4>
+    <p>When processing a color image, the kernels are three-dimensional. For an input with <strong>RGB channels</strong>, each filter also has three channels. The convolution is performed as follows:</p>
+    <ul>
+        <li>The filter's "Red" weights convolve with the Red channel.</li>
+        <li>The filter's "Green" weights convolve with the Green channel.</li>
+        <li>The filter's "Blue" weights convolve with the Blue channel.</li>
+    </ul>
+
     <div class="tutorial-image-container" style="text-align: center; margin: 40px 0;">
         <figure style="display: inline-block; max-width: 100%; margin: 0;">
-            <img src="CNNBlocks.jpg" 
-                 alt="CNN Architecture Diagram: Input (RGB), Convolve, Pool, Flatten, and 2-Neuron Output" 
-                 style="width: 100%; max-width: 900px; height: auto; border: 1px solid #ececec; border-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <img src="CNNVolumeOperations.jpg" alt="3D Volume Convolution" style="width: 100%; max-width: 900px; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
             <figcaption style="margin-top: 15px; font-size: 0.95rem; color: #444; font-weight: 500;">
-                Figure 2: Complete CNN Pipeline for Binary Facial Classification (Face vs. No-Face).
+                <strong>Figure 1: Convolution Operation in Convolution layer</strong> 
             </figcaption>
         </figure>
     </div>
 
+    <div class="math-display" style="text-align: center; margin: 20px 0;">
+        \[
+        Output_{i,j} = \sum_{h=0}^{K_H-1} \left[ \sum_{w=0}^{K_W-1} \left( \sum_{c=0}^{C-1} \text{Input}_{i+h, j+w, c} \cdot \text{Kernel}_{h, w, c} \right) \right] + b
+        \]
+    </div>
+
+    <p style="font-size: 0.9rem; color: #555; margin-top: 15px;">
+        <strong>Where:</strong><br>
+        \(C\) = Number of Input Channels (e.g., 3 for RGB)<br>
+        \(K_H, K_W\) = Kernel Height and Width (e.g., 3 &times; 3)<br>
+        \(b\) = Learned Bias term
+    </p>
+
+    <p>Crucially, the <strong>outputs of these three channels are added together</strong> as shown in the Figure (along with a bias term) to produce a single, unified 2D feature map for that specific filter. If a layer has 64 filters, the output will be a stack of 64 feature maps, forming the input for the next layer.</p>
+
     <div class="tutorial-image-container" style="text-align: center; margin: 40px 0;">
         <figure style="display: inline-block; max-width: 100%; margin: 0;">
-            <img src="CNNImageHumanBeing.jpg" 
-                 alt="CNN Feature Hierarchy" 
-                 style="width: 100%; max-width: 900px; height: auto; border: 1px solid #ececec; border-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <img src="CNNBlocks.jpg" alt="CNN Architecture Pipeline" style="width: 100%; max-width: 900px; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
             <figcaption style="margin-top: 15px; font-size: 0.95rem; color: #444; font-weight: 500;">
-                Figure 3: CNNs operate through a feature hierarchy, beginning at the base where filters decompose pixels into low-level primitives like edges and curves. These building blocks are mathematically combined in the middle layers to form mid-level features such as eyes and noses. Finally, the top layers integrate these parts into a high-level concept, identifying a "Human Being" by analyzing the specific spatial arrangement of those features.
+                <strong>Figure 4: The Architectural Pipeline.</strong> A smooth continuity of data flowing from 32x32 RGB input, through successive Convolution and Pooling stages, to the final classification.
             </figcaption>
         </figure>
     </div>
 
-    <div style="margin-top: 15px; font-size: 0.9rem; color: #555; font-style: italic; background-color: #fff; padding: 10px; border-radius: 6px; border: 1px solid #eee;">
-        <strong>Strategic Insight:</strong> In an MLP, a pattern at $(x_1, y_1)$ is a completely different feature than the identical pattern at $(x_2, y_2)$ because there is zero <strong>Weight Sharing</strong>. The MLP must manually re-learn "Diagonal Edge" at every single spatial location.
+    <h3>The Role of the Pooling Layer</h3>
+    <p>As illustrated in the pipeline above, <strong>Pooling Layers</strong> (typically Max Pooling) are the "editors" of the network. While convolution detects features, pooling serves as <strong>Spatial Downsampling</strong>. By taking the maximum value in a $2 \times 2$ or $3 \times 3$ window, the network achieves two goals:</p>
+    <ul>
+        <li><strong>Dimensionality Reduction:</strong> It sheds redundant data, keeping only the strongest activations and preventing the "Parameter Explosion" discussed earlier.</li>
+        <li><strong>Invariance to Noise:</strong> It makes the detection robust. It no longer matters exactly which pixel triggered a "corner" detection, only that the corner exists within that pooled region.</li>
+    </ul>
+
+    <h3>The Feature Hierarchy: From Primitives to Entities</h3>
+    <p>The "intelligence" of a CNN emerges from how these layers are stacked. This creates a <strong>Cognitive Hierarchy</strong> where the network learns to "see" in stages.</p>
+
+    <div class="tutorial-image-container" style="text-align: center; margin: 40px 0;">
+        <figure style="display: inline-block; max-width: 100%; margin: 0;">
+            <img src="CNNImageHumanBeing.jpg" alt="CNN Feature Hierarchy" style="width: 100%; max-width: 900px; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <figcaption style="margin-top: 15px; font-size: 0.95rem; color: #444; font-weight: 500;">
+                <strong>Figure 5: The Cognitive Hierarchy.</strong> Low-level primitives (edges) are mathematically combined into mid-level parts (eyes, noses), which finally form high-level entities (Human Being).
+            </figcaption>
+        </figure>
     </div>
+
+    <p>The first layers act as <strong>Edge Detectors</strong>. Because these kernels are shared across the image, they learn basic geometric primitives. As we move deeper into the network, the <strong>Forward Pass</strong> combines these edges into <strong>Part Detectors</strong> (like whiskers or ears) and finally into <strong>Entity Detectors</strong> that represent the entire object.</p>
+
+    <h3>The Final Output: Reaching a Verdict</h3>
+    <p>Once the spatial features have been extracted and downsampled, the 3D maps are <strong>Flattened</strong> into a 1D vector. This vector is fed into the final "Dense" layers of the network.</p>
+    <p>For a binary classification task (e.g., Face vs. No-Face), the <strong>last layer consists of 2 output neurons</strong>. These neurons use a Softmax function to translate the abstract features into a probability distribution. If the "Face" neuron fires at 0.95 and the "No-Face" at 0.05, the network has successfully translated millions of raw pixels into a single, high-confidence identification.</p>
 
     <div class="intuition-box">
         <h3>Comparison: CNN vs. MLP</h3>
@@ -102,12 +173,12 @@
                 <tr>
                     <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Mathematical Operation</td>
                     <td style="padding: 12px; border: 1px solid #ddd;"><strong>Matrix Multiplication:</strong> $Z = W \cdot A + b$. The operation between W and A is a dot-product of the entire input vector.</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;"><strong>Convolution:</strong> $Z = W * A + b$. The operation between W and A is a local sliding-window dot-product (cross-correlation).</td>
+                    <td style="padding: 12px; border: 1px solid #ddd;"><strong>Convolution:</strong> $Z = W * A + b$. The operation between W and A is a local sliding-window dot-product.</td>
                 </tr>
                 <tr>
                     <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Connectivity</td>
                     <td style="padding: 12px; border: 1px solid #ddd;"><strong>Fully Connected:</strong> Every input unit connects to every hidden neuron.</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;"><strong>Locally Connected:</strong> Neurons only connect to a small local region (kernel). The operation is a standard IP convolution, treated as neural layers.</td>
+                    <td style="padding: 12px; border: 1px solid #ddd;"><strong>Locally Connected:</strong> Neurons only connect to a small local region (kernel).</td>
                 </tr>
                 <tr>
                     <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Parameter Efficiency</td>
@@ -116,130 +187,41 @@
                 </tr>
                 <tr>
                     <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Spatial Awareness</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">None. Data must be "flattened," losing 2D relationships. In an MLP, the network is "Index-Bound." It learns that "When index 5 and index 6 are high, it's an edge."</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">Excellent. Maintains spatial hierarchy and is <strong>Translation Invariant.</strong> In a CNN, the network is "Pattern-Bound." Because it uses a sliding window with the same weights, it says: "Wherever I am, if the pixels under my current window look like an edge, I will fire."</td>
-                </tr>
-                <tr>
-                    <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Computational Goal</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">Finding complex non-linear combinations of independent features.</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">Identifying local patterns (edges, shapes) that compose global objects.</td>
+                    <td style="padding: 12px; border: 1px solid #ddd;">None. Data must be "flattened." The network is "Index-Bound."</td>
+                    <td style="padding: 12px; border: 1px solid #ddd;">Excellent. Maintains spatial hierarchy and is <strong>Translation Invariant.</strong> The network is "Pattern-Bound."</td>
                 </tr>
             </tbody>
         </table>
-
-        <div style="background: #fff8e1; padding: 10px; border-left: 5px solid #ffc107; font-style: italic;">
-            <strong>The Verdict:</strong> Think of the MLP as a generalist that looks at every detail simultaneously, while the CNN is a specialist that scans the image like a detective with a magnifying glass.
-        </div>
-    </div>
-
-    <div class="intuition-box">
-        <strong>Tutorial Focus:</strong> 
-        This page outlines the end-to-end algorithmic flow of a network, from the initial weight setup using <strong>Xavier Initialization</strong> to the iterative optimization via the <strong>Adam Optimizer</strong>.
     </div>
 
     <h3>1. Initialization Phase</h3>
-    <div class="algorithm-block">
+    <div class="algorithm-block" style="background: #f4f4f4; padding: 20px; border-radius: 8px; font-family: monospace; border-left: 5px solid #1a237e; margin: 20px 0;">
         <strong>Algorithm: Xavier_Initialization</strong><br>
-        For each layer $l$ from $1$ to $L$: // $l$: current layer index; $L$: total layers<br>
-        1. Calculate variance: $\sigma^2 = \frac{2}{n_{in} + n_{out}}$ // $n_{in}/n_{out}$: connectivity units<br>
-        2. Sample weights: $W^{[l]} \sim \mathcal{N}(0, \sigma^2)$ // $W^{[l]}$: filter weights for convolution<br>
-        3. Set bias: $b^{[l]} = 0$ // $b^{[l]}$: bias vector
+        For each layer $l$ from $1$ to $L$:<br>
+        1. Calculate variance: $\sigma^2 = \frac{2}{n_{in} + n_{out}}$<br>
+        2. Sample weights: $W^{[l]} \sim \mathcal{N}(0, \sigma^2)$<br>
+        3. Set bias: $b^{[l]} = 0$
     </div>
 
     <hr>
 
     <h3>2. Forward Pass (FP): The Convolution Engine</h3>
-    <p>This section explicitly shows the <strong>Sliding Window</strong> and <strong>Spatial Downsampling</strong> steps that define a CNN layer.</p>
-
-    <div class="algorithm-block">
+    <div class="algorithm-block" style="background: #f4f4f4; padding: 20px; border-radius: 8px; font-family: monospace; border-left: 5px solid #1a237e; margin: 20px 0;">
         <strong>Algorithm: CNN_Forward_Step</strong><br>
-        <span class="comment">/* 1. The Convolution Operation (Hidden Layers l = 1 to L-1) */</span><br>
-        1. For each filter $k$ in layer $l$:<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;For each position $(i, j)$ in the output feature map:<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$Z^{[l]}_{i,j,k} = \sum_{m} \sum_{n} (A^{[l-1]}_{i+m, j+n} \cdot W^{[l]}_{m,n,k}) + b^{[l]}_k$<br><br>
-        
-        <span class="comment">/* 2. Activation and Regularization */</span><br>
-        2. <strong>Activation:</strong> $A^{[l]} = \max(0, Z^{[l]})$ // ReLU non-linear output<br>
-        3. <strong>Dropout:</strong> If training == True: $A^{[l]} = (A^{[l]} \cdot \text{Bernoulli}(p)) / p$<br><br>
-        
-        <span class="comment">/* 3. Spatial Downsampling (Pooling) */</span><br>
-        4. <strong>Max Pooling:</strong> For each window of size $(p \times p)$ with stride $s$:<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;$A^{[l]}_{pool} = \max(\text{values in window region})$ // Reduces dimensions and adds local invariance<br><br>
-        
-        <span class="comment">/* 4. Final Output (Flattening & Softmax) */</span><br>
-        5. <strong>Flattening:</strong> $A^{[L-1]}_{flat} = \text{reshape}(A^{[L-1]}_{pool}, [-1, 1])$ // Bridge from 3D maps to 1D vector<br>
-        6. <strong>Logits:</strong> $Z^{[L]} = W^{[L]} \cdot A^{[L-1]}_{flat} + b^{[L]}$<br>
-        7. <strong>Softmax:</strong> $\hat{y} = \frac{e^{Z^{[L]}}}{\sum e^{Z^{[L]}}}$ // Probability for Binary Classification
+        1. <strong>Convolution:</strong> $Z^{[l]}_{i,j,k} = \sum_{m} \sum_{n} (A^{[l-1]}_{i+m, j+n} \cdot W^{[l]}_{m,n,k}) + b^{[l]}_k$<br>
+        2. <strong>Activation:</strong> $A^{[l]} = \max(0, Z^{[l]})$<br>
+        3. <strong>Max Pooling:</strong> Downsample $A^{[l]}$ by taking window maximums.<br>
+        4. <strong>Softmax:</strong> $\hat{y} = \frac{e^{Z^{[L]}}}{\sum e^{Z^{[L]}}}$
     </div>
-
-    <hr>
-
-    <h3>3. Loss Function: Cross-Entropy</h3>
-    <div class="intuition-box">
-        $$L = -\sum_{i=1}^{C} y_i \log(\hat{y}_i)$$
-        Where $y$ is the ground truth (one-hot encoded) and $\hat{y}$ is the predicted probability.
-    </div>
-
-    <hr>
 
     <h3>4. Backward Pass & Adam Optimizer</h3>
-    <div class="algorithm-block">
+    <div class="algorithm-block" style="background: #f4f4f4; padding: 20px; border-radius: 8px; font-family: monospace; border-left: 5px solid #1a237e; margin: 20px 0;">
         <strong>Algorithm: Adam_Optimization_Update</strong><br>
-        1. <strong>Calculate Output Error ($dZ$):</strong> $dZ^{[L]} = \hat{y} - y$<br>
-        2. <strong>Compute Gradients ($g_t$):</strong><br>
-        &nbsp;&nbsp;&nbsp;&nbsp;For each filter $k$ in layer $l$:<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For each position $(m, n)$ in kernel: $g_t = \sum \sum (dZ^{[l]} \cdot A^{[l-1]})$<br>
+        1. <strong>Calculate Output Error:</strong> $dZ^{[L]} = \hat{y} - y$<br>
+        2. <strong>Compute Gradients ($g_t$):</strong> Backpropagate error through pooling and convolution layers.<br>
         3. <strong>Update Moments:</strong> $m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t$; $v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2$<br>
         4. <strong>Apply Update:</strong> $W_{t+1} = W_t - \eta \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon}$
     </div>
 
-    <div class="intuition-box">
-        <h3>Comparison of Landmark CNN Architectures</h3>
-        <table style="width:100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95rem;">
-            <thead>
-                <tr style="background-color: #f2f2f2; text-align: left;">
-                    <th style="padding: 12px; border: 1px solid #ddd;">Architecture</th>
-                    <th style="padding: 12px; border: 1px solid #ddd;">Key Innovation</th>
-                    <th style="padding: 12px; border: 1px solid #ddd;">Depth</th>
-                    <th style="padding: 12px; border: 1px solid #ddd;">Parameters</th>
-                    <th style="padding: 12px; border: 1px solid #ddd;">Strategy</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">AlexNet (2012)</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">ReLU, Dropout, GPU usage</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">8 Layers</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">~60 Million</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">Heavy reliance on large $11 \times 11$ filters.</td>
-                </tr>
-                <tr>
-                    <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">VGG-16 (2014)</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">Small $3 \times 3$ filter stacking</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">16 Layers</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">~138 Million</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">Very high memory cost due to massive Fully Connected layers.</td>
-                </tr>
-                <tr>
-                    <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">GoogLeNet (2014)</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">Inception Modules & $1 \times 1$ Convs</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">22 Layers</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">~7 Million</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">Extreme efficiency; removed dense FC layers.</td>
-                </tr>
-                <tr>
-                    <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">ResNet-152 (2015)</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">Skip Connections (Residuals)</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">152 Layers</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">~60 Million</td>
-                    <td style="padding: 12px; border: 1px solid #ddd;">Allows unprecedented depth without vanishing gradients.</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div style="background: #fff3e0; padding: 10px; border-left: 5px solid #ff9800; font-style: italic;">
-            <strong>The Efficiency Paradox:</strong> Notice how VGG-16 has nearly 20 times the parameters of GoogLeNet, yet GoogLeNet often outperforms it. This highlights that architectural "intelligence" usually beats "brute force" scaling.
-        </div>
-    </div>
 </body>
 </html>
