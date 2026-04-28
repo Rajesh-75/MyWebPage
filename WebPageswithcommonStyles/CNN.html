@@ -98,7 +98,7 @@
         <li>The filter's "Green" weights convolve with the Green channel.</li>
         <li>The filter's "Blue" weights convolve with the Blue channel.</li>
     </ul>
-
+	
     <div class="tutorial-image-container" style="text-align: center; margin: 40px 0;">
         <figure style="display: inline-block; max-width: 100%; margin: 0;">
             <img src="CNNVolumeOperations.jpg" alt="3D Volume Convolution" style="width: 100%; max-width: 900px; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
@@ -222,6 +222,180 @@
         3. <strong>Update Moments:</strong> $m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t$; $v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2$<br>
         4. <strong>Apply Update:</strong> $W_{t+1} = W_t - \eta \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon}$
     </div>
+<h3>4. More about Backward Pass and Gradient Computation through Chain Rule</h3>
+<p>In a CNN, the Backward Pass is the process of passing <strong>error maps</strong> backward through the spatial dimensions. To satisfy the <strong>Algorithm: Adam_Optimization_Update</strong>, we must calculate the gradients ($g_t$) by reversing the Forward Pass step-by-step.</p>
 
+<div class="derivative-step">
+    <span class="tag" style="background:#e74c3c;">Step 1</span>
+    <h4>Calculate Output Error ($dZ^{[L]}$)</h4>
+    <p>We begin at the final layer. For a Softmax output with Cross-Entropy loss, the initial error signal is the difference between our prediction and the ground truth.</p>
+    <div class="formula-container">
+        $$dZ^{[L]} = \hat{y} - y$$
+    </div>
+    <code class="code-snippet">dZ_final = predictions - labels</code>
+</div>
+
+<div class="derivative-step">
+    <span class="tag" style="background:#9b59b6;">Step 2</span>
+    <h4>Backpropagate through Pooling & Activation</h4>
+    <p>Before we can update the weights, the error must pass back through the Pooling and ReLU layers of the Forward Pass.</p>
+    
+    <p><strong>A. Max-Pool Backward:</strong> We route the gradient <em>only</em> to the pixel that was the "maximum" during the forward pass.</p>
+    
+    
+    <p><strong>B. ReLU Backward:</strong> We "zero out" gradients where the forward input $Z$ was negative.</p>
+    <div class="formula-container">
+        $$dZ^{[l]} = dA^{[l]} \cdot f'(Z^{[l]})$$
+    </div>
+</div>
+
+<div class="derivative-step">
+    <span class="tag" style="background:#f39c12;">Step 3</span>
+    <h4>Compute Gradients ($g_t$) for Weights ($\frac{\partial L}{\partial W}$)</h4>
+    <p>This is the core of the <strong>Adam Update</strong>. Because weights are shared, the gradient for a single kernel weight is the sum of its contributions across every position it "slid" over.</p>
+    
+    <div class="formula-container" style="text-align: center; font-size: 1.1rem; background: #fdfdfd; padding: 10px; border: 1px solid #eee;">
+        $$\frac{\partial L}{\partial W_k} = \sum_{i,j} \underbrace{dZ_{i,j}}_{\text{Error Map}} \cdot \underbrace{A_{i+m, j+n}^{[l-1]}}_{\text{Input Signal}}$$
+    </div>
+
+    <div class="math-breakdown">
+        <strong>The Intuition:</strong> This is a <strong>Valid Convolution</strong> between the input $A^{[l-1]}$ and the error map $dZ$. It aligns the "blame" with the specific weights that caused it.
+    </div>
+    <code class="code-snippet">dW = convolve(A_prev, dZ, mode='valid')</code>
+</div>
+
+<div class="derivative-step">
+    <span class="tag" style="background:#3498db;">Step 4</span>
+    <h4>Pass the Baton Backward ($\frac{\partial L}{\partial A^{[l-1]}}$)</h4>
+    <p>To update earlier layers, we compute the gradient for the previous layer's activations. This requires a <strong>Full Convolution</strong> with a rotated kernel.</p>
+    
+    <div class="formula-container">
+        $$\frac{\partial L}{\partial A^{[l-1]}} = dZ^{[l]} \circledast \text{rot}_{180}(W^{[l]})$$
+    </div>
+
+    <div class="math-breakdown">
+        <strong>Why Rotate the Kernel?</strong>
+        <p>To mathematically reverse the convolution of the forward pass, we must flip the operation. Using <strong>Full Padding</strong> ensures the resulting error map $dA^{[l-1]}$ matches the original input dimensions exactly.</p>
+    </div>
+    <code class="code-snippet">dA_prev = convolve(dZ, rot180(W), mode='full')</code>
+</div>
+
+<hr>
+
+<h3>5. Adam Optimization Update</h3>
+<p>Once the gradients ($g_t$) are computed in Step 3, the Adam optimizer uses them to update the moments and adjust the weights.</p>
+
+<div class="algorithm-block" style="background: #f4f4f4; padding: 20px; border-radius: 8px; font-family: monospace; border-left: 5px solid #1a237e; margin: 20px 0;">
+    <strong>Algorithm: Adam_Optimization_Update</strong><br>
+    1. <strong>Update Moments:</strong> <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;$m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t$<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;$v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2$<br>
+    2. <strong>Apply Update:</strong> <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;$W_{t+1} = W_t - \eta \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon}$
+</div>
+
+<div class="math-breakdown">
+    <strong>Why Rotate the Kernel?</strong>
+    <p>In the forward pass, we slide the filter over the input. To go backwards, we mathematically flip the operation. We use <strong>Full Padding</strong> to ensure the output error map has the same dimensions as the original input $A^{[l-1]}$.</p>
+</div>
+<code class="code-snippet">dA_prev = signal.convolve2d(dZ, kernel, mode='full')</code>
+
+<div class="math-breakdown">
+    <strong>The "Convolutional" Gradient:</strong>
+    <p>This is mathematically equivalent to convolving the input $A^{[l-1]}$ with the error map $dZ$. It aligns the error found at each "look" with the pixel that caused it.</p>
+</div>
+
+<h4>NumPy Implementation</h4>
+<code class="code-snippet">dW = signal.convolve2d(A_prev, dZ, mode='valid')</code>
+<div class="intuition-box">
+    <strong>Intuition:</strong> If a specific part of the filter repeatedly saw a high-intensity pixel ($A$) that led to a high error ($dZ$), that weight gets a massive update.
+</div>
+<hr>
+
+<h3>5. Implementation: CNN Training from Scratch (Pure Python)</h3>
+<p>To truly understand the "mechanical engine" of a CNN, we can implement the forward and backward passes using nested loops. This avoids external libraries and shows exactly how the <strong>Weight Sharing</strong> and <strong>Valid Convolution</strong> we discussed are translated into code.</p>
+
+<div class="intuition-box">
+    <strong>Developer Note:</strong> This implementation uses "Pure Python" lists for maximum clarity. In a production environment, these loops are typically vectorized using NumPy or GPU kernels (CUDA) to improve performance.
+</div>
+
+<div class="algorithm-block" style="background: #2d3748; color: #edf2f7; padding: 25px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; line-height: 1.5; overflow-x: auto;">
+    <pre style="margin: 0;">
+<span style="color: #9f7aea;">import</span> random <span style="color: #718096;"># Only for initialization</span>
+
+<span style="color: #ed64a6;">class</span> <span style="color: #ecc94b;">AdamOptimizer</span>:
+    <span style="color: #ed64a6;">def</span> <span style="color: #4299e1;">__init__</span>(self, learning_rate=0.001, b1=0.9, b2=0.999, epsilon=1e-8):
+        self.eta = learning_rate
+        self.b1, self.b2 = b1, b2
+        self.epsilon = epsilon
+        self.m = <span style="color: #ed64a6;">None</span>
+        self.v = <span style="color: #ed64a6;">None</span>
+        self.t = 0
+
+    <span style="color: #ed64a6;">def</span> <span style="color: #4299e1;">update</span>(self, weights, gradients):
+        <span style="color: #ed64a6;">if</span> self.m <span style="color: #ed64a6;">is None</span>:
+            self.m = [[0.0 <span style="color: #ed64a6;">for</span> _ <span style="color: #ed64a6;">in</span> row] <span style="color: #ed64a6;">for</span> row <span style="color: #ed64a6;">in</span> weights]
+            self.v = [[0.0 <span style="color: #ed64a6;">for</span> _ <span style="color: #ed64a6;">in</span> row] <span style="color: #ed64a6;">for</span> row <span style="color: #ed64a6;">in</span> weights]
+        
+        self.t += 1
+        new_w = [[0.0 <span style="color: #ed64a6;">for</span> _ <span style="color: #ed64a6;">in</span> row] <span style="color: #ed64a6;">for</span> row <span style="color: #ed64a6;">in</span> weights]
+        
+        <span style="color: #ed64a6;">for</span> i <span style="color: #ed64a6;">in</span> <span style="color: #4299e1;">range</span>(<span style="color: #4299e1;">len</span>(weights)):
+            <span style="color: #ed64a6;">for</span> j <span style="color: #ed64a6;">in</span> <span style="color: #4299e1;">range</span>(<span style="color: #4299e1;">len</span>(weights[0])):
+                g = gradients[i][j]
+                <span style="color: #718096;"># 1. Moment Updates</span>
+                self.m[i][j] = self.b1 * self.m[i][j] + (1 - self.b1) * g
+                self.v[i][j] = self.b2 * self.v[i][j] + (1 - self.b2) * (g**2)
+                
+                <span style="color: #718096;"># 2. Bias Correction</span>
+                m_hat = self.m[i][j] / (1 - self.b1**self.t)
+                v_hat = self.v[i][j] / (1 - self.b2**self.t)
+                
+                <span style="color: #718096;"># 3. Parameter Update</span>
+                new_w[i][j] = weights[i][j] - (self.eta * m_hat) / (v_hat**0.5 + self.epsilon)
+        <span style="color: #ed64a6;">return</span> new_w
+
+<span style="color: #ed64a6;">class</span> <span style="color: #ecc94b;">ConvLayer</span>:
+    <span style="color: #ed64a6;">def</span> <span style="color: #4299e1;">__init__</span>(self, kernel_size):
+        <span style="color: #718096;"># Small random initialization</span>
+        self.kernel = [[random.uniform(-0.1, 0.1) <span style="color: #ed64a6;">for</span> _ <span style="color: #ed64a6;">in</span> <span style="color: #4299e1;">range</span>(kernel_size)] 
+                       <span style="color: #ed64a6;">for</span> _ <span style="color: #ed64a6;">in</span> <span style="color: #4299e1;">range</span>(kernel_size)]
+        self.optimizer = AdamOptimizer()
+
+    <span style="color: #ed64a6;">def</span> <span style="color: #4299e1;">forward</span>(self, image):
+        self.last_input = image
+        h, w = <span style="color: #4299e1;">len</span>(image), <span style="color: #4299e1;">len</span>(image[0])
+        kh, kw = <span style="color: #4299e1;">len</span>(self.kernel), <span style="color: #4299e1;">len</span>(self.kernel[0])
+        output = [[0.0 <span style="color: #ed64a6;">for</span> _ <span style="color: #ed64a6;">in</span> <span style="color: #4299e1;">range</span>(w-kw+1)] <span style="color: #ed64a6;">for</span> _ <span style="color: #ed64a6;">in</span> <span style="color: #4299e1;">range</span>(h-kh+1)]
+        
+        <span style="color: #718096;"># Standard 2D Convolution (Sliding Window)</span>
+        <span style="color: #ed64a6;">for</span> i <span style="color: #ed64a6;">in</span> <span style="color: #4299e1;">range</span>(h-kh+1):
+            <span style="color: #ed64a6;">for</span> j <span style="color: #ed64a6;">in</span> <span style="color: #4299e1;">range</span>(w-kw+1):
+                sum_val = 0
+                <span style="color: #ed64a6;">for</span> ki <span style="color: #ed64a6;">in</span> <span style="color: #4299e1;">range</span>(kh):
+                    <span style="color: #ed64a6;">for</span> kj <span style="color: #ed64a6;">in</span> <span style="color: #4299e1;">range</span>(kw):
+                        sum_val += image[i+ki][j+kj] * self.kernel[ki][kj]
+                output[i][j] = sum_val
+        <span style="color: #ed64a6;">return</span> output
+
+    <span style="color: #ed64a6;">def</span> <span style="color: #4299e1;">backward</span>(self, d_out):
+        kh, kw = <span style="color: #4299e1;">len</span>(self.kernel), <span style="color: #4299e1;">len</span>(self.kernel[0])
+        d_kernel = [[0.0 <span style="color: #ed64a6;">for</span> _ <span style="color: #ed64a6;">in</span> <span style="color: #4299e1;">range</span>(kw)] <span style="color: #ed64a6;">for</span> _ <span style="color: #ed64a6;">in</span> <span style="color: #4299e1;">range</span>(kh)]
+        
+        <span style="color: #718096;"># Compute dL/dW (Valid Convolution between Input and Error Map)</span>
+        <span style="color: #ed64a6;">for</span> i <span style="color: #ed64a6;">in</span> <span style="color: #4299e1;">range</span>(kh):
+            <span style="color: #ed64a6;">for</span> j <span style="color: #ed64a6;">in</span> <span style="color: #4299e1;">range</span>(kw):
+                <span style="color: #ed64a6;">for</span> oi <span style="color: #ed64a6;">in</span> <span style="color: #4299e1;">range</span>(<span style="color: #4299e1;">len</span>(d_out)):
+                    <span style="color: #ed64a6;">for</span> oj <span style="color: #ed64a6;">in</span> <span style="color: #4299e1;">range</span>(<span style="color: #4299e1;">len</span>(d_out[0])):
+                        d_kernel[i][j] += self.last_input[i+oi][j+oj] * d_out[oi][oj]
+        
+        <span style="color: #718096;"># Update kernel weights using Adam</span>
+        self.kernel = self.optimizer.update(self.kernel, d_kernel)
+        <span style="color: #ed64a6;">return</span> d_kernel</pre>
+</div>
+
+<div style="background: #fff8e1; padding: 15px; border-left: 5px solid #ffc107; margin-top: 10px;">
+    <strong>Tutorial Focus:</strong> Notice how the <code>backward</code> method uses <code>self.last_input</code>. This confirms our derivation that the gradient for the weights depends directly on the values seen during the forward pass.
+</div>
 </body>
 </html>
