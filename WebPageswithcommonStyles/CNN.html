@@ -99,6 +99,7 @@
         <li>The filter's "Blue" weights convolve with the Blue channel.</li>
     </ul>
 	
+	
     <div class="tutorial-image-container" style="text-align: center; margin: 40px 0;">
         <figure style="display: inline-block; max-width: 100%; margin: 0;">
             <img src="CNNVolumeOperations.jpg" alt="3D Volume Convolution" style="width: 100%; max-width: 900px; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
@@ -131,7 +132,73 @@
             </figcaption>
         </figure>
     </div>
+	<h4>Other Convolution Operations: Padding and Striding</h4>
 
+<p>
+    Convolving a 10 x 10 image with a 3 x 3 filter results in an 8 x 8 output. 
+    In general, convolving an <strong>$h \times w$</strong> filter over an image of size 
+    <strong>$m \times n$</strong> produces an output of size:
+</p>
+
+<div class="formula-container" style="text-align: center; padding: 10px; background: #f9fafb; margin: 10px 0;">
+    $$(m - h + 1) \times (n - w + 1)$$
+</div>
+
+<p>
+    This is called <strong>valid convolution</strong> since we only apply the filter to "valid" 
+    parts of the input (we don’t let it "slide off the ends"). However, this causes the 
+    spatial dimensions to shrink with every layer.
+</p>
+
+<div class="tutorial-image-container" style="text-align: center; margin: 40px 0;">
+        <figure style="display: inline-block; max-width: 100%; margin: 0;">
+            <img src="Zeropadding.jpg" alt="3D Volume Convolution" style="width: 100%; max-width: 900px; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <figcaption style="margin-top: 15px; font-size: 0.95rem; color: #444; font-weight: 500;">
+                <strong>Figure 1: Convolution Operation in Convolution layer</strong> 
+            </figcaption>
+        </figure>
+    </div>
+
+<p>
+    If we want the output to have the <strong>same size</strong> as the input, we can use 
+    <strong>zero-padding</strong>, which involves adding a border of 0s around the image. 
+    This is referred to as <strong>same convolution</strong>.
+</p>
+<div style="background-color: #ffffff; border: 1px solid #d1d5db; border-radius: 8px; padding: 24px; font-family: 'Inter', sans-serif; max-width: 700px; margin: 20px auto;">
+    
+    <h4 style="margin-top: 0; color: #111827;">Reducing Redundancy: Strided Convolution</h4>
+    
+    <p style="color: #374151;">
+        Because neighboring outputs share overlapping inputs, they are often very similar. 
+        We can reduce this redundancy and speed up computation by skipping every $s$-th input. 
+        This is called <strong>Strided Convolution</strong>.
+    </p>
+
+    <div style="background: #f0f7ff; border-left: 4px solid #3498db; padding: 15px; margin: 20px 0;">
+        <strong>The General Formula for Output Size:</strong>
+        <div style="text-align: center; font-size: 1.2em; margin-top: 10px;">
+            $$ \left\lfloor \frac{X_h + 2P_h - F_h}{S_h} + 1 \right\rfloor \times \left\lfloor \frac{X_w + 2P_w - F_w}{S_w} + 1 \right\rfloor $$
+        </div>
+        <p style="font-size: 0.85rem; color: #555; margin-top: 10px;">
+            Where $X$ is input size, $P$ is padding, $F$ is filter size, and $S$ is stride.
+        </p>
+    </div>
+
+    <p style="color: #374151;"><strong>Example Calculation:</strong></p>
+    <p style="font-size: 0.95rem; color: #4b5563;">
+        For a $5 \times 7$ image, a $3 \times 3$ filter, no padding ($P=0$), and a stride of $S=2$:
+    </p>
+    
+    <div style="background: #f9fafb; padding: 12px; border-radius: 4px; font-family: monospace; text-align: center;">
+        Height: $\lfloor (5 - 3) / 2 + 1 \rfloor = 2$ <br>
+        Width: $\lfloor (7 - 3) / 2 + 1 \rfloor = 3$ <br>
+        <strong>Output Size: $2 \times 3$</strong>
+    </div>
+
+    <p style="font-size: 0.875rem; color: #6b7280; font-style: italic; margin-top: 15px;">
+        <strong>Architect's Note:</strong> Increasing the stride is a powerful way to reduce the "spatial footprint" of your feature maps as you go deeper into the network.
+    </p>
+</div>
     <h3>The Role of the Pooling Layer</h3>
     <p>As illustrated in the pipeline above, <strong>Pooling Layers</strong> (typically Max Pooling) are the "editors" of the network. While convolution detects features, pooling serves as <strong>Spatial Downsampling</strong>. By taking the maximum value in a $2 \times 2$ or $3 \times 3$ window, the network achieves two goals:</p>
     <ul>
@@ -230,8 +297,19 @@
     <h4>Calculate Output Error ($dZ^{[L]}$)</h4>
     <p>We begin at the final layer. For a Softmax output with Cross-Entropy loss, the initial error signal is the difference between our prediction and the ground truth.</p>
     <div class="formula-container">
+    <div style="text-align: center; margin-bottom: 15px;">
         $$dZ^{[L]} = \hat{y} - y$$
     </div>
+    
+    <p>
+        <strong>$\hat{y}$</strong>: The <strong>Final Prediction</strong> produced by the Softmax layer (after all filtering, pooling, and activation).<br>
+        <strong>$y$</strong>: The <strong>Ground Truth</strong> label (the target value).
+    </p>
+    
+    <div class="intuition-box" style="background: #e3f2fd; border-left: 5px solid #2196f3; padding: 15px;">
+        <strong>Architect's Note:</strong> While calculating derivatives usually requires complex multiplication, the combination of <strong>Softmax</strong> and <strong>Cross-Entropy</strong> creates a mathematical "shortcut" where the terms cancel out, leaving us with this simple subtraction.
+    </div>
+</div>
     <code class="code-snippet">dZ_final = predictions - labels</code>
 </div>
 
@@ -246,6 +324,12 @@
     <p><strong>B. ReLU Backward:</strong> We "zero out" gradients where the forward input $Z$ was negative.</p>
     <div class="formula-container">
         $$dZ^{[l]} = dA^{[l]} \cdot f'(Z^{[l]})$$
+		<p> $f'(Z)$ is the <strong>derivative</strong> of the Activation Function ($f$) with respect to the Weighted Sum ($Z$).. But in our CNN engine, it is like a <strong>Binary Gate, and $dA{[l]}$ The error signal coming from the layer(previous layer) above.</p>
+    <ul>
+        <li><strong>When $Z$ was Positive:</strong> The gate is <strong>1</strong>. The error flows through perfectly.</li>
+        <li><strong>When $Z$ was Negative:</strong> The gate is <strong>0</strong>. The error is "blocked" and cannot update previous layers.</li>
+    </ul>
+    <p>This is why we say ReLU helps the network focus—it literally shuts off the path for neurons that didn't fire!</p>
     </div>
 </div>
 
@@ -280,18 +364,77 @@
     <code class="code-snippet">dA_prev = convolve(dZ, rot180(W), mode='full')</code>
 </div>
 
+<p>Overall we can write like this 
+layer L $$dZ^{[L]} = \hat{y} - y$$ $$dA^{[L-1]} = W^{[L]T} \cdot dZ^{[L]}$$ in layer L-1 $$dZ^{[L-1]} = dA^{[L-1]} \cdot f'(Z^{[L-1]})$$, $$dA^{[L-2]} = W^{[L-1]T} \cdot dZ^{[L-1]}$$
+
 <hr>
 
 <h3>5. Adam Optimization Update</h3>
 <p>Once the gradients ($g_t$) are computed in Step 3, the Adam optimizer uses them to update the moments and adjust the weights.</p>
 
-<div class="algorithm-block" style="background: #f4f4f4; padding: 20px; border-radius: 8px; font-family: monospace; border-left: 5px solid #1a237e; margin: 20px 0;">
-    <strong>Algorithm: Adam_Optimization_Update</strong><br>
-    1. <strong>Update Moments:</strong> <br>
-    &nbsp;&nbsp;&nbsp;&nbsp;$m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t$<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;$v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2$<br>
-    2. <strong>Apply Update:</strong> <br>
-    &nbsp;&nbsp;&nbsp;&nbsp;$W_{t+1} = W_t - \eta \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon}$
+<div style="background-color: #ffffff; border: 1px solid #d1d5db; border-radius: 8px; padding: 24px; font-family: 'Inter', system-ui, -apple-system, sans-serif; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 650px; margin: 20px auto;">
+    
+    <h3 style="margin-top: 0; color: #111827; border-bottom: 1px solid #e5e7eb; padding-bottom: 12px; font-size: 1.25rem;">Backpropagation: The CNN Error Chain</h3>
+
+    <div style="line-height: 1.8; color: #374151;">
+        <!-- STEP 1 -->
+        <div style="margin-bottom: 16px;">
+            <strong>1. Layer $L$ (The Source):</strong>
+            <div style="background: #f9fafb; padding: 10px; border-radius: 4px; text-align: center; margin-top: 4px;">
+                $$dZ^{[L]} = \hat{y} - y$$
+            </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div style="margin-bottom: 16px;">
+            <strong>2. Handover ($L \rightarrow L-1$): The Rotation Operation</strong>
+            <p style="font-size: 0.85rem; color: #4b5563; margin: 4px 0;">To move blame back through a Conv layer, we rotate the filter $W$ by $180^\circ$ and convolve it with the error.</p>
+            <div style="background: #fffbeb; border: 1px solid #fde68a; padding: 10px; border-radius: 4px; text-align: center; margin-top: 4px;">
+                $$dA^{[L-1]} = dZ^{[L]} * \text{rot180}(W^{[L]})$$
+            </div>
+        </div>
+
+      <div style="background-color: #ffffff; border: 1px solid #34495e; border-radius: 8px; padding: 25px; font-family: 'Segoe UI', sans-serif; max-width: 700px; margin: 20px auto; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+    
+    <h3 style="margin-top: 0; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
+        Module: Backpropagation in Convolutional Layers
+    </h3>
+
+    <p style="color: #444; font-size: 0.95rem;">
+        In a CNN, the weights are <strong>Filters (Kernels)</strong>. To pass the error backward, we must maintain the spatial relationship of the pixels.
+    </p>
+
+    <!-- STEP 1: The Local Error -->
+    <div style="margin-bottom: 20px;">
+        <span style="background: #3498db; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">STEP 1</span>
+        <strong style="display: block; margin-top: 5px;">Apply Activation Gate (ReLU Backward):</strong>
+        <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; text-align: center; margin-top: 5px; border: 1px solid #e9ecef;">
+            $$dZ^{[l]} = dA^{[l]} \cdot f'(Z^{[l]})$$
+        </div>
+    </div>
+
+    <!-- STEP 2: The Spatial Handover -->
+    <div style="margin-bottom: 20px;">
+        <span style="background: #e67e22; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">STEP 2</span>
+        <strong style="display: block; margin-top: 5px;">Spatial Handover (Filter Rotation):</strong>
+        <p style="font-size: 0.85rem; color: #666; margin-bottom: 8px;">
+            To calculate the error for the previous layer ($dA^{[l-1]}$), we convolve the current error with the <strong>rotated filter</strong>.
+        </p>
+        <div style="background: #fffbeb; padding: 12px; border-radius: 6px; text-align: center; border: 1px solid #fde68a;">
+            $$dA^{[l-1]} = dZ^{[l]} * \text{rot180}(W^{[l]})$$
+        </div>
+    </div>
+
+    <div style="background: #fdf2f2; border-left: 4px solid #e74c3c; padding: 12px; font-size: 0.9rem; color: #c0392b;">
+        <strong>Programmer's Logic:</strong> In Step 2, $W$ is a <strong>3D Filter</strong>. Rotating it $180^\circ$ ensures the "blame" is mathematically mapped back to the exact input pixels that created the output during the forward pass.
+    </div>
+</div>
+
+    <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 20px 0;">
+
+    <p style="font-size: 0.875rem; color: #6b7280; font-style: italic; margin-bottom: 0;">
+        <strong>Architect's Tip:</strong> In standard Dense layers, we use $W^T$. In Convolutional layers, we use <strong>Filter Rotation ($180^\circ$)</strong> to achieve the same goal: distributing blame to the correct spatial locations.
+    </p>
 </div>
 
 <div class="math-breakdown">
