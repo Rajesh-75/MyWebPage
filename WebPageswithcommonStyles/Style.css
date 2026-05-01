@@ -10,6 +10,23 @@ body {
     margin: 20px;
     padding: 0;
 }
+h2 {
+    font-size: 1.8rem;
+    color: #0056b3; /* This makes h2 blue */
+    margin-top: 30px;
+}
+
+h3 {
+    font-size: 1.4rem;
+    color: #0056b3; /* Add this line to make h3 blue as well */
+    margin-top: 20px;
+}
+
+/* 3. Standardize Paragraphs and Lists */
+p, li {
+    font-size: 1rem; /* Exactly 16px */
+    margin-bottom: 10px;
+}
 
 .publisher-heading {
     text-transform: uppercase;
