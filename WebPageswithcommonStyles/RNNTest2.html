@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recurrent Neural Networks</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        .derivation-box {
+            background-color: #f8fafc;
+            border-left: 4px solid #2563eb;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .derivation-step {
+            margin-bottom: 20px;
+        }
+        .derivation-step:last-child {
+            margin-bottom: 0;
+        }
+        .code-block {
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 20px 0;
+            border-left: 4px solid #10b981;
+        }
+        .code-keyword { color: #f43f5e; font-weight: bold; }
+        .code-comment { color: #64748b; font-style: italic; }
+        .code-var { color: #38bdf8; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+<section id="rnn-concept">
+    <h2>1. Recurrent Neural Networks</h2>
+    
+    <p>
+        A <strong>Recurrent Neural Network (RNN)</strong> is fundamentally a neural architecture equipped with 
+        <em>memory</em>, designed to process sequential data by looking at inputs one step at a time while 
+        retaining information from previous steps. You can think of it like reading a sentence: your 
+        understanding of the current word is entirely dependent on your memory of the words that came before it. In this tutorial, we only discuss about Language models using RNN. We shall not be discussing any other applications of RNN. 
+    </p>
+
+    <div class="note">
+        <strong>RNN for Next word generation Example Task: Predict the next word</strong><br>
+        <strong>Input sentence:</strong> "The cat sat on the ___"
+    </div>
+    
+    <p>
+        Traditional neural networks, like the Multilayer Perceptron (MLP), process words in isolation because their neurons are only connected to the layers above or below them. Neurons within the same layer do not talk to each other. This lack of horizontal communication means they have no way to pass information from one time step to the next. Consequently, they lack the 'memory' required to see how the meaning of a word is shaped by the words that came before it. An RNN, however, reads "The" to initialize its memory, updates that memory with "cat" to recognize the subject, and continues to build context through "sat" and "on". By the time it reaches the final "the", its internal state has captured the entire narrative, enabling it to logically predict <strong>"mat"</strong>.
+    </p>
+
+    <div class="svg-container">
+        <img src="RNNwithexample.SVG" alt="Unfolded RNN processing the sentence 'The cat sat on the'" style="width: 100%; height: auto;">
+        <p style="font-style: italic; color: #64748b; font-size: 0.85rem;"><strong>Figure 1:</strong> An unfolded RNN processing the sequence "The cat sat on the". 
+        The nodes \(h_1\) through \(h_5\) represent the evolving hidden states updated by 
+        matrices <strong>U</strong> and <strong>W</strong> to predict <strong>"mat"</strong>.</p>
+    </div>
+
+    <h3>The Hidden State: How It Works</h3>
+    <p>
+        This mechanism is driven by the <strong>hidden state</strong> \(h_t\), which serves as the network's 
+        persistent memory. At each discrete time step, the RNN updates this state by mathematically 
+        combining the new input \(x_t\) with the preceding hidden state \(h_{t-1}\) using a learned 
+        weight matrix:
+    </p>
+
+    <div class="math-block">
+        $$h_t = \tanh(Wh_{t-1} + Wx_t + b_h)$$
+    </div>
+
+    <div class="note" style="border-left-color: #10b981; background-color: #f0fdf4;">
+        <strong>First-Principles Architecture: Words as Vectors</strong>
+        <ul style="margin-top: 5px; padding-left: 20px;">
+            <li><strong>Vector Inputs:</strong> The network does not process text strings directly. Each word is converted into a continuous numerical <strong>word vector (embedding)</strong>. The length of this word vector must exactly match the number of physical input neurons in the RNN.</li>
+            <li><strong>Time Over Space:</strong> Long sequence data does <em>not</em> require more input neurons. The RNN reuses the exact same set of input neurons at every clock tick, cycling through one word vector at a time.</li>
+            <li><strong>Cumulative Memory:</strong> The hidden states do not store raw historical word vectors. Instead, each sequential state (\(h_{t-2}, h_{t-1}, h_t\)) dynamically blends the current input vector with past summaries. Consequently, each state holds a running calculation of all words processed up to that step, with the final hidden state \(h_t\) preserving the context of the <strong>entire sequence</strong>.</li>
+        </ul>
+    </div>
+
+    <p>
+        This ensures that the "story" of the sequence flows continuously from the first input to the final 
+        prediction. This "first-principles" logic is the necessary foundation for transitioning from 
+        basic neural nets into more complex sequential architectures.
+    </p>
+</section>
+
+<h1>Recurrent Neural Network: Forward Propagation</h1>
+
+<div class="svg-container">
+    <svg width="100%" height="auto" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+        <style>
+            .node { fill: #ffffff; stroke: #334155; stroke-width: 2; }
+            .label { font-family: sans-serif; font-size: 14px; fill: #1e293b; font-weight: bold; }
+            .weight { font-family: serif; font-size: 16px; font-style: italic; fill: #2563eb; font-weight: bold; }
+            .arrow { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+        </style>
+        <defs>
+            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+            </marker>
+        </defs>
+        <circle class="node" cx="100" cy="350" r="25" /> <text class="label" x="88" y="355">x\(_\text{t-1}\)</text>
+        <circle class="node" cx="100" cy="200" r="25" /> <text class="label" x="88" y="205">h\(_\text{t-1}\)</text>
+        <circle class="node" cx="100" cy="50" r="25" />  <text class="label" x="88" y="55">o\(_\text{t-1}\)</text>
+        <path class="arrow" d="M 100 325 L 100 225" />   <text class="weight" x="80" y="280">U</text>
+        <path class="arrow" d="M 100 175 L 100 75" />    <text class="weight" x="80" y="130">V</text>
+        <circle class="node" cx="300" cy="350" r="25" /> <text class="label" x="290" y="355">x\(_\text{t}\)</text>
+        <circle class="node" cx="300" cy="200" r="25" /> <text class="label" x="290" y="205">h\(_\text{t}\)</text>
+        <circle class="node" cx="300" cy="50" r="25" />  <text class="label" x="290" y="55">o\(_\text{t}\)</text>
+        <path class="arrow" d="M 300 325 L 300 225" />   <text class="weight" x="280" y="280">U</text>
+        <path class="arrow" d="M 300 175 L 300 75" />    <text class="weight" x="280" y="130">V</text>
+        <circle class="node" cx="500" cy="350" r="25" /> <text class="label" x="485" y="355">x\(_\text{t+1}\)</text>
+        <circle class="node" cx="500" cy="200" r="25" /> <text class="label" x="485" y="205">h\(_\text{t+1}\)</text>
+        <circle class="node" cx="500" cy="50" r="25" />  <text class="label" x="485" y="55">o\(_\text{t+1}\)</text>
+        <path class="arrow" d="M 500 325 L 500 225" />   <text class="weight" x="480" y="280">U</text>
+        <path class="arrow" d="M 500 175 L 500 75" />    <text class="weight" x="480" y="130">V</text>
+        <circle class="node" cx="700" cy="350" r="25" /> <text class="label" x="685" y="355">x\(_\text{t+2}\)</text>
+        <circle class="node" cx="700" cy="200" r="25" /> <text class="label" x="685" y="205">h\(_\text{t+2}\)</text>
+        <circle class="node" cx="700" cy="50" r="25" />  <text class="label" x="685" y="55">o\(_\text{t+2}\)</text>
+        <path class="arrow" d="M 700 325 L 700 225" />   <text class="weight" x="680" y="280">U</text>
+        <path class="arrow" d="M 700 175 L 700 75" />    <text class="weight" x="680" y="130">V</text>
+        <path class="arrow" d="M 125 200 L 275 200" /> <text class="weight" x="190" y="190">W</text>
+        <path class="arrow" d="M 325 200 L 475 200" /> <text class="weight" x="390" y="190">W</text>
+        <path class="arrow" d="M 525 200 L 675 200" /> <text class="weight" x="590" y="190">W</text>
+    </svg>
+    <p style="font-style: italic; color: #64748b; font-size: 0.85rem;">Figure 2: Unfolded RNN Architecture with Time Step Notation.(RNN.svg)</p>
+</div>
+
+<h2>2. Initialization: The Start of Time</h2>
+<p>The chain shown in <code>RNN.svg</code> starts with the input \(x_{t-1}\) feeding into hidden unit \(h_{t-1}\). However, the hidden unit \(h_{t-1}\) also has a horizontal incoming connection <span class="highlight">W</span>. In a recursive loop, time step \(t=1\) must inherit a memory from time step \(t=0\).</p>
+
+<p>We must initialize the very first hidden state. This is typically done with a <strong>vector of zeros</strong>, representing that the network starts with a clean slate before reading the first input. Let \(h^{(t-2)}\) be our zero initialization:</p>
+
+<div class="math-block">
+    $$h^{(t-2)} = \vec{0}$$
+</div>
+
+<h2>3. Step-by-Step Forward Math</h2>
+<p>We will now perform forward propagation for the sequence \([t-1, t, t+1, t+2]\) visible in our diagram.</p>
+
+<h3>Time Step \(t-1\): The First Input</h3>
+<p>The hidden state \(h^{(t-1)}\) is calculated by combining the initial memory (\(h^{(t-2)}\) via weight \(W\)) and the new input (\(x^{(t-1)}\) via weight \(U\)), then applying the \(\tanh\) activation.</p>
+
+<div class="math-block">
+    <strong>Hidden State Computation:</strong>
+    $$Z_h^{(t-1)} = W h^{(t-2)} + U x^{(t-1)} + b_h$$
+    $$h^{(t-1)} = \tanh(Z_h^{(t-1)})$$
+</div>
+
+<h3>Time Step \(t\): Updating the Memory</h3>
+<p>This step is the most critical to understand recurrence. When computing \(h^{(t)}\), we are not using zero; we are using the "summary" of information just computed in the previous step (\(h^{(t-1)}\)) arriving via connection <span class="highlight">W</span>.</p>
+
+<div class="math-block">
+    <strong>Hidden State Update:</strong>
+    $$h^{(t)} = \tanh(W h^{(t-1)} + U x^{(t)} + b_h)$$
+    <strong>Output Prediction:</strong>
+    $$o^{(t)} = \sigma(V h^{(t)} + b_o)$$
+</div>
+
+<h3>Time Step \(t+1\): The Sequence Continues</h3>
+<p>The recurrence rule applies identically here. Forward propagation continues chronologically, reusing the exact same shared weight matrices \(U, V, W\).</p>
+
+<div class="math-block">
+    $$h^{(t+1)} = \tanh(W h^{(t)} + U x^{(t+1)} + b_h)$$
+    $$o^{(t+1)} = \sigma(V h^{(t+1)} + b_o)$$
+</div>
+
+<h3>Time Step \(t+2\): The End of the Path</h3>
+<p>This is the final visible step in diagram. Notice that \(h^{(t+2)}\) has a horizontal outgoing connection <span class="highlight">W</span> pointing to a dashed line, indicating this memory will persist into the next (unseen) input step.</p>
+
+<div class="math-block">
+    $$h^{(t+2)} = \tanh(W h^{(t+1)} + U x^{(t+2)} + b_h)$$
+    $$o^{(t+2)} = \sigma(V h^{(t+2)} + b_o)$$
+</div>
+
+<hr>
+
+<h2>Generalizing Forward Propagation: The Recursive Loop</h2>
+<p>In a real implementation, we don't write four separate functions for \(t-1\) through \(t+2\). We write a generalized rule that applies to any time step \(t\) within a <code>for</code> loop that iterates over the entire input sequence length \(T\).</p>
+
+<div class="math-block">
+    <strong>The Recursive Forward Rule:</strong>
+    <p>The forward pass of a standard RNN is defined by these two simple equations applied over and over again from \(t=1 \dots T\):</p>
+    $$\text{Memory Update:} \quad h^{(t)} = \tanh(W h^{(t-1)} + U x^{(t)} + b_h)$$
+    $$\text{Output Projection:} \quad o^{(t)} = \sigma(V h^{(t)} + b_o)$$
+</div>
+
+<h2>Parameter Sharing: The Crucial Concept</h2>
+<p>Trainees may ask: <em>"Why don't we have \(W_1\) connecting step \(1\to2\), and \(W_2\) connecting step \(2\to3\)?\"</em></p>
+
+<p>The answer defines modern deep learning: <strong>Parameter Sharing</strong>. Reusing \(U, V,\) and \(W\) at every step means the RNN is learning a <strong>single set of logical rules</strong> for processing sequential data (e.g., "The word after 'is' is likely an adjective or noun"), and it can apply those rules to sequences of any length.</p>
+
+<section id="rnn-bptt">
+    <h2>4. Backpropagation Through Time (BPTT)</h2>
+    <p>
+        To train our RNN, we need to find the optimal weights (\(U, V,\) and \(W\)) that minimize our prediction errors. 
+        Just like in a traditional neural network, we do this by calculating the gradient of a loss function 
+        with respect to our weights, and then updating them using Gradient Descent. 
+    </p>
+    <p>
+        Because the exact same weight matrices (\(U, V,\) and \(W\)) are reused at every single word in the sequence, a mistake made at the very end is actually caused by those weights acting across the entire past. To fix this mistake, we must calculate how much those weights contributed to the error at every individual step. We do this by virtually stretching out our recursive loops into a straight chain of events and tracking the error gradients backward step-by-step into the past—a process called <strong>Backpropagation Through Time (BPTT)</strong>.
+    </p>
+
+    <h3>Step 1: Calculating the Total Loss</h3>
+    <p>
+        For a single training sequence of length \(T\), we calculate an individual loss \(\ell(y^{(t)}, o^{(t)})\) 
+        at each time step by comparing our model's prediction \(o^{(t)}\) against the true target word \(y^{(t)}\). 
+        The total loss \(L\) for the entire sequence is simply the average of these individual losses across time:
+    </p>
+
+    <div class="math-block">
+        $$L = \frac{1}{T} \sum_{t=1}^{T} \ell(y^{(t)}, o^{(t)})$$
+    </div>
+
+    <h3>Step 2: The Gradient Breakdown &amp; The Chain Rule</h3>
+    <p>
+        To perform gradient descent, we must compute the partial derivatives of the total loss with respect 
+        to our three core weight matrices: \(\frac{\partial L}{\partial V}\), \(\frac{\partial L}{\partial U}\), 
+        and \(\frac{\partial L}{\partial W}\).
+    </p>
+
+    <ul>
+        <li>
+            <strong>\(\frac{\partial L}{\partial V}\) (The Output Weights):</strong> This term is straightforward 
+            to calculate. Because the output matrix \(V\) connects directly to the local loss at each specific time step, 
+            its gradient can be calculated instantly for each isolated position without looking at the past.
+        </li>
+        <li>
+            <strong>\(\frac{\partial L}{\partial W}\) (The Recurrent Memory Weights):</strong> This is where standard 
+            backpropagation turns into <em>Backpropagation Through Time</em>. Because the hidden state \(h^{(t)}\) is calculated 
+            using the previous state \(h^{(t-1)}\), the derivative at any time step \(t\) must account for the entire history 
+            leading up to it.
+        </li>
+    </ul>
+
+    <h3>Mathematical Underpinning of BPTT</h3>
+    <p>
+        By applying the calculus <strong>Chain Rule</strong> to the loss at any single time step \(t\), we can see how the recursive historical gradients are systematically unrolled through time.
+    </p>
+
+    <div class="derivation-box">
+        <div class="derivation-step">
+            <strong>Part 1: The Local Chain Rule Base</strong>
+            $$\frac{\partial \ell(y^{(t)}, o^{(t)})}{\partial W} = \frac{\partial \ell(y^{(t)}, o^{(t)})}{\partial o^{(t)}} \cdot \frac{\partial o^{(t)}}{\partial h^{(t)}} \cdot \frac{\partial h^{(t)}}{\partial W}$$
+        </div>
+        <hr style="border: 0; border-top: 1px dashed #cbd5e1; margin: 15px 0;">
+        <p>
+            The complexity lies in that last term, \(\frac{\partial h^{(t)}}{\partial W}\). Because \(h^{(t)}\) contains 
+            \(h^{(t-1)}\), the derivative expands recursively. For any given time step, the total influence of the weights 
+            on the current memory is the sum of its immediate impact <em>plus</em> its accumulated historical impact:
+        </p>
+        <div class="derivation-step">
+            <strong>Part 2: The Temporal Multivariate Expansion</strong>
+            $$\frac{\partial h^{(t)}}{\partial W} = \frac{\partial \tanh^{(t)}}{\partial W} + \frac{\partial \tanh^{(t)}}{\partial h^{(t-1)}} \cdot \frac{\partial h^{(t-1)}}{\partial W}$$
+        </div>
+        <hr style="border: 0; border-top: 1px dashed #cbd5e1; margin: 15px 0;">
+        <p>
+            If we unroll this recursive equation all the way back to the first time step (\(t=1\")), we get the generalized 
+            BPTT equation. It uses a product series to multiply the gradients across every single step backward through time:
+        </p>
+        <div class="derivation-step">
+            <strong>Part 3: Unrolling the Single-Step Recursion</strong>
+            $$\frac{\partial h^{(t-1)}}{\partial W} = \frac{\partial \tanh^{(t-1)}}{\partial W} + \frac{\partial \tanh^{(t-1)}}{\partial h^{(t-2)}} \cdot \frac{\partial h^{(t-2)}}{\partial W}$$
+        </div>
+        <hr style="border: 0; border-top: 1px dashed #cbd5e1; margin: 15px 0;">
+        <div class="derivation-step">
+            <strong>Part 4: The Generalized Matrix Product Series (BPTT Equation)</strong>
+            $$\frac{\partial h^{(t)}}{\partial W} = \sum_{i=1}^{t} \left( \prod_{j=i+1}^{t} \frac{\partial h^{(j)}}{\partial h^{(j-1)}} \right) \frac{\partial h^{(i)}}{\partial W}$$
+        </div>
+    </div>
+
+    <h3>Vanishing and Exploding Gradients in BPTT</h3>
+    <p>
+        BPTT suffers from the problem of Gradients either becoming very low values near to zero or very high values. Consider the equation 
+        \(\prod_{j=i+1}^{t} \frac{\partial h^{(j)}}{\partial h^{(j-1)}}\) identified in Part 4. To understand why this 
+        product behaves so volatilely over long historical sequences, we must compute the exact Jacobian matrix for a single time step. 
+        Given the recurrence relation \(h^{(j)} = \tanh(W h^{(j-1)} + U x^{(j)} + b_h)\), the partial derivative of the current hidden state 
+        with respect to the previous hidden state is given by:
+    </p>
+
+    <div class="math-block">
+        $$\frac{\partial h^{(j)}}{\partial h^{(j-1)}} = \text{diag}\left(1 - \left(h^{(j)}\right)^2\right) \cdot W^T$$
+    </div>
+
+    <p>
+        When we substitute this expression back into the full product series across an extended temporal window stretching from step 
+        \(i\) to step \(t\), the overall gradient contribution expands to:
+    </p>
+
+    <div class="derivation-box">
+        <div class="derivation-step">
+            <strong>Part 5: Expanded Temporal Jacobian Product</strong>
+            $$\prod_{j=i+1}^{t} \frac{\partial h^{(j)}}{\partial h^{(j-1)}} = \prod_{j=i+1}^{t} \left[ \text{diag}\left(1 - \left(h^{(j)}\right)^2\right) \cdot W^T \right]$$
+        </div>
+    </div>
+
+    <p>
+        By isolating this expression, we see that propagating an error backward across \((t - i)\) steps requires multiplying the recurrent weight matrix 
+        \(W^T\) by itself repeatedly. In linear algebra terms, the long-term behavior of this sequence depends entirely on the 
+        <strong>spectral radius</strong> (the largest absolute eigenvalue, \(\lambda_{\max}\)) of the weight matrix \(W^T\), coupled with the squashing property of the 
+        activation derivative:
+    </p>
+
+    <ul>
+        <li>
+            <strong>The Vanishing Gradient Problem (\(\lambda_{\max} < 1\)):</strong> The derivative of the \(\tanh\) function, 
+            \((1 - (h^{(j)})^2)\), is strictly bounded between \(0\) and \(1\). If the maximum eigenvalue of your weight matrix \(W\) is also less than \(1\), 
+            the continuous matrix product acts as an exponential fraction multiplier. As the distance between the error step \(t\) and historical step \(i\) grows large, 
+            the product exponentially decays toward zero:
+            $$\lim_{t - i \to \infty} \prod_{j=i+1}^{t} \frac{\partial h^{(j)}}{\partial h^{(j-1)}} = \mathbf{0}$$
+            Consequently, \(\frac{\partial L}{\partial W}\) receives absolutely zero meaningful feedback from early sequence inputs, rendering the model incapable of learning long-range dependencies.
+        </li>
+        <li>
+            <strong>The Exploding Gradient Problem (\(\lambda_{\max} > 1\)):</strong> Conversely, if the weights are initialized or updated such that the spectral radius 
+            of \(W\) is significantly greater than \(1\), and the hidden unit activations do not fully saturate the \(\tanh\) boundaries, the repeated multiplication of 
+            elements greater than \(1.0\) causes the gradient norm to scale exponentially:
+            $$\| \text{Gradient} \| \propto (\lambda_{\max})^{t-i}$$
+            This exponential surge causes massive weight updates during gradient descent, which destabilizes training completely, forces optimization steps to oscillate wildly, 
+            and eventually triggers numerical overflow errors (\(\text{NaN}\)).
+        </li>
+    </ul>
+</section>
+
+<section id="bptt-algorithm">
+    <h2>5. Algorithm: Backpropagation Through Time</h2>
+    <p>
+        Translating these high-level calculus rules into programmatic rule sets gives us the final training execution strategy. Notice how the backward pass steps backward through the sequence matrix (from time step \(T\) down to \(1\)) while building upon cumulative structural derivatives.
+    </p>
+
+    <div class="code-block">
+<pre><code><strong>Inputs:</strong> Sequences {x_1, ..., x_T}, Targets {y_1, ..., y_T}
+<strong>Parameters:</strong> U, W, V, b_h, b_o
+
+<span class="code-keyword">for</span> i = 1 <span class="code-keyword">to</span> epochs:
+   <span class="code-keyword">for each</span> sequence (x, y):
+      
+      <span class="code-comment"># forward pass</span>
+      h_0 = 0
+      <span class="code-keyword">for</span> t = 1 <span class="code-keyword">to</span> T:
+         h_t = tanh(W * h_{t-1} + U * x_t + b_h)
+         o_t = softmax(V * h_t + b_o)
+
+      <span class="code-comment"># backward pass</span>
+      dU, dW, dV, db_h, db_o = 0, 0, 0, 0, 0
+      next_dh = 0
+
+      <span class="code-keyword">for</span> t = T <span class="code-keyword">down to</span> 1:
+         <span class="code-comment"># current step error</span>
+         err_t = o_t - y_t
+         
+         <span class="code-comment"># local output path (vertical)</span>
+         dV   += err_t * h_t^T
+         db_o += err_t
+         
+         <span class="code-comment"># future hidden state path (horizontal)</span>
+         <span class="code-comment"># total derivative = local gradient + future gradient</span>
+         dh_total = (V^T * err_t) + (W^T * next_dh)
+         
+         <span class="code-comment"># activation derivative (chain rule)</span>
+         dh_raw = dh_total * (1 - h_t^2)
+         
+         <span class="code-comment"># accumulate structural gradients</span>
+         dU   += dh_raw * x_t^T
+         dW   += dh_raw * h_{t-1}^T
+         db_h += dh_raw
+         
+         <span class="code-comment"># pass gradient to previous step</span>
+         next_dh = dh_raw
+
+      <span class="code-comment"># weight updates via gradient descent</span>
+      U   -= η * dU
+      W   -= η * dW
+      V   -= η * dV
+      b_h -= η * db_h
+      b_o -= η * db_o</code></pre>
+    </div>
+</section>
+</div>
+
+<h2>RNN Application: Sequence to Sequence Translation </h2>
+<h3>Alignment cases</h3>
+
+</body>
+</html>
