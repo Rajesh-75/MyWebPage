@@ -387,6 +387,239 @@
     </div>
 </section>
 </div>
+<section id="rnn-vocabulary-prep">
+    <h2>6. Preprocessing: Vocabulary Preparation</h2>
+    <p>
+        Before data can flow through the mathematical equations of an RNN, the raw text sequence must be converted into structured numerical representations. This is handled via a structured three-step translation pipeline:
+    </p>
+
+    <div class="derivation-box" style="border-left-color: #38bdf8;">
+        <ul style="margin: 0; padding-left: 20px; line-height: 1.6; list-style-type: none;">
+            <li style="margin-bottom: 12px;">
+                <strong>Step 1: Cleaning and Tokenization</strong><br>
+                The raw text string is normalized by converting all characters to lowercase and stripping out punctuation marks (e.g., periods, commas). The cleaned corpus string is then split across whitespace boundaries into an ordered list of string tokens:
+                <div style="background-color: #1e293b; color: #38bdf8; padding: 10px; border-radius: 6px; font-family: monospace; margin-top: 5px;">
+                    Raw Text: "The cat sat." &rarr; Tokens: ["the", "cat", "sat"]
+                </div>
+            </li>
+            <li style="margin-bottom: 12px;">
+                <strong>Step 2: Unique Set Extraction (The Vocabulary)</strong><br>
+                Duplicate tokens are filtered out by casting the token list into a unique set, which is then ordered alphabetically. The total number of elements in this set defines the fixed <strong>Vocabulary Size (\(V\))</strong> of our network's output layer.
+            </li>
+            <li>
+                <strong>Step 3: Bi-directional Mapping Lookup Tables</strong><br>
+                Because linear algebra structures cannot multiply strings, two index dictionaries are constructed to handle the pipeline conversion:
+                <ul>
+                    <li><code>Map(Word &rarr; Index):</code> Converts a string token to a unique integer matrix row position \(i \in [0, V-1]\).</li>
+                    <li><code>Map(Index &rarr; Word):</code> Converts a predicted integer row index back into a text string token during text generation.</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section id="rnn-full-algorithm">
+    <h2>7. Training Algorithm: Next-Word Generation from Scratch</h2>
+    <p>
+        This brings together the input vector lookup, forward recurrence loop, categorical cross-entropy evaluation, and Backpropagation Through Time (BPTT).
+    </p>
+	<div style="font-family: sans-serif; line-height: 1.5; color: #333; max-width: 750px; margin: 20px 0; padding-left: 10px;">
+    
+    <div style="margin-bottom: 20px;">
+        <h4 style="color: #2e7d32; margin-bottom: 5px; text-align: left;">1. Phase 1: The Chronological Forward Sweep</h4>
+        <p style="margin: 0 0 10px 0; text-align: left;">
+            The network cannot calculate any gradients until it knows how poorly it predicted the sequence. Therefore, it completes the entire forward pass across all time steps first:
+        </p>
+        <ul style="margin: 0; padding-left: 20px; text-align: left;">
+            <li>The loop starts at <i>t</i> = 1 and runs sequentially up to <i>t</i> = <i>T</i>.</li>
+            <li>As it computes each step, the system caches (stores in RAM) the inputs <i>x<sub>t</sub></i>, the hidden states <i>h<sub>t</sub></i>, and the output probability distributions <i>p<sub>t</sub></i>.</li>
+            <li>You must wait until time step <i>T</i> is reached to calculate the final total sequence loss (<i>L</i>).</li>
+        </ul>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <h4 style="color: #1565c0; margin-bottom: 5px; text-align: left;">2. Phase 2: The Reverse BPTT Sweep</h4>
+        <p style="margin: 0 0 10px 0; text-align: left;">
+            Once the forward sweep is finished and the total loss is established, the backward pass begins at the final time step <i>T</i> and runs in reverse down to 1:
+        </p>
+        <ul style="margin: 0; padding-left: 20px; text-align: left;">
+            <li>The error signal flows backward through the stored cache.</li>
+            <li>Because the hidden state at the last step (<i>h<sub>T</sub></i>) was built on top of the hidden state before it (<i>h<sub>T-1</sub></i>), the gradient must cascade through every single historical memory state sequentially.</li>
+        </ul>
+    </div>
+
+    <div style="background-color: #fff5f5; border-left: 4px solid #c62828; padding: 15px; border-radius: 4px; text-align: left;">
+        <h4 style="color: #c62828; margin: 0 0 10px 0; text-align: left;">The Engineering Bottleneck: Why this limits RNNs</h4>
+        
+        <p style="margin: 0 0 10px 0;">
+            Because you have to compute all forward steps before starting the backward pass, the computer must hold every single hidden state (<i>h<sub>1</sub>, h<sub>2</sub>, ..., h<sub>T</sub></i>) inside its GPU/CPU memory simultaneously. If a text sequence is 10,000 words long, you have to store 10,000 dense matrix states in RAM before you can execute a single step of backpropagation. For long sequences, this quickly causes Out-of-Memory (OOM) errors.
+        </p>
+        <p style="margin: 0;">
+            To solve this practical limitation, engineers invented a modification called <strong>Truncated BPTT</strong>. Instead of processing the entire sequence at once, they split a long sequence into smaller chunks (e.g., 50 words at a time). The forward pass computes 50 steps, BPTT runs immediately back through those 50 steps, updates the weights, and then passes only the final hidden state value as the starting memory for the next 50-word chunk.
+        </p>
+    </div>
+
+</div>
+
+    <div class="code-block">
+<pre><code><strong>Given Dimensions:</strong>
+  V : Vocabulary Size
+  D : Word Vector Dimension (Input Neurons)
+  H : Hidden State Dimension (Memory Features)
+
+<strong>Hyperparameters:</strong>
+  &eta; : Learning Rate (Scalar)
+  MaxEpochs : Total number of full training cycles
+
+<strong>Model Parameter Parameters:</strong>
+  E   : Embedding Matrix of shape (V &times; D)
+  U   : Input-to-Hidden Weight Matrix of shape (H &times; D)
+  W   : Hidden-to-Hidden Weight Matrix of shape (H &times; H)
+  V_w : Hidden-to-Output Weight Matrix of shape (V &times; H)
+  b_h : Hidden Layer Bias Vector of shape (H &times; 1)
+  b_o : Output Layer Bias Vector of shape (V &times; 1)
+
+<strong>Algorithm Execution:</strong>
+
+For Epoch = 1 To MaxEpochs:
+    Initialize TotalLoss = 0
+    Initialize Hidden State Vector Base: h_(-1) = ZeroVector(Shape: H &times; 1)
+    
+    # ------------------------------------------
+    # 1. FORWARD PROPAGATION LOOP
+    # ------------------------------------------
+    For t = 1 To T:
+        # Retrieve the specific word vector row from Embedding Matrix
+        x_t = RowVector(E, InputWordIndex_t) transposed to shape (D &times; 1)
+        
+        # Calculate recurrence state memory
+        Z_h = MatrixMultiply(W, h_(t-1)) + MatrixMultiply(U, x_t) + b_h
+        h_t = tanh(Z_h)  # Shape: (H &times; 1)
+        
+        # Project memory to raw vocabulary layer scores
+        Z_o = MatrixMultiply(V_w, h_t) + b_o  # Shape: (V &times; 1)
+        
+        # Softmax normalization to yield probability distribution Vector (p_t)
+        For each vocabulary element k from 1 To V:
+            p_t[k] = exp(Z_o[k]) / SumAcrossAllElements(exp(Z_o))
+            
+        # Accumulate categorical cross-entropy loss tracking metric
+        TargetIndex = TargetWordIndex_t
+        TotalLoss = TotalLoss - log(p_t[TargetIndex])
+        
+        Cache current states {x_t, h_t, p_t} for backward pass usage
+
+    # ------------------------------------------
+    # 2. BACKPROPAGATION THROUGH TIME (BPTT) LOOP
+    # ------------------------------------------
+    Initialize Local Gradient Accumulators to Zero:
+      dU = MatrixZeros(H &times; D), dW = MatrixZeros(H &times; H), dV_w = MatrixZeros(V &times; H)
+      db_h = VectorZeros(H &times; 1), db_o = VectorZeros(V &times; 1), dE = MatrixZeros(V &times; D)
+    
+    Initialize Future Step Temporal Error Carryover: next_dh = VectorZeros(H &times; 1)
+    
+    For t = T Down To 1:
+        # Compute local categorical cross-entropy error vector gradient
+        err_t = CopyVector(p_t)
+        err_t[TargetWordIndex_t] = err_t[TargetWordIndex_t] - 1  # Subtract 1 from correct class target
+        
+        # Local vertical output weight updates gradient mapping
+        dV_w = dV_w + MatrixTensorProduct(err_t, h_t.Transposed)
+        db_o = db_o + err_t
+        
+        # Unroll historical horizontal hidden path memory tracking 
+        dh_total = MatrixMultiply(V_w.Transposed, err_t) + MatrixMultiply(W.Transposed, next_dh)
+        
+        # Backpropagate through non-linear activation derivative layer
+        dh_raw = dh_total &odot; (ElementWiseOneVector - SquareElements(h_t))
+        
+        # Accumulate structural sequence gradients over time steps
+        dU   = dU + MatrixTensorProduct(dh_raw, x_t.Transposed)
+        dW   = dW + MatrixTensorProduct(dh_raw, h_(t-1).Transposed)
+        db_h = db_h + dh_raw
+        
+        # Project error mapping backward to individual source input matrix rows
+        dE[InputWordIndex_t] = dE[InputWordIndex_t] + VectorSqueeze(MatrixMultiply(U.Transposed, dh_raw))
+        
+        # Assign current raw hidden derivative to cascade backward into next historical time step
+        next_dh = dh_raw
+
+    # Apply Gradient Boundary Clipping constraints to arrest Exploding Gradients
+    For each derivative matrix [dU, dW, dV_w, db_h, db_o, dE]:
+        ClipAllElementsWithinBoundaries(Matrix, MinValue=-5.0, MaxValue=5.0)
+
+    # ------------------------------------------
+    # 3. CONVERGENCE PARAMETER OPTIMIZATION
+    # ------------------------------------------
+    U   = U   - (&eta; &times; dU)
+    W   = W   - (&eta; &times; dW)
+    V_w = V_w - (&eta; &times; dV_w)
+    b_h = b_h - (&eta; &times; db_h)
+    b_o = b_o - (&eta; &times; db_o)
+    E   = E   - (&eta; &times; dE)
+    
+    Print Metrics: EvaluationSequenceLoss = TotalLoss / T</code></pre>
+    </div>
+</section>
+
+<section id="rnn-inference">
+    <h2>8. Execution: Evaluation and Inference Phase</h2>
+    <p>
+        Once training is complete, text generation is verified by providing a seed input vector token and calculating ongoing sequence steps recursively without target constraints:
+    </p>
+
+    <div class="code-block">
+<pre><code><strong>Inference Routine (SeedWordToken, NumberOfGenerationSteps):</strong>
+    CurrentWordIndex = Map(SeedWordToken &rarr; Index)
+    h = VectorZeros(Shape: H &times; 1)
+    OutputSentenceSequence = [SeedWordToken]
+    
+    For Step = 1 To NumberOfGenerationSteps:
+        # Vector Lookup Pass
+        x = RowVector(E, CurrentWordIndex) transposed to shape (D &times; 1)
+        
+        # Propagate Recurrent Hidden Unit Sequence Memory
+        h = tanh(MatrixMultiply(W, h) + MatrixMultiply(U, x) + b_h)
+        
+        # Calculate Output Probability Vector
+        OutputVectorScores = MatrixMultiply(V_w, h) + b_o
+        p = ComputeSoftmaxDistribution(OutputVectorScores)
+        
+        # Select target with maximal probability output matrix score
+        CurrentWordIndex = FindIndexWithMaximalValue(p)
+        PredictedStringToken = Map(CurrentWordIndex &rarr; Word)
+        
+        Append PredictedStringToken to OutputSentenceSequence
+        
+    Return OutputSentenceSequence</code></pre>
+    </div>
+</section>
+
+<section id="lstm-architecture" style="margin-top: 40px; font-family: sans-serif;">
+    <h2 style="color: #1e3a8a; border-bottom: 2px solid #3b82f6; padding-bottom: 8px;">4. Long Short-Term Memory (LSTM)</h2>
+    <p style="line-height: 1.6; color: #334155;">
+        Standard RNNs fail because they modify their memory blindly at every step. An <strong>LSTM</strong> fixes this by introducing an internal "conveyor belt" called the <strong>Cell State (\(C_t\))</strong>, regulated by three distinct mathematical gates.
+    </p>
+
+    <div style="background-color: #f0fdf4; border-left: 4px solid #16a34a; padding: 15px; margin: 20px 0; border-radius: 0 6px 6px 0;">
+        <strong>The Functional Roles of LSTM Gates:</strong>
+        <ul style="margin-top: 8px; padding-left: 20px; line-height: 1.6; color: #1e293b; font-size: 0.95rem;">
+            <li><strong>Forget Gate (\(f_t\)):</strong> Closes to erase useless history, opens to let critical past memory slide forward untouched.</li>
+            <li><strong>Input Gate (\(i_t\)):</strong> Selects which new data details from the current word input are worthy of being written into long-term storage.</li>
+            <li><strong>Output Gate (\(o_t\)):</strong> Filters the long-term internal memory to construct the visible short-term hidden state expression.</li>
+        </ul>
+    </div>
+
+    <div style="background-color: #f1f5f9; padding: 15px; border-radius: 6px; margin: 15px 0; font-family: monospace;">
+        <h5 style="margin: 0 0 10px 0; color: #0f172a;">The Fundamental LSTM Gate Equations:</h5>
+        $$f_t = \sigma(W_f \cdot [h_{t-1}, x_t] + b_f)$$
+        $$i_t = \sigma(W_i \cdot [h_{t-1}, x_t] + b_i)$$
+        $$\tilde{C}_t = \tanh(W_c \cdot [h_{t-1}, x_t] + b_c)$$
+        <span style="color:#2563eb; font-weight:bold;">$$\text{Conveyor Update: } C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$$</span>
+        $$o_t = \sigma(W_o \cdot [h_{t-1}, x_t] + b_o)$$
+        $$h_t = o_t \odot \tanh(C_t)$$
+    </div>
+</section>
 
 <h2>RNN Application: Sequence to Sequence Translation </h2>
 <h3>Alignment cases</h3>
