@@ -76,7 +76,7 @@
     </p>
 
     <div class="math-block">
-        $$h_t = \tanh(Wh_{t-1} + Wx_t + b_h)$$
+        $$h_t = \tanh(Wh_{t-1} + Ux_t + b_h)$$
     </div>
 
     <div class="note" style="border-left-color: #10b981; background-color: #f0fdf4;">
@@ -193,7 +193,7 @@
     <strong>The Recursive Forward Rule:</strong>
     <p>The forward pass of a standard RNN is defined by these two simple equations applied over and over again from \(t=1 \dots T\):</p>
     $$\text{Memory Update:} \quad h^{(t)} = \tanh(W h^{(t-1)} + U x^{(t)} + b_h)$$
-    $$\text{Output Projection:} \quad o^{(t)} = \sigma(V h^{(t)} + b_o)$$
+    $$\text{Output Projection:} \quad o^{(t)} = \text{softmax}(V h^{(t)} + b_o)$$
 </div>
 
 <h2>Parameter Sharing: The Crucial Concept</h2>
@@ -388,34 +388,68 @@
 </section>
 </div>
 <section id="rnn-vocabulary-prep">
-    <h2>6. Preprocessing: Vocabulary Preparation</h2>
-    <p>
-        Before data can flow through the mathematical equations of an RNN, the raw text sequence must be converted into structured numerical representations. This is handled via a structured three-step translation pipeline:
-    </p>
+   <h3>6.1 From Raw Text to Training Pairs</h3>
+   <p>
+    Before we can run forward/backward pass, we need numbers, not words. This section converts sentences into the (input, target) tensors an RNN expects.
+   </p>
+<p>
+    An RNN language model learns by predicting the next <strong>token</strong> given previous tokens. 
+    A token is usually a word, but can also be a subword or character. We build training examples by sliding a window.
+	
+</p>
 
-    <div class="derivation-box" style="border-left-color: #38bdf8;">
-        <ul style="margin: 0; padding-left: 20px; line-height: 1.6; list-style-type: none;">
-            <li style="margin-bottom: 12px;">
-                <strong>Step 1: Cleaning and Tokenization</strong><br>
-                The raw text string is normalized by converting all characters to lowercase and stripping out punctuation marks (e.g., periods, commas). The cleaned corpus string is then split across whitespace boundaries into an ordered list of string tokens:
-                <div style="background-color: #1e293b; color: #38bdf8; padding: 10px; border-radius: 6px; font-family: monospace; margin-top: 5px;">
-                    Raw Text: "The cat sat." &rarr; Tokens: ["the", "cat", "sat"]
-                </div>
-            </li>
-            <li style="margin-bottom: 12px;">
-                <strong>Step 2: Unique Set Extraction (The Vocabulary)</strong><br>
-                Duplicate tokens are filtered out by casting the token list into a unique set, which is then ordered alphabetically. The total number of elements in this set defines the fixed <strong>Vocabulary Size (\(V\))</strong> of our network's output layer.
-            </li>
-            <li>
-                <strong>Step 3: Bi-directional Mapping Lookup Tables</strong><br>
-                Because linear algebra structures cannot multiply strings, two index dictionaries are constructed to handle the pipeline conversion:
-                <ul>
-                    <li><code>Map(Word &rarr; Index):</code> Converts a string token to a unique integer matrix row position \(i \in [0, V-1]\).</li>
-                    <li><code>Map(Index &rarr; Word):</code> Converts a predicted integer row index back into a text string token during text generation.</li>
-                </ul>
-            </li>
-        </ul>
-    </div>
+<div class="derivation-box" style="border-left-color: #8b5cf6;">
+    <strong>Example: Building the dataset</strong><br>
+    <strong>Raw text:</strong> "the cat sat on the mat" <br>
+    <strong>Step 1 - Tokenize:</strong> <code>["the", "cat", "sat", "on", "the", "mat"]</code><br>
+    <strong>Step 2 - Add special tokens:</strong> <code>["&lt;s&gt;", "the", "cat", "sat", "on", "the", "mat", "&lt;/s&gt;"]</code><br>
+    &lt;s&gt; = start of sequence, &lt;/s&gt; = end of sequence. The RNN learns when to stop.<br><br>
+    
+    <strong>Step 3 - Create (input, target) pairs for each time step:</strong>
+    <table style="width:100%; font-size:0.9rem; margin-top:10px;">
+        <tr><th>t</th><th>Input x_t</th><th>Target y_t</th></tr>
+        <tr><td>1</td><td>&lt;s&gt;</td><td>the</td></tr>
+        <tr><td>2</td><td>the</td><td>cat</td></tr>
+        <tr><td>3</td><td>cat</td><td>sat</td></tr>
+        <tr><td>4</td><td>sat</td><td>on</td></tr>
+        <tr><td>5</td><td>on</td><td>the</td></tr>
+        <tr><td>6</td><td>the</td><td>mat</td></tr>
+        <tr><td>7</td><td>mat</td><td>&lt;/s&gt;</td></tr>
+    </table>
+    At each step, loss is computed: <code>ℓ = -log P(y_t | x_1...x_t)</code>
+</div>
+
+<ul>
+    <li><strong>Token vs Word:</strong> "don't" → ["do", "n't"] if you use subwords. For intro, keep it word-level.</li>
+    <li><strong>Vocabulary cutoff:</strong> Replace rare words with &lt;unk&gt; token. If a word appears &lt;5 times, map to &lt;unk&gt;. Keeps V small.</li>
+    <li><strong>Batching:</strong> Real training groups many sentences together. For teaching, use batch_size=1 to keep it simple.</li>
+</ul>
+<h4>One-Hot vs Embeddings: Why We Don't Use One-Hot</h4>
+<p>
+    After mapping words to indices, the naive way to feed them to the RNN is <strong>one-hot encoding</strong>. 
+    For a vocabulary of size V=10,000, the word "cat" with index 245 becomes a vector of 9,999 zeros and a single 1 at position 245.
+</p>
+
+<div class="math-block">
+    $$\text{onehot}("cat") = [0, 0, ..., 1, ..., 0] \quad \text{shape: } (V \times 1)$$
+</div>
+
+<p><strong>Two fatal problems:</strong></p>
+<ol>
+    <li><strong>Size:</strong> With V=50k, each input is 50,000 neurons. Your U matrix becomes (H × 50000). GPU memory explodes.</li>
+    <li><strong>No meaning:</strong> "cat" and "dog" are equally distant from "pizza". One-hot encodes identity, not semantics.</li>
+</ol>
+
+<div class="note" style="border-left-color: #f59e0b; background-color: #fffbeb;">
+    <strong>Solution: Learned Embeddings</strong><br>
+    Instead, we use a small dense vector D=300. The embedding matrix E of shape (V × D) is a lookup table. 
+    Row 245 of E is the 300-dim vector for "cat". E is <em>learned</em> during training via BPTT, so "cat" and "dog" end up close together.
+    <div class="math-block">
+    $$x_t = E[\text{idx("cat")}, :] \quad \text{shape: } (1 \times D) \text{ or } (D \times 1)$$
+</div>
+<p style="font-size:0.9rem; margin-top:-10px;">We treat it as a column vector (D × 1) to match U h_{t-1} + U x_t</p>
+     
+</div>
 </section>
 
 <section id="rnn-full-algorithm">
@@ -428,7 +462,7 @@
     <div style="margin-bottom: 20px;">
         <h4 style="color: #2e7d32; margin-bottom: 5px; text-align: left;">1. Phase 1: The Chronological Forward Sweep</h4>
         <p style="margin: 0 0 10px 0; text-align: left;">
-            The network cannot calculate any gradients until it knows how poorly it predicted the sequence. Therefore, it completes the entire forward pass across all time steps first:
+            The network cannot calculate any gradients until it knows how poorly it predicted the sequence.Forward Propogation needs to look at the full sentence first. Therefore, it completes the entire forward pass across all time steps before running backpropagation through time to update the weights."
         </p>
         <ul style="margin: 0; padding-left: 20px; text-align: left;">
             <li>The loop starts at <i>t</i> = 1 and runs sequentially up to <i>t</i> = <i>T</i>.</li>
@@ -598,28 +632,103 @@ For Epoch = 1 To MaxEpochs:
 <section id="lstm-architecture" style="margin-top: 40px; font-family: sans-serif;">
     <h2 style="color: #1e3a8a; border-bottom: 2px solid #3b82f6; padding-bottom: 8px;">4. Long Short-Term Memory (LSTM)</h2>
     <p style="line-height: 1.6; color: #334155;">
-        Standard RNNs fail because they modify their memory blindly at every step. An <strong>LSTM</strong> fixes this by introducing an internal "conveyor belt" called the <strong>Cell State (\(C_t\))</strong>, regulated by three distinct mathematical gates.
+       <div class="note" style="border-left-color: #ef4444; background-color: #fef2f2;">
+    <strong>The RNN Problem: Uncontrolled Memory</strong><br>
+    A standard RNN has only one memory vector, the hidden state h_t. At every step, it computes 
+    <code>h_t = tanh(W h_{t-1} + U x_t)</code>. This forces it to completely rewrite its memory using both old memory 
+    and new input, even when the new input is irrelevant. It cannot choose to "keep" important old information or "ignore" noisy new input.
+    <br><br>
+    <strong>The LSTM Fix: Gated Memory</strong><br>
+    An LSTM adds a second memory called the Cell State C_t. Think of C_t as a conveyor belt running through time. 
+    Three gates control it: 
+    <ol style="margin:8px 0;">
+        <li><strong>Forget Gate:</strong> Chooses what to erase from C_{t-1}</li>
+        <li><strong>Input Gate:</strong> Chooses what new info from x_t should be added to C_t</li>
+        <li><strong>Output Gate:</strong> Chooses what part of C_t to expose as h_t</li>
+    </ol>
+    Now the network can protect information for many steps, or dump it when it’s no longer needed. The gradient flows through C_t with fewer multiplications, so it vanishes slower.
+	
+	One LSTM cell at time t takes input x_t, previous hidden state h_{t-1}, previous cell state C_{t-1}, 
+    and produces new h_t, C_t. The 3 gates are just sigmoid layers that output numbers between 0 and 1.
+</div>
     </p>
+<figure style="margin:20px 0; text-align:center;">
+    <img src="LSTM.png" 
+         alt="LSTM cell diagram showing forget gate, input gate, candidate, output gate, and cell state flow" 
+         style="max-width:100%; width:800px; height:auto; border:1px solid #e2e8f0; border-radius:8px; background:#fff;">
+    <figcaption style="font-size:0.9rem; color:#475569; margin-top:8px;">
+        <strong>Figure:</strong> LSTM cell at time t. Gates control information flow into cell state C^{(t)}. 
+        ⊙ = element-wise multiply, ⊕ = element-wise add.
+    </figcaption>
+</figure>
+<h3>LSTM Architecture</h3>
+<p>
+    This is the standard LSTM block. The blue line is <code>h^{(t-1)}</code>, black line at top is cell state 
+    <code>C^{(t-1)}</code>, and black line at bottom is input <code>x^{(t)}</code>. 
+    Follow the arrows to see how information flows.
+</p>
 
-    <div style="background-color: #f0fdf4; border-left: 4px solid #16a34a; padding: 15px; margin: 20px 0; border-radius: 0 6px 6px 0;">
-        <strong>The Functional Roles of LSTM Gates:</strong>
-        <ul style="margin-top: 8px; padding-left: 20px; line-height: 1.6; color: #1e293b; font-size: 0.95rem;">
-            <li><strong>Forget Gate (\(f_t\)):</strong> Closes to erase useless history, opens to let critical past memory slide forward untouched.</li>
-            <li><strong>Input Gate (\(i_t\)):</strong> Selects which new data details from the current word input are worthy of being written into long-term storage.</li>
-            <li><strong>Output Gate (\(o_t\)):</strong> Filters the long-term internal memory to construct the visible short-term hidden state expression.</li>
-        </ul>
+<div class="derivation-box" style="border-left-color: #8b5cf6;">
+    <strong>Walk through the diagram step by step:</strong><br><br>
+    
+    <strong>Step 1: Gates look at h^{(t-1)} and x^{(t)}</strong><br>
+    The blue <code>h^{(t-1)}</code> and black <code>x^{(t)}</code> feed into all 4 yellow boxes. 
+    Each box is a neural layer with its own weights and bias.
+    <table style="width:100%; font-size:0.9rem; margin:10px 0;">
+        <tr><th>Gate</th><th>Equation</th><th>What it does in diagram</th></tr>
+        <tr>
+            <td><strong>Forget f</strong></td>
+            <td>$$f = \sigma(W_{hf} h^{(t-1)} + W_{xf} x^{(t)} + b_f)$$</td>
+            <td>Left σ box. Output f goes up to "×" to scale old C^{(t-1)}</td>
+        </tr>
+        <tr>
+            <td><strong>Input i</strong></td>
+            <td>$$i = \sigma(W_{hi} h^{(t-1)} + W_{xi} x^{(t)} + b_i)$$</td>
+            <td>Middle σ box. Output i goes to "×" before the "+" </td>
+        </tr>
+        <tr>
+            <td><strong>Candidate Ĉ</strong></td>
+            <td>$$\tilde{C} = \tanh(W_{hc} h^{(t-1)} + W_{xc} x^{(t)} + b_c)$$</td>
+            <td>Right Tanh box. Creates new content, also goes to "×"</td>
+        </tr>
+        <tr>
+            <td><strong>Output o</strong></td>
+            <td>$$o = \sigma(W_{ho} h^{(t-1)} + W_{xo} x^{(t)} + b_o)$$</td>
+            <td>Bottom σ box. Output o goes to final "×" on right</td>
+        </tr>
+    </table>
+    
+    <strong>Step 2: Update the cell state C^{(t)} - the top line</strong><br>
+    <code>C^{(t-1)}</code> enters from left. First "×" multiplies it by f. This is the forget gate in action. 
+    Then "+" adds new info: <code>i * Ĉ</code>. Result is <code>C^{(t)}</code> going out right.
+    <div class="math-block">
+        $$C^{(t)} = f * C^{(t-1)} + i * \tilde{C}$$
     </div>
+    
+    <strong>Step 3: Compute output h^{(t)} - the blue line</strong><br>
+    <code>C^{(t)}</code> goes through purple Tanh, then "×" with o. Result is <code>h^{(t)}</code>, 
+    which goes to next time step AND to next layer.
+    <div class="math-block">
+        $$h^{(t)} = o * \tanh(C^{(t)})$$
+    </div>
+</div>
 
-    <div style="background-color: #f1f5f9; padding: 15px; border-radius: 6px; margin: 15px 0; font-family: monospace;">
-        <h5 style="margin: 0 0 10px 0; color: #0f172a;">The Fundamental LSTM Gate Equations:</h5>
-        $$f_t = \sigma(W_f \cdot [h_{t-1}, x_t] + b_f)$$
-        $$i_t = \sigma(W_i \cdot [h_{t-1}, x_t] + b_i)$$
-        $$\tilde{C}_t = \tanh(W_c \cdot [h_{t-1}, x_t] + b_c)$$
-        <span style="color:#2563eb; font-weight:bold;">$$\text{Conveyor Update: } C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$$</span>
-        $$o_t = \sigma(W_o \cdot [h_{t-1}, x_t] + b_o)$$
-        $$h_t = o_t \odot \tanh(C_t)$$
-    </div>
-</section>
+<div class="note" style="border-left-color: #f59e0b; background-color: #fffbeb;">
+    <strong>BPTT from the Diagram</strong><br>
+    Look at the top black line C^{(t-1)} → C^{(t)}. There’s only one weight: multiplication by f. 
+    No repeated W matrices. If the network learns f ≈ 1, then <code>∂C^{(t)} / ∂C^{(t-1)} = f ≈ 1</code>. 
+    Gradient flows backward through time with no decay. That’s why LSTM beats other RNNs on long sequences. 
+    The gates f, i, o still use W matrices, so they can have vanishing gradients. But C_t is protected.
+</div>
+
+<ul>
+    <li><strong>Why 4 W matrices?</strong> Each gate needs to learn different behavior. f learns “when to forget”, i learns “when to write”. Same input, different weights.</li>
+    <li><strong>What are ⊙ and ⊕?</strong> ⊙ = element-wise multiply, shown as "×" in diagram. ⊕ = element-wise add, shown as "+" in diagram.</li>
+    <li><strong>Why tanh for Ĉ and C^{(t)}?</strong> Keeps cell values between -1 and 1, prevents explosion. Sigmoid for gates because we need values 0 to 1.</li>
+</ul>
+    
+
+    
 
 <h2>RNN Application: Sequence to Sequence Translation </h2>
 <h3>Alignment cases</h3>
