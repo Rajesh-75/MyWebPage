@@ -72,65 +72,70 @@
         ];
         
         const tutorials = [
-            {	
-                title: "Introduction", 
-                subtopics: [
-                    { title: "Machine learning Pipeline", filePath: "MachineLearningPipeline.html" }
-                ]
+    {    
+        title: "Introduction", 
+        subtopics: [
+            { title: "Machine learning Pipeline", filePath: "MachineLearningPipeline.html" }
+        ]
+    },
+    {    
+        title: "Machine Learning",    
+        subtopics: [
+            { 
+                title: "Machine Learning Basics", 
+                content: "Machine Learning use cases and terminologies shall be discussed here. Further Model, Cost, and Optimization aspects shall be discussed more taking examples of ML Models." 
             },
-            {	
-                title: "Machine Learning",	
-                subtopics: [
-                    { 
-                        title: "Machine Learning Basics", 
-                        content: "Machine Learning use cases and terminologies shall be discussed here. Further Model, Cost, and Optimization aspects shall be discussed more taking examples of ML Models." 
-                    },
-                    /* NEW SUBTOPIC ADDED HERE */
-                    { title: "ML and DL Comparison Table", filePath: "ComparisonTable.html" },
-                    {	
-                        title: "Nearest Neighbor",	
-                        content: `<h2 class="detail-title">Nearest Neighbor (k-NN)</h2><p class="detail-description">The k-Nearest Neighbors (k-NN) algorithm is a non-parametric, lazy learning algorithm...</p>`	
-                    },
-                    { title: "K-Mean Clustering", filePath: "decision-trees.htm" },	
-                    { title: "Decision Trees", filePath: "decision-trees.html" },
-                    { title: "Random Forests", filePath: "random-forests.html" },
-                    { title: "Support Vector Machines (SVM)", filePath: "svm.html" },	
-                    { title: "Shallow Neural Networks", filePath: "ShallowNeuralNetwork.html"},
-                    { title: "Gradient Descent and Backpropagation", filePath: "BP2.html"},
-                    { title: "Kernel Density Estimation (KDE)" }
-                ]
+            { title: "ML and DL Comparison Table", filePath: "ComparisonTable.html" },
+            {    
+                title: "Nearest Neighbor",    
+                content: `<h2 class="detail-title">Nearest Neighbor (k-NN)</h2><p class="detail-description">The k-Nearest Neighbors (k-NN) algorithm is a non-parametric, lazy learning algorithm...</p>`    
             },
-            {	
-                title: "Probability & MLE",	
-                subtopics: [
-                    { title: "Basic Probability", filePath:"Probability.html" },
-                    { title: "Random Variable and Operations", filePath:"RandomVariableandExpectations.html" },
-                    { title: "Normal Distributions", filePath: "NormalDistribution.html" },
-                    { title: "Maximum Likelihood Estimation (MLE)",filePath:"MaximumLikelihoodEstimation.html" }
-                ]
-            },
-            {	
-                title: "Deep Learning",	
-                subtopics: [
-                    { title: "Convolutional Neural Networks (CNN)", content: "Tutorial on CNNs for image recognition." },
-                    { title: "Recurrent Neural Networks (RNN)", content: "Focus on RNNs for sequential data." }
-                ]
-            },
-            {	
-                title: "Statistics",	
-                subtopics: [
-                    { title: "Measures of Central Tendency", filePath: "CentralTendency.html" },
-                    { title: "Hypothesis Testing", content: "Steps for Z-tests and T-tests." },
-                    { title: "Regression Analysis", content: "Simple and multiple linear regression." },
-                    { title: "Statistical Data Visualization", filePath: "StatisticalDataVisualization.html" }
-                ]
-            },
-            {	
-                title: "Python",	
-                content: "Master Python libraries crucial for data science (Pandas, NumPy, Matplotlib)."
-            }
-        ];
-
+            { title: "K-Mean Clustering", filePath: "decision-trees.html" },    
+            { title: "Decision Trees", filePath: "decision-trees.html" },
+            { title: "Bayesian Classification", filePath: "Bay-class.html" },
+            { title: "Random Forests", filePath: "random-forests.html" },
+            { title: "Support Vector Machines (SVM)", filePath: "svm.html" },    
+            { title: "Neural Networks", filePath: "NN_version1.html"},
+            { title: "Gradient Descent and Backpropagation", filePath: "BP2.html"},
+            { title: "Kernel Density Estimation (KDE)" },
+            /* FIX: Cleaned duplicate lines, added missing closing quote and comma */
+            { title: "Principal Component Analysis (PCA)", filePath: "PCA.html" },
+			{ title: "K-nearest neighbourhood", filePath: "KNN.html" },
+        ]
+    },
+    {    
+        title: "Probability & MLE",    
+        subtopics: [
+            { title: "Basic Probability", filePath:"Probability.html" },
+            { title: "Random Variable and Operations", filePath:"RandomVariableandExpectations.html" },
+            { title: "Normal Distributions", filePath: "NormalDistribution.html" },
+            { title: "Maximum Likelihood Estimation (MLE)",filePath:"MaximumLikelihoodEstimation.html" }
+        ]
+    },
+    {    
+        title: "Deep Learning",    
+        subtopics: [
+            { title: "Convolutional Neural Networks", filePath: "CNN.html" },
+            { title: "Recurrent Neural Networks (RNN)", filePath: "RNNTest2.html" },
+			{ title: "Attention and Transformer", filePath: "Transformer.html" },
+			{ title: "LLM and RAG", filePath: "LLMRAG.html" }
+        ]
+    },
+    {    
+        title: "Statistics",    
+        subtopics: [
+            { title: "Measures of Central Tendency", filePath: "CentralTendency.html" },
+            { title: "Estimation theory", filePath: "EstimationTheory.html" },
+            { title: "Hypothesis Testing", filePath:"HypothesisTesting.html" },
+            { title: "Regression Analysis", content: "Simple and multiple linear regression." },
+            { title: "Statistical Data Visualization", filePath: "StatisticalDataVisualization.html" }
+        ]
+    },
+    {    
+        title: "Python",    
+        content: "Master Python libraries crucial for data science (Pandas, NumPy, Matplotlib)."
+    }
+];
         const bookTrack = document.getElementById('bookTrack');
         const carouselWrapper = document.getElementById('carouselWrapper');
         const mainContentArea = document.getElementById('mainContentArea');	
